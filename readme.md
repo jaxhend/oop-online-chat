@@ -7,7 +7,7 @@ Krüpteeritud online-chat, mille kaudu saavad tudengid omavahel suhelda ja jagad
 
 ### Funktsionaalsus:
 * Saab luua ja ühineda channelite ja chat roomidega.
-  *Saab üksteisele privaatseid sõnumeid saata.
+* Saab üksteisele privaatseid sõnumeid saata.
 * Sõnumite krüpteerimine. Kõik privaatvestlused võiksid olla E2E-krüpteeritud.
 * Sõnumeid ja kasutajakontosi hoiab keskne server, kuhu saab üle võrgu ühenduda. Sõnumitel olemas ka ajatempel. Server hoiab sõnumite ajalugu.
 * Kasutaja saab saata helisõnumi teistele kasutajatele ning sõnumi saaja saab seda kuulata.
