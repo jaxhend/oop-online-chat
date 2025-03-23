@@ -1,0 +1,29 @@
+name: Cloud deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to Server
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no server@oop.atlante.ee << 'EOF'
+            cd /opt/online-chat/oop-online-chat
+            sudo git reset --hard HEAD
+            sudo git pull origin main
+            sudo git config --global --add safe.directory /opt/online-chat/oop-online-chat
+            sudo mvn clean package -DskipTests
+            sudo systemctl status online-chat.service --no-pager
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
