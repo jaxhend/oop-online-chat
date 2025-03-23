@@ -19,7 +19,10 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no server@oop.atlante.ee << 'EOF'
+            rm -rf /opt/online-chat/oop-online-chat
+            git clone https://github.com/jaxhend/oop-online-chat.git /opt/online-chat/oop-online-chat
             cd /opt/online-chat/oop-online-chat/
+            git config --global --add safe.directory /opt/online-chat/oop-online-chat
             git pull origin main
             mvn clean install -DskipTests
             sudo systemctl restart online-chat.service
