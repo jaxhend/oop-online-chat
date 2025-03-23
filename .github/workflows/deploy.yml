@@ -1,4 +1,4 @@
-name: Deploy to Server ver4
+name: deployment
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
             cd /opt/online-chat/oop-online-chat/
             sudo git config --global --add safe.directory /opt/online-chat/oop-online-chat
             sudo git pull origin main
-            sudo mvn clean install -DskipTests
+            sudo mvn clean package -DskipTests
             sudo systemctl restart online-chat.service
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}

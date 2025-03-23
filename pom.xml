@@ -22,7 +22,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Server.Server</mainClass>  <!-- Or Client.Client for the client -->
+                            <mainClass>Server.Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
