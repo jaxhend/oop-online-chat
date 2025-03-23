@@ -14,8 +14,8 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Connecting to server");
-        // server: 35.212.230.59
-        try (Socket socket = new Socket("35.212.230.59", 45367);
+        // server: 35.212.230.59 ehk oop.atlante.ee
+        try (Socket socket = new Socket("oop.atlante.ee", 45367);
             DataInputStream din = new DataInputStream(socket.getInputStream());
             DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
             Scanner scanner = new Scanner(System.in)) {
