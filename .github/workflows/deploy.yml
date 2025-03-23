@@ -15,6 +15,7 @@ jobs:
 
       - name: Deploy to Server
         run: |
+          mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no server@oop.atlante.ee << 'EOF'
