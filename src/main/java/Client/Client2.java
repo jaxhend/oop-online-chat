@@ -7,7 +7,7 @@ import java.net.Socket;
 
 import java.util.Scanner;
 
-public class Client {
+public class Client2 {
     private static final int TYPE_ECHO = 1;
     private static final int OK = 200;
     private static final int ERROR = 400;
@@ -21,16 +21,16 @@ public class Client {
              Scanner scanner = new Scanner(System.in)) {
             System.out.println("Connected");
             System.out.print("Sisestage kasutajanimi: ");
-            String kasutajaNimi = scanner.nextLine();
-            dout.writeUTF(kasutajaNimi);
+            String userName = scanner.nextLine();
+            dout.writeUTF(userName);
             System.out.println("Edukalt sisselogitud!");
             Thread listenerThread = new Thread(() -> {
                 try {
                     while (true) {
                         int responseCode = din.readInt();
                         if (responseCode == OK) {
-                            String msg = din.readUTF();
-                            System.out.println(msg);
+                            String message = din.readUTF();
+                            System.out.println(message);
                         } else {
                             System.out.println("Server saatis tundmatu vastuse.");
                         }
@@ -48,7 +48,6 @@ public class Client {
                 if (message.equalsIgnoreCase("exit")) {
                     break;
                 }
-
                 dout.writeInt(TYPE_ECHO);
                 dout.writeUTF(message);
             }
@@ -58,7 +57,7 @@ public class Client {
     }
 
     public static void echo(String[] args, int i, DataInputStream din, DataOutputStream dout) throws IOException {
-        dout.writeInt(Client.TYPE_ECHO);
+        dout.writeInt(Client2.TYPE_ECHO);
         dout.writeUTF(args[i + 1]);
         if (din.readInt() == OK)
             System.out.println(din.readUTF());
