@@ -12,8 +12,8 @@ import org.snf4j.core.session.IStreamSession;
 
 public class ChatClient {
     static final String PREFIX = "org.snf4j.";
-    static final String HOST = System.getProperty(PREFIX+"Host", "127.0.0.1");
-    static final int PORT = Integer.getInteger(PREFIX+"Port", 8002);
+    static final String HOST = System.getProperty(PREFIX+"Host", "oop.atlante.ee");
+    static final int PORT = Integer.getInteger(PREFIX+"Port", 45367);
     static final Integer BYE_TYPED = 0;
 
     public static void main(String[] args) throws Exception {

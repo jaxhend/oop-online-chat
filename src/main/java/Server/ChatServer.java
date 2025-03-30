@@ -10,7 +10,7 @@ import org.snf4j.core.handler.IStreamHandler;
 
 public class ChatServer {
     static final String PREFIX = "org.snf4j.";
-    static final int PORT = Integer.getInteger(PREFIX+"Port", 8002);
+    static final int PORT = Integer.getInteger(PREFIX+"Port", 45367);
 
     public static void main(String[] args) throws Exception {
         SelectorLoop loop = new SelectorLoop();
