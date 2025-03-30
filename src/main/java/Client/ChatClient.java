@@ -12,7 +12,7 @@ import org.snf4j.core.session.IStreamSession;
 
 // Allikas: https://github.com/snf4j/snf4j
 public class ChatClient {
-    static final String HOST = "localhost";
+    static final String HOST = "oop.atlante.ee";
     static final int PORT = 45367;
     static final Integer BYE_TYPED = 0; // Chatist väljumiseks
 
