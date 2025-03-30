@@ -14,6 +14,7 @@ public class ChatServer {
     public static void main(String[] args) throws Exception {
         // Kuulab evente socketil. Saab aru, kui uus kasutaja tahab ühendada.
         SelectorLoop loop = new SelectorLoop();
+        System.out.println("TESTTEST");
 
         try {
             loop.start();
