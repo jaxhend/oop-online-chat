@@ -11,9 +11,9 @@ import org.snf4j.core.session.IStreamSession;
 public class ChatServerHandler extends AbstractStreamHandler {
 
     private static Integer USERID = 0;
+    private static String YOUID = "[mina]";
 
-    private static String YOUID = "[you]";
-
+    // See HashMap on jagatud kõikidele lõimedele.
     static final Map<Long, IStreamSession> sessions = new HashMap<Long, IStreamSession>();
 
     @Override
@@ -31,7 +31,7 @@ public class ChatServerHandler extends AbstractStreamHandler {
     public void event(SessionEvent event) {
         switch (event) {
             case OPENED:
-                sessions.put(getSession().getId(), getSession());
+                sessions.put(getSession().getId(), getSession()); // Lisab kasutaja HashMappi.
                 getSession().getAttributes().put(USERID, "["+getSession().getRemoteAddress()+"]");
                 send("{connected}");
                 break;
@@ -48,7 +48,7 @@ public class ChatServerHandler extends AbstractStreamHandler {
         String userId = (String) getSession().getAttributes().get(USERID);
 
         for (IStreamSession session: sessions.values()) {
-            session.write(((session.getId() == youId ? YOUID : userId) + ' ' + message).getBytes());
+            session.write(((session.getId() == youId ? YOUID : userId) + ' ' + message).getBytes(StandardCharsets.UTF_8));
         }
     }
 
