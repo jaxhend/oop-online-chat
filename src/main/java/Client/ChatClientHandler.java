@@ -7,11 +7,13 @@ import org.snf4j.core.handler.SessionEvent;
 import org.snf4j.core.session.DefaultSessionConfig;
 import org.snf4j.core.session.ISessionConfig;
 
+import java.nio.charset.StandardCharsets;
+
 public class ChatClientHandler extends AbstractStreamHandler {
 
     @Override
     public void read(Object msg) {
-        System.err.println(new String((byte[])msg));
+        System.err.println(new String((byte[])msg, StandardCharsets.UTF_8));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package Server;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class ChatServerHandler extends AbstractStreamHandler {
 
     @Override
     public void read(Object msg) {
-        String s = new String((byte[])msg);
+        String s = new String((byte[])msg, StandardCharsets.UTF_8);
 
         send(s);
         if ("bye".equalsIgnoreCase(s)) {
