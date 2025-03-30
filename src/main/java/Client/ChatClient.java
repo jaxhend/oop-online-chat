@@ -37,7 +37,6 @@ public class ChatClient {
 
             // Ootab, kuni ühendus on valmis.
             session.getReadyFuture().sync();
-            System.out.println("Ühendus loodud");
 
             // Loeb konsoolist.
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));

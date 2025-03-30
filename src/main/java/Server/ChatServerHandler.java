@@ -21,8 +21,8 @@ public class ChatServerHandler extends AbstractStreamHandler {
         byte[] bytes = (byte[]) msg;
         String s = new String(bytes, StandardCharsets.UTF_8);
 
-        System.err.println("Baidid: " + java.util.Arrays.toString(bytes));
-        System.err.println("Sõnum: " + s);
+        System.out.println("Baidid: " + java.util.Arrays.toString(bytes));
+        System.out.println("Sõnum: " + s);
 
         send(s);
         if ("bye".equalsIgnoreCase(s)) {

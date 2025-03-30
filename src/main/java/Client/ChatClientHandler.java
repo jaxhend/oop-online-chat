@@ -12,7 +12,7 @@ public class ChatClientHandler extends AbstractStreamHandler {
 
     @Override
     public void read(Object msg) {
-        System.err.println(new String((byte[])msg, StandardCharsets.UTF_8));
+        System.out.println(new String((byte[])msg, StandardCharsets.UTF_8));
     }
 
     @Override
@@ -20,7 +20,7 @@ public class ChatClientHandler extends AbstractStreamHandler {
         if (event == SessionEvent.CLOSED) {
             // Ühendus sulgub.
             if (!getSession().getAttributes().containsKey(ChatClient.BYE_TYPED)) {
-                System.err.println("Connection closed. Type \"bye\" to exit");
+                System.out.println("Connection closed. Type \"bye\" to exit");
             }
         }
     }
