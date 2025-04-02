@@ -1,4 +1,3 @@
-
 package Client;
 
 import java.io.BufferedReader;
@@ -6,39 +5,45 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
 
 import org.snf4j.core.SelectorLoop;
 import org.snf4j.core.session.IStreamSession;
 
+// Allikas: https://github.com/snf4j/snf4j
 public class ChatClient {
-    static final String PREFIX = "org.snf4j.";
-    static final String HOST = System.getProperty(PREFIX+"Host", "127.0.0.1");
-    static final int PORT = Integer.getInteger(PREFIX+"Port", 8002);
-    static final Integer BYE_TYPED = 0;
+    static final String HOST = "oop.atlante.ee";
+    static final int PORT = 45367;
+    static final Integer BYE_TYPED = 0; // Chatist väljumiseks
 
     public static void main(String[] args) throws Exception {
+        // Ootab evente socketidel ja seejärel väljastab neid. Tal on enda thread.
+        // Kasutatakse tavaliselt koos SocketChanneliga.
         SelectorLoop loop = new SelectorLoop();
 
         try {
             loop.start();
 
-            // Initialize the connection
+            // Avab uue socketchanneli.
             SocketChannel channel = SocketChannel.open();
-            channel.configureBlocking(false);
+            channel.configureBlocking(false); // Mitteblokeeruv
             channel.connect(new InetSocketAddress(InetAddress.getByName(HOST), PORT));
 
-            // Register the channel
-            IStreamSession session = (IStreamSession) loop.register(channel, new ChatClientHandler()).sync().getSession();
+            // Socketchanneli lisamine.
+            IStreamSession session = (IStreamSession) loop
+                    .register(channel, new ChatClientHandler())
+                    .sync() // Ootab, kuni lisamine on lõpule viidud.
+                    .getSession(); // Tagastab kanali sessiooni.
 
-            // Confirm that the connection was successful
+            // Ootab, kuni ühendus on valmis.
             session.getReadyFuture().sync();
 
-            // Read commands from the standard input
+            // Loeb konsoolist.
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             String line;
             while ((line = in.readLine()) != null) {
                 if (session.isOpen()) {
-                    session.write((line).getBytes());
+                    session.write((line).getBytes(StandardCharsets.UTF_8)); // Saadab sõnumi.
                 }
                 if ("bye".equalsIgnoreCase(line)) {
                     session.getAttributes().put(BYE_TYPED, BYE_TYPED);
@@ -47,8 +52,6 @@ public class ChatClient {
             }
         }
         finally {
-
-            // Gently stop the loop
             loop.stop();
         }
     }

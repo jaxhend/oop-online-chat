@@ -1,4 +1,3 @@
-
 package Client;
 
 import org.snf4j.core.EndingAction;
@@ -7,29 +6,28 @@ import org.snf4j.core.handler.SessionEvent;
 import org.snf4j.core.session.DefaultSessionConfig;
 import org.snf4j.core.session.ISessionConfig;
 
+import java.nio.charset.StandardCharsets;
+
 public class ChatClientHandler extends AbstractStreamHandler {
 
     @Override
     public void read(Object msg) {
-        System.err.println(new String((byte[])msg));
+        System.out.println(new String((byte[])msg, StandardCharsets.UTF_8));
     }
 
     @Override
     public void event(SessionEvent event) {
         if (event == SessionEvent.CLOSED) {
-
-            // Notify if the closing initiated by the server
+            // Ühendus sulgub.
             if (!getSession().getAttributes().containsKey(ChatClient.BYE_TYPED)) {
-                System.err.println("Connection closed. Type \"bye\" to exit");
+                System.out.println("Connection closed. Type \"bye\" to exit");
             }
         }
     }
 
     @Override
     public ISessionConfig getConfig() {
-
-        // Gently stop the selector loop if session associated
-        // with this handler ends
+        // Selleks, et SelectorLoop oleks turvaliselt suletud.
         return new DefaultSessionConfig()
                 .setEndingAction(EndingAction.STOP);
     }

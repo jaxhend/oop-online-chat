@@ -9,21 +9,23 @@ import org.snf4j.core.factory.AbstractSessionFactory;
 import org.snf4j.core.handler.IStreamHandler;
 
 public class ChatServer {
-    static final String PREFIX = "org.snf4j.";
-    static final int PORT = Integer.getInteger(PREFIX+"Port", 8002);
+    static final int PORT = 45367;
 
     public static void main(String[] args) throws Exception {
+        // Kuulab evente socketil. Saab aru, kui uus kasutaja tahab ühendada.
         SelectorLoop loop = new SelectorLoop();
+        System.out.println("TESTTEST1");
 
         try {
             loop.start();
 
-            // Initialize the listener
+            // Kuulaja initsialiseerimine
             ServerSocketChannel channel = ServerSocketChannel.open();
             channel.configureBlocking(false);
             channel.socket().bind(new InetSocketAddress(PORT));
 
-            // Register the listener
+            // Kuulaja lisamine
+            // AbstractSessionFactory loob iga uue kliendi jaoks ChatServerHandleri.
             loop.register(channel, new AbstractSessionFactory() {
 
                 @Override
@@ -32,12 +34,11 @@ public class ChatServer {
                 }
             }).sync();
 
-            // Wait till the loop ends
+            // Oota, kuni loop lõppeb.
             loop.join();
         }
         finally {
 
-            // Gently stop the loop
             loop.stop();
         }
     }
