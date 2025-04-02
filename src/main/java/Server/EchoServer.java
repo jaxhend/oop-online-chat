@@ -48,12 +48,11 @@ public final class EchoServer {
                         }
                     });
 
-
             ChannelFuture f = b.bind(PORT).sync();
+            System.out.println("Echo server käivitatud pordil: " + PORT);
 
             f.channel().closeFuture().sync();
         } finally {
-
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
