@@ -30,7 +30,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Server.Server</mainClass>  <!-- Or Client.Client for the client -->
+                            <mainClass>Server.EchoServer</mainClass>  <!-- Or Client.Client for the client -->
                         </manifest>
                     </archive>
                 </configuration>
