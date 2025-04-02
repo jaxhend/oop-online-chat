@@ -16,12 +16,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.snf4j</groupId>
-            <artifactId>snf4j-core</artifactId>
-            <version>1.11.1</version>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.96.Final</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -31,7 +30,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Server.ChatServer</mainClass>
+                            <mainClass>Server.Server</mainClass>  <!-- Or Client.Client for the client -->
                         </manifest>
                     </archive>
                 </configuration>
