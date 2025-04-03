@@ -1,6 +1,7 @@
 package Server;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -31,9 +32,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             received = buf.toString(CharsetUtil.UTF_8);
             System.out.println("Klient (" + ctx.channel().remoteAddress() + "): " + received);
             for (Channel channel : channels) { // Broadcast sõnum
-                if (channel != ctx.channel()) {
-                    channel.writeAndFlush(received + "\n");
-                }
+                channel.writeAndFlush(Unpooled.copiedBuffer(received, CharsetUtil.UTF_8));
             }
         }
     }
