@@ -24,12 +24,7 @@ public final class Client {
     static final int SIZE = Integer.parseInt(System.getProperty("size", "256"));
 
     public static void main(String[] args) throws Exception {
-        final SslContext sslCtx;
-        if (System.getProperty("ssl") != null) {
-            sslCtx = SslContextBuilder.forClient().build();
-        } else {
-            sslCtx = null;
-        }
+        final SslContext sslCtx = SslContextBuilder.forClient().build();
 
         EventLoopGroup group = new NioEventLoopGroup();
         try {
@@ -41,9 +36,7 @@ public final class Client {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline p = ch.pipeline();
-                            if (sslCtx != null) {
-                                p.addLast(sslCtx.newHandler(ch.alloc(), HOST, PORT));
-                            }
+                            p.addLast(sslCtx.newHandler(ch.alloc(), HOST, PORT));
                             p.addLast(new ClientHandler());
                         }
                     });
