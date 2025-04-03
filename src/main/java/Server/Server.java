@@ -15,7 +15,7 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
-public final class EchoServer {
+public final class Server {
 
     static final int PORT = Integer.parseInt(System.getProperty("port", "45367"));
 
@@ -30,7 +30,7 @@ public final class EchoServer {
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
-        final EchoServerHandler serverHandler = new EchoServerHandler();
+        final ServerHandler serverHandler = new ServerHandler();
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)

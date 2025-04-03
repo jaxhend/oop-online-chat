@@ -9,7 +9,7 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 @io.netty.channel.ChannelHandler.Sharable
-public class EchoServerHandler extends ChannelInboundHandlerAdapter {
+public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     public static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
