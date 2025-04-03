@@ -18,7 +18,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh -o StrictHostKeyChecking=no server@oop.atlante.ee << 'EOF'
+          ssh -o StrictHostKeyChecking=no server@35.212.139.5 << 'EOF'
             cd /opt/online-chat/oop-online-chat
             sudo git reset --hard HEAD
             sudo git pull origin main
