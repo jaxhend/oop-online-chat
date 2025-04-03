@@ -2,12 +2,7 @@ package Client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -17,7 +12,7 @@ import io.netty.util.CharsetUtil;
 
 import java.util.Scanner;
 
-public final class Client {
+public final class Client2 {
 
     static final String HOST = System.getProperty("host", "oop.atlante.ee");
     static final int PORT = Integer.parseInt(System.getProperty("port", "45367"));
