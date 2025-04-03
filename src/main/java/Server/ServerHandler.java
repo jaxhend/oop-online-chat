@@ -29,10 +29,14 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         String received = null;
         if (msg instanceof ByteBuf) {
             ByteBuf buf = (ByteBuf) msg;
-            received = buf.toString(CharsetUtil.UTF_8);
-            System.out.println("Klient (" + ctx.channel().remoteAddress() + "): " + received);
-            for (Channel channel : channels) { // Broadcast sõnum
-                channel.writeAndFlush(Unpooled.copiedBuffer(received, CharsetUtil.UTF_8));
+            try {
+                received = buf.toString(CharsetUtil.UTF_8);
+                System.out.println("Klient (" + ctx.channel().remoteAddress() + "): " + received);
+                for (Channel channel : channels) { // Broadcast sõnum
+                    channel.writeAndFlush(Unpooled.copiedBuffer(received, CharsetUtil.UTF_8));
+                }
+            } finally {
+                buf.release();
             }
         }
     }
