@@ -1,34 +1,18 @@
 package Client;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.CharsetUtil;
+import io.netty.channel.SimpleChannelInboundHandler;
 
-public class ClientHandler extends ChannelInboundHandlerAdapter {
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) {
-        System.out.println("Ühendatud serveriga, saad nüüd sõnumeid saata.");
-    }
+public class ClientHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        if (msg instanceof ByteBuf) {
-            ByteBuf buf = (ByteBuf) msg;
-            String response = buf.toString(CharsetUtil.UTF_8);
-            System.out.println("Server tagastas: " + response);
-        }
-    }
-
-    @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) {
-        ctx.flush();
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, String msg) {
+        System.out.println(msg);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        System.out.println("Viga: " + cause.getMessage());
         ctx.close();
     }
 }
