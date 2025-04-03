@@ -17,39 +17,35 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 public final class Server {
 
-    static final int PORT = Integer.parseInt(System.getProperty("port", "45367"));
+    static final int PORT = 45367;
 
     public static void main(String[] args) throws Exception {
-        final SslContext sslCtx;
-        if (System.getProperty("ssl") != null) {
-            SelfSignedCertificate ssc = new SelfSignedCertificate();
-            sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
-        } else {
-            sslCtx = null;
-        }
+        SelfSignedCertificate ssc = new SelfSignedCertificate();
+        final SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
 
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1); // Võtab vastu sissetulevaid ühendusi.
+        EventLoopGroup workerGroup = new NioEventLoopGroup(); // Haldab registreeritud liiklust.
         final ServerHandler serverHandler = new ServerHandler();
+
         try {
-            ServerBootstrap b = new ServerBootstrap();
+            ServerBootstrap b = new ServerBootstrap(); // Abiklass, mis aitab serverit seadistada
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG, 100)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                    .childHandler(new ChannelInitializer<SocketChannel>() { // Iga kliendi interaktsioon läbib pipeline'i
+
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
+                            // Pipeline töötab automaatselt. Netty käivitab selle iga kord, kui kanal saab andmeid lugeda või kirjutada.
                             ChannelPipeline p = ch.pipeline();
-                            if (sslCtx != null) {
-                                p.addLast(sslCtx.newHandler(ch.alloc()));
-                            }
-                            p.addLast(serverHandler);
+                            p.addLast(sslCtx.newHandler(ch.alloc())); // SSL lisatakse enne ServerHandleri.
+                            p.addLast(serverHandler); // Esimesel korral käivitatakse Serverhandler.channelActive()
                         }
                     });
 
             ChannelFuture f = b.bind(PORT).sync();
-            System.out.println("Echo server käivitatud pordil: " + PORT);
 
             f.channel().closeFuture().sync();
         } finally {
