@@ -19,7 +19,7 @@ import java.util.Scanner;
 
 public final class Client {
 
-    static final String HOST = System.getProperty("host", "35.212.139.5"); //oop.atlante.ee
+    static final String HOST = System.getProperty("host", "oop.atlante.ee");
     static final int PORT = Integer.parseInt(System.getProperty("port", "45367"));
     static final int SIZE = Integer.parseInt(System.getProperty("size", "256"));
 
