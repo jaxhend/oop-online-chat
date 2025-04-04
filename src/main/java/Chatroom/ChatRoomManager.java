@@ -35,9 +35,10 @@ public class ChatRoomManager {
         if (room != null) {
             room.leave(session);
             session.setCurrentRoom(null);
+
+            // Kustutab chatruumi, kui seal pole ühtegi liiget ega see ei ole 3 algselt loodud chatruumi.
+            if (room.activeMembers() == 0 & !defaulRooms.contains(room.getName()))
+                rooms.remove(room);
         }
-        // Kustutab chatruumi, kui seal pole ühtegi liiget ega see ei ole 3 algselt loodud chatruumi.
-        if (room.activeMembers() == 0 & !defaulRooms.contains(room.getName()))
-            rooms.remove(room);
     }
 }
