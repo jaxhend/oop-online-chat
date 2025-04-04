@@ -1,5 +1,6 @@
 package Server;
 
+import Chatroom.ChatRoomManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -16,7 +17,7 @@ public final class Server {
     public static void main(String[] args) throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1); // Võtab vastu sissetulevaid ühendusi.
         EventLoopGroup workerGroup = new NioEventLoopGroup(); // Haldab registreeritud liiklust.
-        final ServerHandler serverHandler = new ServerHandler();
+        final ServerHandler serverHandler = new ServerHandler(new ChatRoomManager());
 
         try {
             ServerBootstrap b = new ServerBootstrap(); // Abiklass, mis aitab serverit seadistada
@@ -28,10 +29,10 @@ public final class Server {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             // Pipeline töötab automaatselt. Netty käivitab selle iga kord, kui kanal saab andmeid lugeda või kirjutada.
-                            ChannelPipeline p = ch.pipeline();
-                            ch.pipeline().addLast(new StringDecoder());
-                            ch.pipeline().addLast(new StringEncoder());
-                            p.addLast(serverHandler); // Esimesel korral käivitatakse Serverhandler.channelActive()
+                            ChannelPipeline pipeline = ch.pipeline();
+                            pipeline.addLast("Decoder", new StringDecoder());
+                            pipeline.addLast("Encoder", new StringEncoder());
+                            pipeline.addLast("Handler", serverHandler); // Esimesel korral käivitatakse Serverhandler.channelActive()
                         }
                     });
 

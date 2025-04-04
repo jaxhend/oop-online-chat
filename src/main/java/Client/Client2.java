@@ -13,8 +13,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public final class Client2 {
-    private static final String HOST = "localhost";
-    private static final int PORT = 45367;
+    static final String HOST = "oop.atlante.ee";
+    static final int PORT = 45367;
 
     public static void main(String[] args) throws Exception {
         EventLoopGroup group = new NioEventLoopGroup();
@@ -32,7 +32,7 @@ public final class Client2 {
 
             Channel channel = b.connect(HOST, PORT).sync().channel();
 
-            System.out.println("Sisesta sõnum: ");
+            System.out.println("Sisesta username ja järgmisel real sõnum:  ");
 
             //TODO: CLI
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));

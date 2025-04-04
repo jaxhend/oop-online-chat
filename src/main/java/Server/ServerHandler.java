@@ -1,5 +1,6 @@
 package Server;
 
+import Chatroom.ChatRoomManager;
 import Client.ClientSession;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -13,6 +14,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     // Thread-safe
     private static final ConcurrentHashMap<Channel, ClientSession> sessions = new ConcurrentHashMap<>();
+    private static ChatRoomManager roomManager = new ChatRoomManager();
+
+    public ServerHandler(ChatRoomManager roomManager) {
+        this.roomManager = roomManager;
+    }
 
     public void channelActive(ChannelHandlerContext ctx) throws Exception { // Käivitub kliendi ühendamisel.
         sessions.put(ctx.channel(), new ClientSession(ctx)); // Kanal lisatakse sõnastikku.
