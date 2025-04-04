@@ -2,11 +2,45 @@ package Chatroom;
 
 import Client.ClientSession;
 
-public interface ChatRoom { // Liides ChatRoom, et tulevikus oleks lihtsam muuta ruumide funktsioone ja võimalusi.
+import java.time.format.DateTimeFormatter;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-    public void join(ClientSession session);
 
-    public void leave(ClientSession session);
+public abstract class ChatRoom {
+    private final String name;
+    private boolean isPublic;
+    private final Set<ClientSession> participants = ConcurrentHashMap.newKeySet();
 
-    public void broadcast(String message);
+    protected static final String RESET = "\033[0m";
+    protected static final String RED = "\033[0;31m";
+    protected static final String GREEN = "\033[0;32m";
+    protected static final String YELLOW = "\033[0;33m";
+    protected static final String BLUE = "\033[0;34m";
+    protected static final String PURPLE = "\033[0;35m";
+    protected static final String CYAN = "\033[0;36m";
+    protected static final String WHITE = "\033[0;37m";
+    protected static final DateTimeFormatter timeformatter = DateTimeFormatter.ofPattern("HH:mm");
+
+    public ChatRoom(String name, boolean isPublic) {
+        this.name = name;
+        this.isPublic = isPublic;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setPublic(boolean value) {
+        this.isPublic = value;
+    }
+
+    public abstract void join(ClientSession session);
+
+    public abstract void leave(ClientSession session);
+
+    public abstract void broadcast(String message, ClientSession session, boolean isChatMessage);
+
+    public abstract int activeMembers();
+
 }

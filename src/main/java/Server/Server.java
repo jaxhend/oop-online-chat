@@ -1,6 +1,5 @@
 package Server;
 
-import Chatroom.ChatRoomManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -17,7 +16,7 @@ public final class Server {
     public static void main(String[] args) throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1); // Võtab vastu sissetulevaid ühendusi.
         EventLoopGroup workerGroup = new NioEventLoopGroup(); // Haldab registreeritud liiklust.
-        final ServerHandler serverHandler = new ServerHandler(new ChatRoomManager());
+        final ServerHandler serverHandler = new ServerHandler();
 
         try {
             ServerBootstrap b = new ServerBootstrap(); // Abiklass, mis aitab serverit seadistada

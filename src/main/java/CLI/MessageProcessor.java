@@ -2,28 +2,29 @@ package CLI;
 
 import Chatroom.ChatRoom;
 import Chatroom.ChatRoomManager;
-import Chatroom.RegularChatRoom;
 import Client.ClientSession;
 
 public class MessageProcessor {
     private final ChatRoomManager roomManager;
     private static final String JOIN_COMMAND = "/join ";
-    private static final String LEAVE_COMMAND = "/leave";
+    private static final String LEAVE_COMMAND = "/exit";
 
     public MessageProcessor(ChatRoomManager roomManager) {
         this.roomManager = roomManager;
     }
 
     public String processMessage(ClientSession session, String input) {
-        // Kui kasutaja pole sisetanud enda nime siis küsitakse seda temalt
+        // Kasutajanime määramine
         if (session.getUsername() == null) {
-            return handleUsernameRegistration(session, input);
+            String username = input.trim();
+            session.setUsername(username);
+            return null;
         }
 
         // Chatroomiga liitumine
         if (input.startsWith(JOIN_COMMAND)) {
             handleJoinCommand(session, input);
-            return null;
+            return null; // On null, kuna ruumi sisenedes saadetakse sõnum broadcast() poolt.
         }
 
         // Chatroomist lahkumine
@@ -31,38 +32,32 @@ public class MessageProcessor {
             return handleLeaveCommand(session);
         }
 
-        // tavalise sõnumi saatmine
+        // Tavalise sõnumi saatmine
         return handleChatMessage(session, input);
     }
 
-    private String handleUsernameRegistration(ClientSession session, String input) {
-        String username = input.trim();
-        session.setUsername(username);
-        return "Kasuta " + JOIN_COMMAND + ", et liituda chatroomiga";
-    }
 
-
-    private void handleJoinCommand(ClientSession session, String input) {
+    public void handleJoinCommand(ClientSession session, String input) {
         String roomName = input.substring(JOIN_COMMAND.length()).trim();
-        RegularChatRoom room = roomManager.getOrCreateRoom(roomName);
+        ChatRoom room = roomManager.getOrCreateRoom(roomName);
         roomManager.removeClientFromCurrentRoom(session);
-        room.join(session);
+        room.join(session); // Lisab ruumi ja saadab sõnumi.
         session.setCurrentRoom(room);
     }
 
 
-    private String handleLeaveCommand(ClientSession session) {
-        roomManager.removeClientFromCurrentRoom(session);
-        return "Lahkusid ruumist.";
+    public String handleLeaveCommand(ClientSession session) {
+        roomManager.removeClientFromCurrentRoom(session); // Saadab teistele ruumis olijatele sõnumi.
+        return "Lahkusid ruumist."; // Kasutaja saab sõnumi, et on ruumist lahkunud.
     }
 
-    private String handleChatMessage(ClientSession session, String message) {
+    public String handleChatMessage(ClientSession session, String message) {
         ChatRoom room = session.getCurrentRoom();
         if (room == null) {
             return "Te pole üheski chatruumis, kasuta " + JOIN_COMMAND + " + chatruumi_nimi, et liituda chatruumiga";
         }
 
-        room.broadcast(session.getUsername() + ": " + message);
+        room.broadcast(message, session, true);
         return null;
     }
 }

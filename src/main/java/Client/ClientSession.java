@@ -1,13 +1,13 @@
 package Client;
 
-import Chatroom.RegularChatRoom;
+import Chatroom.ChatRoom;
 import io.netty.channel.ChannelHandlerContext;
 
 public class ClientSession {
 
     private final ChannelHandlerContext ctx;
     private String username = null;
-    private RegularChatRoom currentRoom = null;
+    private ChatRoom currentRoom = null;
 
     public ClientSession(ChannelHandlerContext ctx) {
         this.ctx = ctx;
@@ -21,11 +21,11 @@ public class ClientSession {
         this.username = username;
     }
 
-    public RegularChatRoom getCurrentRoom() {
+    public ChatRoom getCurrentRoom() {
         return currentRoom;
     }
 
-    public void setCurrentRoom(RegularChatRoom currentRoom) {
+    public void setCurrentRoom(ChatRoom currentRoom) {
         this.currentRoom = currentRoom;
     }
 

@@ -13,22 +13,24 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public final class Client {
-    private static final String HOST = "oop.atlante.ee";
+    private static final String HOST = "localhost";
     private static final int PORT = 45367;
 
     public static void main(String[] args) throws Exception {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
-            b.group(group).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true).handler(new ChannelInitializer<SocketChannel>() {
-                @Override
-                public void initChannel(SocketChannel ch) throws Exception {
-                    ChannelPipeline p = ch.pipeline();
-                    p.addLast("Decoder", new StringDecoder(StandardCharsets.UTF_8));
-                    p.addLast("Encoder", new StringEncoder(StandardCharsets.UTF_8));
-                    p.addLast("Handler", new ClientHandler());
-                }
-            });
+            b.group(group).channel(NioSocketChannel.class)
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .handler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) throws Exception {
+                            ChannelPipeline p = ch.pipeline();
+                            p.addLast("Decoder", new StringDecoder(StandardCharsets.UTF_8));
+                            p.addLast("Encoder", new StringEncoder(StandardCharsets.UTF_8));
+                            p.addLast("Handler", new ClientHandler());
+                        }
+                    });
 
             Channel channel = b.connect(HOST, PORT).sync().channel();
 

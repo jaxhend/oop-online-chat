@@ -15,12 +15,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     // Thread-safe
     private static final ConcurrentHashMap<Channel, ClientSession> sessions = new ConcurrentHashMap<>();
-    private static ChatRoomManager roomManager = new ChatRoomManager();
     private final MessageProcessor processor;
 
-    public ServerHandler(ChatRoomManager roomManager) {
-        this.roomManager = roomManager;
-        this.processor = new MessageProcessor(roomManager);
+    public ServerHandler() {
+        this.processor = new MessageProcessor(new ChatRoomManager());
     }
 
     public void channelActive(ChannelHandlerContext ctx) throws Exception { // Käivitub kliendi ühendamisel.
@@ -30,13 +28,14 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
+    // Serverisse sissetuleva sõnumi edastamine
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ClientSession clientSession = sessions.get(ctx.channel());
         String input = (String) msg;
 
         String response = processor.processMessage(clientSession, input);
         if (response != null) {
-            ctx.writeAndFlush(response);
+            ctx.writeAndFlush(response); // Saadab kasutajale personaalsed teated.
         }
     }
 
