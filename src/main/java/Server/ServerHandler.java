@@ -1,5 +1,6 @@
 package Server;
 
+import CLI.MessageProcessor;
 import Chatroom.ChatRoomManager;
 import Client.ClientSession;
 import io.netty.channel.Channel;
@@ -15,9 +16,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     // Thread-safe
     private static final ConcurrentHashMap<Channel, ClientSession> sessions = new ConcurrentHashMap<>();
     private static ChatRoomManager roomManager = new ChatRoomManager();
+    private final MessageProcessor processor;
 
     public ServerHandler(ChatRoomManager roomManager) {
         this.roomManager = roomManager;
+        this.processor = new MessageProcessor(roomManager);
     }
 
     public void channelActive(ChannelHandlerContext ctx) throws Exception { // Käivitub kliendi ühendamisel.
@@ -30,10 +33,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ClientSession clientSession = sessions.get(ctx.channel());
         String input = (String) msg;
-        if (clientSession.getUsername() == null) {
-            clientSession.setUsername((String) msg);
-        } else
-            ctx.writeAndFlush(clientSession.getUsername().trim() + ": " + input);
+
+        String response = processor.processMessage(clientSession, input);
+        if (response != null) {
+            ctx.writeAndFlush(response);
+        }
     }
 
     @Override

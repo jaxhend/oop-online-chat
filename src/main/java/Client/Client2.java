@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public final class Client2 {
-    static final String HOST = "oop.atlante.ee";
+    static final String HOST = "localhost";
     static final int PORT = 45367;
 
     public static void main(String[] args) throws Exception {
@@ -32,7 +32,7 @@ public final class Client2 {
 
             Channel channel = b.connect(HOST, PORT).sync().channel();
 
-            System.out.println("Sisesta username ja järgmisel real sõnum:  ");
+            System.out.print("Sisesta username:  ");
 
             //TODO: CLI
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));

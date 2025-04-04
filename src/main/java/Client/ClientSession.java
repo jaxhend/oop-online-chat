@@ -30,6 +30,6 @@ public class ClientSession {
     }
 
     public void sendMessage(String message) {
-        ctx.writeAndFlush(message + "\n");
+        ctx.writeAndFlush(message);
     }
 }
