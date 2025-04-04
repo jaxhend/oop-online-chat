@@ -13,8 +13,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public final class Client2 {
-    static final String HOST = "localhost";
-    static final int PORT = 45367;
+    private static final String HOST = "oop.atlante.ee";
+    private static final int PORT = 45367;
 
     public static void main(String[] args) throws Exception {
         EventLoopGroup group = new NioEventLoopGroup();
@@ -43,7 +43,7 @@ public final class Client2 {
                     channel.close();
                     break;
                 }
-                channel.writeAndFlush(line + "\r\n");
+                channel.writeAndFlush(line + "\r");
             }
         } finally {
             group.shutdownGracefully();
