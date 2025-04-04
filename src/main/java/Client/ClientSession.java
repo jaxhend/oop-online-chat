@@ -21,7 +21,7 @@ public class ClientSession {
         this.username = username;
     }
 
-    public RegularChatRoom getCurrentRoom(){
+    public RegularChatRoom getCurrentRoom() {
         return currentRoom;
     }
 

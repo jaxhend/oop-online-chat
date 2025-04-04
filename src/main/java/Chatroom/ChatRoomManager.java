@@ -14,17 +14,15 @@ public class ChatRoomManager {
         this.rooms = new HashMap<>();
     }
 
-    /**
-     * Kui kasutaja tahab ruumiga liituda, aga seda ei eksisteeri, siis luuakse ruum.
-     * @param roomName
-     * @return
-     */
+    // Kui kasutaja tahab ruumiga liituda, aga seda ei eksisteeri, siis luuakse ruum.
     public RegularChatRoom getOrCreateRoom(String roomName) {
         return rooms.computeIfAbsent(roomName, RegularChatRoom::new);
     }
+
     public List<String> listRoomNames() {
         return new ArrayList<>(rooms.keySet());
     }
+
     public void removeClientFromCurrentRoom(ClientSession session) {
         RegularChatRoom room = session.getCurrentRoom();
         if (room != null) {

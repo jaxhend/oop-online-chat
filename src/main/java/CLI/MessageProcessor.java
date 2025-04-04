@@ -20,15 +20,11 @@ public class MessageProcessor {
             return handleUsernameRegistration(session, input);
         }
 
-
         // Chatroomiga liitumine
-
         if (input.startsWith(JOIN_COMMAND)) {
             handleJoinCommand(session, input);
             return null;
         }
-
-
 
         // Chatroomist lahkumine
         if (input.startsWith(LEAVE_COMMAND)) {
@@ -53,7 +49,6 @@ public class MessageProcessor {
         room.join(session);
         session.setCurrentRoom(room);
     }
-
 
 
     private String handleLeaveCommand(ClientSession session) {
