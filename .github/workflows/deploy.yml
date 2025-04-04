@@ -25,6 +25,8 @@ jobs:
             sudo git pull origin main
             sudo git config --global --add safe.directory /opt/online-chat/oop-online-chat
             sudo mvn clean package -DskipTests
+            sudo systemctl daemon-reload
+            sudo systemctl restart online-chat.service
             sudo systemctl status online-chat.service --no-pager
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
