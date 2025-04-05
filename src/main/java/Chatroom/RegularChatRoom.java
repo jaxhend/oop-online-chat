@@ -15,6 +15,9 @@ public class RegularChatRoom extends ChatRoom {
     public boolean isPublic(){
         return true;
     }
+    public boolean canJoin(String username) {
+        return true;
+    }
 
     @Override
     public Set<ClientSession> getParticipants() {

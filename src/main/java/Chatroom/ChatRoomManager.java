@@ -35,14 +35,15 @@ public class ChatRoomManager {
         ));
     }
 
-    public List<String> listRoomNames() {
-        List<String> publicRooms = new ArrayList<>();
+    public List<String> listJoinableRooms(String username) {
+        List<String> joinableRooms = new ArrayList<>();
         for (Map.Entry<String, ChatRoom> entry : rooms.entrySet()) {
-            if (entry.getValue().isPublic()) {
-                publicRooms.add(entry.getKey());
+            ChatRoom room = entry.getValue();
+            if (room.isPublic() || room.canJoin(username)) {
+                joinableRooms.add(room.getName());
             }
         }
-        return publicRooms;
+        return joinableRooms;
     }
 
     public void removeClientFromCurrentRoom(ClientSession session) {

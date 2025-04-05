@@ -23,7 +23,9 @@ public class PrivateChatRoom extends ChatRoom {
             participants.add(session);
             broadcast("liitus ruumiga", session, false);
         }
-
+    }
+    public boolean canJoin(String username) {
+        return !isPublic() || allowedUsers.contains(username);
     }
 
     public boolean isPublic(){

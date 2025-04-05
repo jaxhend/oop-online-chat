@@ -5,8 +5,6 @@ import Chatroom.ChatRoomManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static Server.ServerHandler.sessions;
 
@@ -87,7 +85,7 @@ public class MessageProcessor {
     // Kuvab avalikud chatroomid ning nendes olevate liikmete arvu.
     private String handleSeeChatroomsCommand(ClientSession session) {
         List<String> roomInfoList = new ArrayList<>();
-        for (String name : roomManager.listRoomNames()) {
+        for (String name : roomManager.listJoinableRooms(session.getUsername())) {
             ChatRoom room = roomManager.getOrCreateRoom(name, session, true);
             int participantCount = room.getParticipants().size();
             roomInfoList.add(name + "(" + participantCount + ")");
@@ -105,10 +103,10 @@ public class MessageProcessor {
     }
 
     public void handlePrivateJoinCommand(ClientSession session, String input) {
-        String roomName = input.substring(PRIVATE_JOIN_COMMAND.length()).trim();
+        String secondUser = input.substring(PRIVATE_JOIN_COMMAND.length()).trim();
         List<String> allUsers = ServerHandler.getAllUsernames();
-        if (allUsers.contains(roomName)) {
-            ChatRoom room = roomManager.getOrCreateRoom(roomName, session, false);
+        if (allUsers.contains(secondUser)) {
+            ChatRoom room = roomManager.getOrCreateRoom(secondUser, session, false);
             roomManager.removeClientFromCurrentRoom(session);
             room.join(session); // Liitub privaatvestlusega ja saadab sõnumi.
             session.setCurrentRoom(room);

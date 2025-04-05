@@ -43,4 +43,6 @@ public abstract class ChatRoom {
     public abstract int activeMembers();
 
     abstract boolean isPublic();
+
+    public abstract boolean canJoin(String username);
 }
