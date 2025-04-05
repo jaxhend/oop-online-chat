@@ -17,9 +17,10 @@ git clone https://github.com/jaxhend/oop-online-chat.git
 Liigu äsja kloonitud projekti juurkataloogi:
 cd online-chat 
 
-Enne rakenduse käivitamist tuleb see ehitada.
+Enne rakenduse käivitamist tuleb see ehitada:
 mvn clean install
 
+Käivita kliendi rakendus:
 java -cp .\target\online-chat-1.jar
 ```
 
