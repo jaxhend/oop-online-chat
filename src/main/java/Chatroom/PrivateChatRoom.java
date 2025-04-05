@@ -2,34 +2,67 @@ package Chatroom;
 
 import Client.ClientSession;
 
-// TODO: implement private messages
+import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+
 public class PrivateChatRoom extends ChatRoom {
-    private ClientSession session1;
-    private ClientSession session2;
+    private final Set<ClientSession> participants = ConcurrentHashMap.newKeySet();
 
-
-    public PrivateChatRoom(String name, ClientSession session1, ClientSession session2){
-        super(name, false);
-        this.session1 = session1;
-        this.session2 = session2;
+    public PrivateChatRoom(String name){
+        super(name);
     }
 
     @Override
     public void join(ClientSession session) {
+        participants.add(session);
+        broadcast("liitus ruumiga", session, false);
     }
 
     @Override
     public void leave(ClientSession session) {
-
+        participants.remove(session);
+        if (!participants.isEmpty()) {
+            broadcast("lahkus ruumist", session, false);
+        }
     }
 
     @Override
     public void broadcast(String message, ClientSession session, boolean isChatMessage) {
+        String currentTime = LocalDateTime.now().format(timeformatter);
+        // kuvab sõnumeid ainult siis, kui teine inime on ka chatroomis
+        if (activeMembers() <= 1 && isChatMessage) {
+            String emptyChat = String.format("%s%s%s", RED, "Kedagi teist pole ruumis", RESET);
+            session.sendMessage(emptyChat);
+            return;
+        }
+        for (ClientSession participant : participants) {
+            boolean isSender = participant == session;
 
+            if (isChatMessage) {
+                String username = isSender ? RED + session.getUsername() + RESET : YELLOW + session.getUsername() + RESET;
+                String formattedMessage = String.format("%s%s%s [%s%s%s] %s",
+                        CYAN, currentTime, RESET,
+                        GREEN, username, RESET,
+                        message);
+                participant.sendMessage(formattedMessage);
+            } else {
+                if (isSender) {
+                    participant.sendMessage(String.format("%s%s%s %sLiitusite chatroomiga %s%s",
+                            CYAN, currentTime, RESET, WHITE, getName(), RESET));
+                } else {
+                    participant.sendMessage(String.format("%s%s%s [%s%s%s] %s%s%s",
+                            CYAN, currentTime, RESET,
+                            YELLOW, session.getUsername(), RESET,
+                            WHITE, message, RESET));
+                }
+            }
+        }
     }
 
     @Override
     public int activeMembers() {
-        return 0;
+        return participants.size();
     }
 }

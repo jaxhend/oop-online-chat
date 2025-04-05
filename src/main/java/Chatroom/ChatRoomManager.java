@@ -2,13 +2,10 @@ package Chatroom;
 
 import Client.ClientSession;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ChatRoomManager {
-    private final Map<String, RegularChatRoom> rooms;
+    private final Map<String, ChatRoom> rooms;
     private List<String> defaulRooms = List.of("oop", "proge", "varia");
 
     public ChatRoomManager() {
@@ -20,10 +17,18 @@ public class ChatRoomManager {
     }
 
     // Kui kasutaja tahab ruumiga liituda, aga seda ei eksisteeri, siis luuakse ruum.
-    public ChatRoom getOrCreateRoom(String roomName) {
-        ChatRoom room = rooms.computeIfAbsent(roomName, RegularChatRoom::new);
-        room.setPublic(true);
-        return rooms.computeIfAbsent(roomName, RegularChatRoom::new);
+    public ChatRoom getOrCreateRoom(String roomName, ClientSession session, boolean isPublic) {
+        // Kui kasutaja tahab liituda avalikuruumiga
+        if (isPublic) {
+            return rooms.computeIfAbsent(roomName, RegularChatRoom::new);
+        }
+        // Kui kasutaja tahab kellelegi privaatselt kirjutada
+        List<String> sortedUsers = Arrays.asList(session.getUsername(), roomName);
+        // Kasutame Collection.sort-i, et mõlemad kasutajad saaksid liituda chatiga kasutades
+        // käsu parameetrina teise inimese nimi
+        Collections.sort(sortedUsers);
+        String privateRoomName = sortedUsers.get(0) + ":" + sortedUsers.get(1);
+        return rooms.computeIfAbsent(privateRoomName, PrivateChatRoom::new);
     }
 
     public List<String> listRoomNames() {

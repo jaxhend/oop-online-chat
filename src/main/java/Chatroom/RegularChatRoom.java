@@ -10,7 +10,7 @@ public class RegularChatRoom extends ChatRoom {
     private final Set<ClientSession> participants = ConcurrentHashMap.newKeySet();
 
     public RegularChatRoom(String name) {
-        super(name, true);
+        super(name);
     }
 
     public void join(ClientSession session) {
@@ -39,7 +39,7 @@ public class RegularChatRoom extends ChatRoom {
             boolean isSender = participant == session;
 
             if (isChatMessage) {
-                String username = isSender ? RED + session.getUsername() + RESET : BLUE + session.getUsername() + RESET;
+                String username = isSender ? RED + session.getUsername() + RESET : YELLOW + session.getUsername() + RESET;
                 String formattedMessage = String.format("%s%s%s [%s%s%s] %s: %s",
                         CYAN, currentTime, RESET,
                         GREEN, getName(), RESET,
@@ -53,7 +53,7 @@ public class RegularChatRoom extends ChatRoom {
                     participant.sendMessage(String.format("%s%s%s [%s%s%s] %s%s%s%s%s",
                             CYAN, currentTime, RESET,
                             GREEN, getName(), RESET,
-                            BLUE, session.getUsername(), RESET, WHITE, message, RESET));
+                            YELLOW, session.getUsername(), RESET, WHITE, message, RESET));
                 }
             }
         }

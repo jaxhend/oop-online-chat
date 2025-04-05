@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public final class Client {
-    private static final String HOST = "oop.atlante.ee";
+    private static final String HOST = "localhost";
     private static final int PORT = 45367;
 
     public static void main(String[] args) throws Exception {

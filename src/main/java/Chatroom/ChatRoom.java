@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class ChatRoom {
     private final String name;
-    private boolean isPublic;
     private final Set<ClientSession> participants = ConcurrentHashMap.newKeySet();
 
     protected static final String RESET = "\033[0m";
@@ -22,18 +21,14 @@ public abstract class ChatRoom {
     protected static final String WHITE = "\033[0;37m";
     protected static final DateTimeFormatter timeformatter = DateTimeFormatter.ofPattern("HH:mm");
 
-    public ChatRoom(String name, boolean isPublic) {
+    public ChatRoom(String name) {
         this.name = name;
-        this.isPublic = isPublic;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setPublic(boolean value) {
-        this.isPublic = value;
-    }
 
     public abstract void join(ClientSession session);
 

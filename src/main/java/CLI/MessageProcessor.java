@@ -6,7 +6,9 @@ import Client.ClientSession;
 
 public class MessageProcessor {
     private final ChatRoomManager roomManager;
-    private static final String JOIN_COMMAND = "/join ";
+    private static final String GROUP_JOIN_COMMAND = "/join Group ";
+    private static final String PRIVATE_JOIN_COMMAND = "/join DM ";
+    private static final String SEE_MEMBERS_COMMAND = "/members";
     private static final String LEAVE_COMMAND = "/exit";
 
     public MessageProcessor(ChatRoomManager roomManager) {
@@ -22,9 +24,16 @@ public class MessageProcessor {
         }
 
         // Chatroomiga liitumine
-        if (input.startsWith(JOIN_COMMAND)) {
-            handleJoinCommand(session, input);
+        if (input.startsWith(GROUP_JOIN_COMMAND)) {
+            handleGroupJoinCommand(session, input);
             return null; // On null, kuna ruumi sisenedes saadetakse sõnum broadcast() poolt.
+        } else if (input.startsWith(PRIVATE_JOIN_COMMAND)) {
+            handlePrivateJoinCommand(session, input);
+            return null; // On null, kuna ruumi sisenedes saadetakse sõnum broadcast() poolt.
+        }
+
+        if (input.startsWith(SEE_MEMBERS_COMMAND)) {
+            System.out.println(roomManager.listRoomNames());
         }
 
         // Chatroomist lahkumine
@@ -37,9 +46,16 @@ public class MessageProcessor {
     }
 
 
-    public void handleJoinCommand(ClientSession session, String input) {
-        String roomName = input.substring(JOIN_COMMAND.length()).trim();
-        ChatRoom room = roomManager.getOrCreateRoom(roomName);
+    public void handleGroupJoinCommand(ClientSession session, String input) {
+        String roomName = input.substring(GROUP_JOIN_COMMAND.length()).trim();
+        ChatRoom room = roomManager.getOrCreateRoom(roomName, session, true);
+        roomManager.removeClientFromCurrentRoom(session);
+        room.join(session); // Lisab ruumi ja saadab sõnumi.
+        session.setCurrentRoom(room);
+    }
+    public void handlePrivateJoinCommand(ClientSession session, String input) {
+        String roomName = input.substring(PRIVATE_JOIN_COMMAND.length()).trim();
+        ChatRoom room = roomManager.getOrCreateRoom(roomName,session, false);
         roomManager.removeClientFromCurrentRoom(session);
         room.join(session); // Lisab ruumi ja saadab sõnumi.
         session.setCurrentRoom(room);
@@ -54,8 +70,10 @@ public class MessageProcessor {
     public String handleChatMessage(ClientSession session, String message) {
         ChatRoom room = session.getCurrentRoom();
         if (room == null) {
-            return "Te pole üheski chatruumis, kasuta " + JOIN_COMMAND + " + chatruumi_nimi, et liituda chatruumiga";
+            return "Te pole üheski chatruumis, kasuta " + GROUP_JOIN_COMMAND + " + chatruumi nimi, et liituda grupiga" +
+                    "\n" + "või kasuta " + PRIVATE_JOIN_COMMAND + " + kasutaja nimi, et saata privaatsõnum";
         }
+
 
         room.broadcast(message, session, true);
         return null;
