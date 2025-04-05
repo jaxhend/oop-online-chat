@@ -41,7 +41,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         }
     }
     @Override
-    // Eemalda klient sessionsitest, kui ühendus katkeb või klient sulgeb programmi
+    // Eemaldab kliendi sessionsidest, kui ühendus katkeb või klient sulgeb programmi
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         ClientSession clientSession = sessions.remove(ctx.channel());
         if (clientSession != null) {
