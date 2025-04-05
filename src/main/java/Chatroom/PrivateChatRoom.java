@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PrivateChatRoom extends ChatRoom {
     private final Set<ClientSession> participants = ConcurrentHashMap.newKeySet();
 
-    public PrivateChatRoom(String name){
+    public PrivateChatRoom(String name) {
         super(name);
     }
 

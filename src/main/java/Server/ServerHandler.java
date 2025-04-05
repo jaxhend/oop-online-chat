@@ -1,8 +1,6 @@
 package Server;
 
-import CLI.MessageProcessor;
 import Chatroom.ChatRoomManager;
-import Client.ClientSession;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -40,8 +38,9 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             ctx.writeAndFlush(response); // Saadab kasutajale personaalsed teated.
         }
     }
+
     @Override
-    // Eemaldab kliendi sessionsidest, kui ühendus katkeb või klient sulgeb programmi
+    // Eemaldab kliendi sessiionsidest, kui ühendus katkeb või klient sulgeb programmi
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         ClientSession clientSession = sessions.remove(ctx.channel());
         if (clientSession != null) {

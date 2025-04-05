@@ -1,8 +1,7 @@
-package CLI;
+package Server;
 
 import Chatroom.ChatRoom;
 import Chatroom.ChatRoomManager;
-import Client.ClientSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,6 @@ public class MessageProcessor {
             for (ClientSession user : sessions.values()) {
                 if (username.equalsIgnoreCase(user.getUsername())) {
                     return handleInvalidUsername();
-
                 }
             }
             session.setUsername(username);
@@ -92,7 +90,7 @@ public class MessageProcessor {
             int participantCount = room.getParticipants().size();
             roomInfoList.add(name + "(" + participantCount + ")");
         }
-        return "Hetkel avalikud chatroomid: " + String.join(", ", roomInfoList) ;
+        return "Hetkel avalikud chatroomid: " + String.join(", ", roomInfoList);
     }
 
 
@@ -103,6 +101,7 @@ public class MessageProcessor {
         room.join(session); // Lisab ruumi ja saadab sõnumi.
         session.setCurrentRoom(room);
     }
+
     public void handlePrivateJoinCommand(ClientSession session, String input) {
         String roomName = input.substring(PRIVATE_JOIN_COMMAND.length()).trim();
         ChatRoom room = roomManager.getOrCreateRoom(roomName, session, false);
