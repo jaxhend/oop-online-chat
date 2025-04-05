@@ -14,7 +14,7 @@ public class PrivateChatRoom extends ChatRoom {
 
     public PrivateChatRoom(String name, String session1, String session2) {
         super(name);
-        this.allowedUsers = List.of(session1, session2);
+        this.allowedUsers = List.of(session1.toUpperCase(), session2.toUpperCase());
     }
 
     @Override
@@ -25,7 +25,8 @@ public class PrivateChatRoom extends ChatRoom {
         }
     }
     public boolean canJoin(String username) {
-        return allowedUsers.contains(username);
+        return allowedUsers.stream()
+                .anyMatch(allowed -> allowed.equalsIgnoreCase(username));
     }
 
     @Override
