@@ -10,9 +10,18 @@ Krüpteeritud online-chat, mille kaudu saavad tudengid omavahel suhelda ja jagad
 * Saab üksteisele privaatseid sõnumeid saata. 
 
 ### Kasutusjuhend
+```
+Ava käsurida ja klooni projekt oma arvutisse:
+git clone https://github.com/jaxhend/oop-online-chat.git
 
+Liigu äsja kloonitud projekti juurkataloogi:
+cd online-chat 
 
+Enne rakenduse käivitamist tuleb see ehitada.
+mvn clean install
 
+java -cp .\target\online-chat-1.jar
+```
 
 ### Demo
 Sisesta siia pilt.
