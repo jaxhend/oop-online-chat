@@ -17,7 +17,6 @@ public class MessageProcessor {
     private static final String SEE_MEMBERS_COMMAND = "/members";
     private static final String SEE_CHATROOMS_COMMAND = "/chatrooms";
     private static final String LEAVE_COMMAND = "/leave";
-    List<String> allUsers = ServerHandler.getAllUsernames();
 
     public MessageProcessor(ChatRoomManager roomManager) {
         this.roomManager = roomManager;
@@ -76,6 +75,7 @@ public class MessageProcessor {
 
             return "Aktiivsed kasutajad chatroomis " + session.getCurrentRoom().getName() + ": " + String.join(", ", members);
         }
+        List<String> allUsers = ServerHandler.getAllUsernames();
         return String.join(", ", allUsers);
     }
 
@@ -106,6 +106,7 @@ public class MessageProcessor {
 
     public void handlePrivateJoinCommand(ClientSession session, String input) {
         String roomName = input.substring(PRIVATE_JOIN_COMMAND.length()).trim();
+        List<String> allUsers = ServerHandler.getAllUsernames();
         if (allUsers.contains(roomName)) {
             ChatRoom room = roomManager.getOrCreateRoom(roomName, session, false);
             roomManager.removeClientFromCurrentRoom(session);
