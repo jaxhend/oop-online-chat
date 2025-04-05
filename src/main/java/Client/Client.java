@@ -1,56 +1,58 @@
 package Client;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import io.netty.channel.Channel;
+import org.jline.reader.UserInterruptException;
 
 import static Server.ServerHandler.sessions;
 
 public final class Client {
-    private static final String HOST = "oop.atlante.ee";
-    private static final int PORT = 45367;
-
     public static void main(String[] args) throws Exception {
-        EventLoopGroup group = new NioEventLoopGroup();
+        ChatConsole console = new ChatConsole(); // JLine integratsioon
+        ClientConnector networkClient = new ClientConnector(console.getReader()); // Kliendi ja serveri vaheline ühendus
+
         try {
-            Bootstrap b = new Bootstrap();
-            b.group(group).channel(NioSocketChannel.class)
-                    .option(ChannelOption.TCP_NODELAY, true)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
-                            ChannelPipeline p = ch.pipeline();
-                            p.addLast("Decoder", new StringDecoder(StandardCharsets.UTF_8));
-                            p.addLast("Encoder", new StringEncoder(StandardCharsets.UTF_8));
-                            p.addLast("Handler", new ClientHandler());
-                        }
-                    });
+            // Ühendab serveriga
+            Channel channel = networkClient.connect();
 
-            Channel channel = b.connect(HOST, PORT).sync().channel();
+            String username;
+            while (true) {
+                username = console.getReader().readLine("Sisesta username: ");
+                if (username.trim().isEmpty() || username.contains("/"))
+                    console.getReader().printAbove("Sisesta korrektne username.");
+                else break;
+            }
+            channel.writeAndFlush(username);
+            System.out.println("Abi saamiseks sisesta '/help'");
 
-            System.out.print("Sisesta username: ");
+            while (true) {
+                String line = console.getReader().readLine("> ");
+                if (line.trim().isEmpty()) continue;
 
-            //TODO: CLI
-            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-            String line;
-            while ((line = in.readLine()) != null) {
+                if (line.equalsIgnoreCase("/help")) {
+                    String help = """
+                            Saadaval käsud:
+                            /help       - Kuvab selle juhendi.
+                            /room       - Liitub chatruumiga.
+                            /direct     - Liitub privaatsõnumiga.
+                            /leave      - Lahkub praegusest chatruumist / privaatsõnumist.
+                            /quit       - Sulgeb rakenduse.
+                            /members    - Loetleb kõik aktiivsed kasutajad chatruumis / privaatsõnumis.
+                            /chatrooms  - Loetleb kõik serveris saadaval olevad chatruumid.""";
+                    console.getReader().printAbove(help);
+                    continue;
+                }
                 if (line.equalsIgnoreCase("/quit")) {
-                    System.out.println("Programm lõpetas töö.");
+                    console.getReader().printAbove("Programm lõpetas töö.");
                     channel.close();
                     break;
                 }
-                channel.writeAndFlush(line + "\r");
+                // Saadab serverile sõnumi.
+                channel.writeAndFlush(line);
             }
+        } catch (UserInterruptException e) {
+            System.out.println("\nKatkestatud kasutaja poolt. Programm lõpetas töö.");
         } finally {
-            group.shutdownGracefully();
+            networkClient.shutdown();
         }
     }
 }
