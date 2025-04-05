@@ -23,7 +23,7 @@ public class ChatRoomManager {
             return rooms.computeIfAbsent(roomName, RegularChatRoom::new);
         }
         // Kui kasutaja tahab kellelegi privaatselt kirjutada
-        List<String> sortedUsers = Arrays.asList(session.getUsername(), roomName);
+        List<String> sortedUsers = Arrays.asList(session.getUsername().toUpperCase(), roomName.toUpperCase());
         // Kasutame Collection.sort-i, et mõlemad kasutajad saaksid liituda chatiga kasutades
         // käsu parameetrina teise inimese nimi
         Collections.sort(sortedUsers);

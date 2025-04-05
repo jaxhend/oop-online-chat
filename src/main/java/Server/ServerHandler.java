@@ -14,11 +14,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     // Thread-safe
-    private static final ConcurrentHashMap<Channel, ClientSession> sessions = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<Channel, ClientSession> sessions = new ConcurrentHashMap<>();
     private final MessageProcessor processor;
+    private final ChatRoomManager chatRoomManager;
 
     public ServerHandler() {
-        this.processor = new MessageProcessor(new ChatRoomManager());
+        this.chatRoomManager = new ChatRoomManager();
+        this.processor = new MessageProcessor(chatRoomManager);
     }
 
     public void channelActive(ChannelHandlerContext ctx) throws Exception { // Käivitub kliendi ühendamisel.
@@ -38,10 +40,19 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             ctx.writeAndFlush(response); // Saadab kasutajale personaalsed teated.
         }
     }
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        ClientSession clientSession = sessions.remove(ctx.channel());
+        if (clientSession != null) {
+            chatRoomManager.removeClientFromCurrentRoom(clientSession);
+        }
+        super.channelInactive(ctx);
+    }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
         ctx.close();
     }
+
 }
