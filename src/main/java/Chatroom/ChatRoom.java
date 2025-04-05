@@ -26,6 +26,9 @@ public abstract class ChatRoom {
         this.name = name;
         this.isPublic = isPublic;
     }
+    public Set<ClientSession> getParticipants() {
+        return participants;
+    }
 
     public String getName() {
         return name;

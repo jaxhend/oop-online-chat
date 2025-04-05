@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     // Thread-safe
-    private static final ConcurrentHashMap<Channel, ClientSession> sessions = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<Channel, ClientSession> sessions = new ConcurrentHashMap<>(); // Kasutajate nimekiri
     private final MessageProcessor processor;
 
     public ServerHandler() {
