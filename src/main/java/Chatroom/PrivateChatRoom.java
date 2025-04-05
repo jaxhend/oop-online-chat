@@ -22,6 +22,8 @@ public class PrivateChatRoom extends ChatRoom {
         if (allowedUsers.contains(session.getUsername().toUpperCase())) {
             participants.add(session);
             broadcast("liitus ruumiga", session, false);
+        } else {
+            session.sendMessage("Sul pole õigust selle privaatse vestlusega liituda.");
         }
     }
     public boolean canJoin(String username) {
