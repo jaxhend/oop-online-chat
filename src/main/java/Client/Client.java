@@ -28,7 +28,7 @@ public final class Client {
                 String line = console.getReader().readLine("> ");
                 if (line.trim().isEmpty()) continue;
 
-                if (line.equalsIgnoreCase("/help")) {
+                if (line.contains("/help")) {
                     String help = """
                             Saadaval käsud:
                             /help       - Kuvab selle juhendi.

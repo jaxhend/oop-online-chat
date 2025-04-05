@@ -21,7 +21,7 @@ Enne rakenduse käivitamist tuleb see ehitada:
 mvn clean install
 
 Käivita kliendi rakendus:
-java -cp .\target\online-chat-1.jar
+java -jar .\target\online-chat-1.jar
 ```
 
 ### Demo
