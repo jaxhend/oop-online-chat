@@ -1,13 +1,13 @@
-package CLI;
+package Server;
 
 import Chatroom.ChatRoom;
 import Chatroom.ChatRoomManager;
-import Client.ClientSession;
 
 public class MessageProcessor {
     private final ChatRoomManager roomManager;
     private static final String JOIN_COMMAND = "/join ";
     private static final String LEAVE_COMMAND = "/exit";
+
 
     public MessageProcessor(ChatRoomManager roomManager) {
         this.roomManager = roomManager;
@@ -54,7 +54,7 @@ public class MessageProcessor {
     public String handleChatMessage(ClientSession session, String message) {
         ChatRoom room = session.getCurrentRoom();
         if (room == null) {
-            return "Te pole üheski chatruumis, kasuta " + JOIN_COMMAND + " + chatruumi_nimi, et liituda chatruumiga";
+            return "Te pole ühegi chatruumi või privaatsõnumiga ühinenud, kasuta /help abi saamiseks";
         }
 
         room.broadcast(message, session, true);

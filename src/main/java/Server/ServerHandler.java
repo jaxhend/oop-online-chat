@@ -1,8 +1,6 @@
 package Server;
 
-import CLI.MessageProcessor;
 import Chatroom.ChatRoomManager;
-import Client.ClientSession;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -13,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @ChannelHandler.Sharable
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
-    // Thread-safe
+    // Thread-safe, kasutajatenimekiri
     private static final ConcurrentHashMap<Channel, ClientSession> sessions = new ConcurrentHashMap<>();
     private final MessageProcessor processor;
 

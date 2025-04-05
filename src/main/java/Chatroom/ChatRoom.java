@@ -1,6 +1,6 @@
 package Chatroom;
 
-import Client.ClientSession;
+import Server.ClientSession;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Set;

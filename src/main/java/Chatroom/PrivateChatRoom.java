@@ -1,6 +1,6 @@
 package Chatroom;
 
-import Client.ClientSession;
+import Server.ClientSession;
 
 // TODO: implement private messages
 public class PrivateChatRoom extends ChatRoom {

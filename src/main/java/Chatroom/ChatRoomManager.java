@@ -1,6 +1,6 @@
 package Chatroom;
 
-import Client.ClientSession;
+import Server.ClientSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,12 +9,12 @@ import java.util.Map;
 
 public class ChatRoomManager {
     private final Map<String, RegularChatRoom> rooms;
-    private List<String> defaulRooms = List.of("oop", "proge", "varia");
+    private List<String> defaultRooms = List.of("oop", "proge", "varia");
 
     public ChatRoomManager() {
         this.rooms = new HashMap<>();
         // 3 default chatruumi, mis on alati olemas.
-        for (String roomName : defaulRooms) {
+        for (String roomName : defaultRooms) {
             this.rooms.put(roomName, new RegularChatRoom(roomName));
         }
     }
@@ -37,7 +37,7 @@ public class ChatRoomManager {
             session.setCurrentRoom(null);
 
             // Kustutab chatruumi, kui seal pole ühtegi liiget ega see ei ole 3 algselt loodud chatruumi.
-            if (room.activeMembers() == 0 & !defaulRooms.contains(room.getName()))
+            if (room.activeMembers() == 0 & !defaultRooms.contains(room.getName()))
                 rooms.remove(room);
         }
     }
