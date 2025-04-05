@@ -4,6 +4,7 @@ import Chatroom.ChatRoom;
 import Chatroom.ChatRoomManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static Server.ServerHandler.sessions;
@@ -85,10 +86,27 @@ public class MessageProcessor {
     // Kuvab avalikud chatroomid ning nendes olevate liikmete arvu.
     private String handleSeeChatroomsCommand(ClientSession session) {
         List<String> roomInfoList = new ArrayList<>();
-        for (String name : roomManager.listJoinableRooms(session.getUsername())) {
+        // Näita default chatroome esimesena (alati olemas)
+        for (String name : roomManager.getDefaultRooms()) {
             ChatRoom room = roomManager.getOrCreateRoom(name, session, true);
             int participantCount = room.getParticipants().size();
             roomInfoList.add(name + "(" + participantCount + ")");
+        }
+
+        // Leiab ülejäänud chatroomid, kuhu saab liituda
+        List<String> joinableRooms = roomManager.listJoinableRooms(session.getUsername());
+        List<String> otherRooms = new ArrayList<>();
+        for (String name : joinableRooms) {
+            if(!roomManager.getDefaultRooms().contains(name)) {
+                otherRooms.add(name);
+            }
+        }
+        Collections.sort(otherRooms);
+        for (String name : otherRooms) {
+            ChatRoom room = roomManager.getOrCreateRoom(name, session, true);
+            if (room != null) {
+                roomInfoList.add(name + "(" + room.getParticipants().size() + ")");
+            }
         }
         return "Hetkel avalikud chatroomid: " + String.join(", ", roomInfoList);
     }

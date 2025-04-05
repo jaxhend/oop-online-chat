@@ -35,6 +35,10 @@ public class ChatRoomManager {
         ));
     }
 
+    public List<String> getDefaultRooms() {
+        return defaultRooms;
+    }
+
     public List<String> listJoinableRooms(String username) {
         List<String> joinableRooms = new ArrayList<>();
         for (Map.Entry<String, ChatRoom> entry : rooms.entrySet()) {
