@@ -99,7 +99,9 @@ public class MessageProcessor {
         ChatRoom room = roomManager.getOrCreateRoom(roomName, session, true);
         roomManager.removeClientFromCurrentRoom(session);
         room.join(session); // Lisab ruumi ja saadab sõnumi.
-        session.setCurrentRoom(room);
+        if (room.getParticipants().contains(session)) {
+            session.setCurrentRoom(room);
+        }
     }
 
     public void handlePrivateJoinCommand(ClientSession session, String input) {
