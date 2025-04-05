@@ -43,7 +43,7 @@ public class ChatRoomManager {
 
             // Kustutab chatruumi, kui seal pole ühtegi liiget ega see ei ole 3 algselt loodud chatruumi.
             if (room.activeMembers() == 0 & !defaulRooms.contains(room.getName()))
-                rooms.remove(room);
+                rooms.remove(room.getName());
         }
     }
 }
