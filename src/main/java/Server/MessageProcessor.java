@@ -37,12 +37,10 @@ public class MessageProcessor {
 
         // Chatroomiga liitumine
         if (input.startsWith(GROUP_JOIN_COMMAND)) {
-            handleGroupJoinCommand(session, input);
-            return null; // On null, kuna ruumi sisenedes saadetakse sõnum broadcast() poolt.
+            return handleGroupJoinCommand(session, input); // On "null", kui korrektne. Ruumi sisenedes saadetakse sõnum broadcast() poolt.
         }
         if (input.startsWith(PRIVATE_JOIN_COMMAND)) {
-            handlePrivateJoinCommand(session, input);
-            return null; // On null, kuna ruumi sisenedes saadetakse sõnum broadcast() poolt.
+            return handlePrivateJoinCommand(session, input); // On "null", kui korrektne. Ruumi sisenedes saadetakse sõnum broadcast() poolt.
         }
 
         // Aitab kuvada avalikud chatroomid
@@ -112,18 +110,30 @@ public class MessageProcessor {
     }
 
 
-    public void handleGroupJoinCommand(ClientSession session, String input) {
+    public String handleGroupJoinCommand(ClientSession session, String input) {
         String roomName = input.substring(GROUP_JOIN_COMMAND.length()).trim();
+
+        if (roomName.isEmpty()) {
+            return "Chatroomi nimi ei tohi olla tühi! Proovi uuesti.";
+
+        }
+
         ChatRoom room = roomManager.getOrCreateRoom(roomName, session, true);
+
         roomManager.removeClientFromCurrentRoom(session);
         room.join(session); // Lisab ruumi ja saadab sõnumi.
         if (room.getParticipants().contains(session)) {
             session.setCurrentRoom(room);
         }
+        return null;
+
     }
 
-    public void handlePrivateJoinCommand(ClientSession session, String input) {
+    public String handlePrivateJoinCommand(ClientSession session, String input) {
         String secondUser = input.substring(PRIVATE_JOIN_COMMAND.length()).trim();
+        if (secondUser.isEmpty()) {
+            return "Privaatsõnumi saaja nimi ei saa olla tühi! Proovi uuesti.";
+        }
         List<String> allUsers = ServerHandler.getAllUsernames();
         if (allUsers.contains(secondUser)) {
             ChatRoom room = roomManager.getOrCreateRoom(secondUser, session, false);
@@ -132,6 +142,7 @@ public class MessageProcessor {
             session.setCurrentRoom(room);
         }
 
+        return null;
     }
 
 

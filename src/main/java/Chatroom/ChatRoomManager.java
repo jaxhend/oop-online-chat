@@ -18,14 +18,14 @@ public class ChatRoomManager {
 
     // Kui kasutaja tahab ruumiga liituda, aga seda ei eksisteeri, siis luuakse ruum.
     public ChatRoom getOrCreateRoom(String roomName, ClientSession session, boolean isPublic) {
-        // Kui kasutaja tahab liituda avalikuruumiga
+
         if (isPublic) {
             return rooms.computeIfAbsent(roomName, RegularChatRoom::new);
         }
         // Kui kasutaja tahab kellelegi privaatselt kirjutada
         List<String> users = Arrays.asList(session.getUsername().toUpperCase(), roomName.toUpperCase());
         // Kasutame Collection.sort-i, et mõlemad kasutajad saaksid liituda chatiga kasutades
-        // käsu parameetrina teise inimese nimi
+        // käsu parameetrina teise inimese nime
         Collections.sort(users);
         String privateRoomName = users.get(0) + ":" + users.get(1);
         return rooms.computeIfAbsent(privateRoomName, key -> new PrivateChatRoom(
