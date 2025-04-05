@@ -24,6 +24,9 @@ public abstract class ChatRoom {
     public ChatRoom(String name) {
         this.name = name;
     }
+    public Set<ClientSession> getParticipants() {
+        return participants;
+    }
 
     public String getName() {
         return name;

@@ -13,6 +13,11 @@ public class RegularChatRoom extends ChatRoom {
         super(name);
     }
 
+    @Override
+    public Set<ClientSession> getParticipants() {
+        return participants;
+    }
+
     public void join(ClientSession session) {
         participants.add(session);
         broadcast(" liitus ruumiga ", session, false);
