@@ -25,11 +25,7 @@ public class PrivateChatRoom extends ChatRoom {
         }
     }
     public boolean canJoin(String username) {
-        return isPublic() || allowedUsers.contains(username);
-    }
-
-    public boolean isPublic(){
-        return false;
+        return allowedUsers.contains(username);
     }
 
     @Override

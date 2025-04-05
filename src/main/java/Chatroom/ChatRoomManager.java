@@ -39,7 +39,7 @@ public class ChatRoomManager {
         List<String> joinableRooms = new ArrayList<>();
         for (Map.Entry<String, ChatRoom> entry : rooms.entrySet()) {
             ChatRoom room = entry.getValue();
-            if (room.isPublic() || room.canJoin(username)) {
+            if (room.canJoin(username)) {
                 joinableRooms.add(room.getName());
             }
         }

@@ -12,9 +12,6 @@ public class RegularChatRoom extends ChatRoom {
     public RegularChatRoom(String name) {
         super(name);
     }
-    public boolean isPublic(){
-        return true;
-    }
     public boolean canJoin(String username) {
         return true;
     }
