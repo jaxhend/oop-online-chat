@@ -42,4 +42,5 @@ public abstract class ChatRoom {
 
     public abstract int activeMembers();
 
+    abstract boolean isPublic();
 }

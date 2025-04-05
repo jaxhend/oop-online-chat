@@ -6,7 +6,9 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @ChannelHandler.Sharable
 public class ServerHandler extends ChannelInboundHandlerAdapter {
@@ -19,6 +21,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public ServerHandler() {
         this.chatRoomManager = new ChatRoomManager();
         this.processor = new MessageProcessor(chatRoomManager);
+    }
+    public static List<String> getAllUsernames() {
+        return sessions.values().stream()
+                .map(ClientSession::getUsername)
+                .collect(Collectors.toList());
     }
 
     public void channelActive(ChannelHandlerContext ctx) throws Exception { // Käivitub kliendi ühendamisel.

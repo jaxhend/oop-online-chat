@@ -12,6 +12,9 @@ public class RegularChatRoom extends ChatRoom {
     public RegularChatRoom(String name) {
         super(name);
     }
+    public boolean isPublic(){
+        return true;
+    }
 
     @Override
     public Set<ClientSession> getParticipants() {

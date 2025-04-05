@@ -5,6 +5,8 @@ import Chatroom.ChatRoomManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static Server.ServerHandler.sessions;
 
@@ -15,6 +17,7 @@ public class MessageProcessor {
     private static final String SEE_MEMBERS_COMMAND = "/members";
     private static final String SEE_CHATROOMS_COMMAND = "/chatrooms";
     private static final String LEAVE_COMMAND = "/leave";
+    List<String> allUsers = ServerHandler.getAllUsernames();
 
     public MessageProcessor(ChatRoomManager roomManager) {
         this.roomManager = roomManager;
@@ -73,8 +76,7 @@ public class MessageProcessor {
 
             return "Aktiivsed kasutajad chatroomis " + session.getCurrentRoom().getName() + ": " + String.join(", ", members);
         }
-        return "Serveris aktiivseid liikmeid: " + sessions.size();
-
+        return String.join(", ", allUsers);
     }
 
     // Tagastab vastava teate ebasobiva kasutajanime kohta.
@@ -104,10 +106,13 @@ public class MessageProcessor {
 
     public void handlePrivateJoinCommand(ClientSession session, String input) {
         String roomName = input.substring(PRIVATE_JOIN_COMMAND.length()).trim();
-        ChatRoom room = roomManager.getOrCreateRoom(roomName, session, false);
-        roomManager.removeClientFromCurrentRoom(session);
-        room.join(session); // Liitub privaatvestlusega ja saadab sõnumi.
-        session.setCurrentRoom(room);
+        if (allUsers.contains(roomName)) {
+            ChatRoom room = roomManager.getOrCreateRoom(roomName, session, false);
+            roomManager.removeClientFromCurrentRoom(session);
+            room.join(session); // Liitub privaatvestlusega ja saadab sõnumi.
+            session.setCurrentRoom(room);
+        }
+
     }
 
 

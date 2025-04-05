@@ -23,16 +23,26 @@ public class ChatRoomManager {
             return rooms.computeIfAbsent(roomName, RegularChatRoom::new);
         }
         // Kui kasutaja tahab kellelegi privaatselt kirjutada
-        List<String> sortedUsers = Arrays.asList(session.getUsername().toUpperCase(), roomName.toUpperCase());
+        List<String> users = Arrays.asList(session.getUsername().toUpperCase(), roomName.toUpperCase());
         // Kasutame Collection.sort-i, et mõlemad kasutajad saaksid liituda chatiga kasutades
         // käsu parameetrina teise inimese nimi
-        Collections.sort(sortedUsers);
-        String privateRoomName = sortedUsers.get(0) + ":" + sortedUsers.get(1);
-        return rooms.computeIfAbsent(privateRoomName, PrivateChatRoom::new);
+        Collections.sort(users);
+        String privateRoomName = users.get(0) + ":" + users.get(1);
+        return rooms.computeIfAbsent(privateRoomName, key -> new PrivateChatRoom(
+                key,
+                users.get(0),
+                users.get(1)
+        ));
     }
 
     public List<String> listRoomNames() {
-        return new ArrayList<>(rooms.keySet());
+        List<String> publicRooms = new ArrayList<>();
+        for (Map.Entry<String, ChatRoom> entry : rooms.entrySet()) {
+            if (entry.getValue().isPublic()) {
+                publicRooms.add(entry.getKey());
+            }
+        }
+        return publicRooms;
     }
 
     public void removeClientFromCurrentRoom(ClientSession session) {

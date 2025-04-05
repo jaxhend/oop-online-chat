@@ -3,21 +3,31 @@ package Chatroom;
 import Server.ClientSession;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 
 public class PrivateChatRoom extends ChatRoom {
     private final Set<ClientSession> participants = ConcurrentHashMap.newKeySet();
+    private final List<String> allowedUsers;
 
-    public PrivateChatRoom(String name) {
+    public PrivateChatRoom(String name, String session1, String session2) {
         super(name);
+        this.allowedUsers = List.of(session1, session2);
     }
 
     @Override
     public void join(ClientSession session) {
-        participants.add(session);
-        broadcast("liitus ruumiga", session, false);
+        if (allowedUsers.contains(session.getUsername().toUpperCase())) {
+            participants.add(session);
+            broadcast("liitus ruumiga", session, false);
+        }
+
+    }
+
+    public boolean isPublic(){
+        return false;
     }
 
     @Override
