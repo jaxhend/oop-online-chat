@@ -25,6 +25,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public static List<String> getAllUsernames() {
         return sessions.values().stream()
                 .map(ClientSession::getUsername)
+                .filter(name -> name != null && !name.isBlank())
                 .collect(Collectors.toList());
     }
 
