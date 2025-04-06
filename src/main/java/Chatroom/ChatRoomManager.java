@@ -6,7 +6,7 @@ import java.util.*;
 
 public class ChatRoomManager {
     private final Map<String, ChatRoom> rooms;
-    private List<String> defaultRooms = List.of("oop", "proge", "varia");
+    private final List<String> defaultRooms = List.of("oop", "proge", "varia");
 
     public ChatRoomManager() {
         this.rooms = new HashMap<>();
@@ -30,7 +30,7 @@ public class ChatRoomManager {
         String privateRoomName = users.get(0) + ":" + users.get(1);
         return rooms.computeIfAbsent(privateRoomName, key -> new PrivateChatRoom(
                 key,
-                users.get(0),
+                users.getFirst(),
                 users.get(1)
         ));
     }
