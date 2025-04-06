@@ -117,6 +117,10 @@ public class MessageProcessor {
 
         }
 
+        if (roomName.contains(":")) {
+            return "Keelatud chatroomi nimi, vali uuesti.";
+        }
+
         ChatRoom room = roomManager.getOrCreateRoom(roomName, session, true);
         roomManager.removeClientFromCurrentRoom(session);
         room.join(session); // Lisab ruumi ja saadab sõnumi.
