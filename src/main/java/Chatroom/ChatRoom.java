@@ -29,18 +29,32 @@ public abstract class ChatRoom {
         return participants;
     }
 
+    public void removeParticipants(ClientSession clientSession) {
+        participants.remove(clientSession);
+    }
+
+    public void addParticipants(ClientSession clientSession) {
+        participants.add(clientSession);
+    }
+
     public String getName() {
         return name;
     }
 
+    public int activeMembers() {
+        return participants.size();
+    }
+
+    public void leave(ClientSession session) {
+        removeParticipants(session);
+        if (!getParticipants().isEmpty()) {
+            broadcast(" lahkus ruumist ", session, false);
+        }
+    }
 
     public abstract void join(ClientSession session);
 
-    public abstract void leave(ClientSession session);
-
     public abstract void broadcast(String message, ClientSession session, boolean isChatMessage);
-
-    public abstract int activeMembers();
 
     public abstract boolean canJoin(String username);
 }

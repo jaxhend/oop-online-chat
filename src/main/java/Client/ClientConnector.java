@@ -12,7 +12,7 @@ import org.jline.reader.LineReader;
 import java.nio.charset.StandardCharsets;
 
 public class ClientConnector {
-    private static final String HOST = "oop.atlante.ee";
+    private static final String HOST = "localhost";
     private static final int PORT = 45367;
 
     private final EventLoopGroup group;

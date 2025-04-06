@@ -4,12 +4,9 @@ import Server.ClientSession;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public class PrivateChatRoom extends ChatRoom {
-    private final Set<ClientSession> participants = ConcurrentHashMap.newKeySet();
     private final List<String> allowedUsers;
 
     public PrivateChatRoom(String name, String session1, String session2) {
@@ -20,23 +17,16 @@ public class PrivateChatRoom extends ChatRoom {
     @Override
     public void join(ClientSession session) {
         if (allowedUsers.contains(session.getUsername().toUpperCase())) {
-            participants.add(session);
+            addParticipants(session);
             broadcast("liitus ruumiga", session, false);
         } else {
             session.sendMessage("Sul pole õigust selle privaatse vestlusega liituda.");
         }
     }
+
     public boolean canJoin(String username) {
         return allowedUsers.stream()
                 .anyMatch(allowed -> allowed.equalsIgnoreCase(username));
-    }
-
-    @Override
-    public void leave(ClientSession session) {
-        participants.remove(session);
-        if (!participants.isEmpty()) {
-            broadcast("lahkus ruumist", session, false);
-        }
     }
 
     @Override
@@ -48,7 +38,7 @@ public class PrivateChatRoom extends ChatRoom {
             session.sendMessage(emptyChat);
             return;
         }
-        for (ClientSession participant : participants) {
+        for (ClientSession participant : getParticipants()) {
             boolean isSender = participant == session;
 
             if (isChatMessage) {
@@ -70,10 +60,5 @@ public class PrivateChatRoom extends ChatRoom {
                 }
             }
         }
-    }
-
-    @Override
-    public int activeMembers() {
-        return participants.size();
     }
 }

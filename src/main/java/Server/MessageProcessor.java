@@ -64,14 +64,16 @@ public class MessageProcessor {
 
     // Kuvab aktiivsed kasutajad chatroomis ning serveris.
     private String handleSeeMembersCommand(ClientSession session) {
-        if (session.getCurrentRoom() != null) {
+        ChatRoom currentChatroom = session.getCurrentRoom();
+        if (currentChatroom != null) {
             List<String> members = new ArrayList<>();
-            session.getCurrentRoom().getParticipants().forEach(participant -> members.add(participant.getUsername()));
+            currentChatroom.getParticipants().forEach(participant -> members.add(participant.getUsername()));
 
-            return "Aktiivsed kasutajad chatroomis " + session.getCurrentRoom().getName() + ": " + String.join(", ", members);
+            return "Aktiivsed kasutajad ruumis " + currentChatroom.getName() + ": " + String.join(", ", members);
         }
+
         List<String> allUsers = ServerHandler.getAllUsernames();
-        return String.join(", ", allUsers);
+        return "Aktiivsed kasutajad serveris: " + String.join(", ", allUsers);
     }
 
     // Tagastab vastava teate ebasobiva kasutajanime kohta.
@@ -83,7 +85,7 @@ public class MessageProcessor {
     private String handleSeeChatroomsCommand(ClientSession session) {
         List<String> roomInfoList = new ArrayList<>();
         // Näita default chatroome esimesena (alati olemas)
-        for (String name : roomManager.getDefaultRooms()) {
+        for (String name : roomManager.defaultRooms) {
             ChatRoom room = roomManager.getOrCreateRoom(name, session, true);
             int participantCount = room.getParticipants().size();
             roomInfoList.add(name + "(" + participantCount + ")");
@@ -93,7 +95,7 @@ public class MessageProcessor {
         List<String> joinableRooms = roomManager.listJoinableRooms(session.getUsername());
         List<String> otherRooms = new ArrayList<>();
         for (String name : joinableRooms) {
-            if(!roomManager.getDefaultRooms().contains(name)) {
+            if (!roomManager.defaultRooms.contains(name)) {
                 otherRooms.add(name);
             }
         }
@@ -110,21 +112,18 @@ public class MessageProcessor {
 
     public String handleGroupJoinCommand(ClientSession session, String input) {
         String roomName = input.substring(GROUP_JOIN_COMMAND.length()).trim();
-
         if (roomName.isEmpty()) {
             return "Chatroomi nimi ei tohi olla tühi! Proovi uuesti.";
 
         }
 
         ChatRoom room = roomManager.getOrCreateRoom(roomName, session, true);
-
         roomManager.removeClientFromCurrentRoom(session);
         room.join(session); // Lisab ruumi ja saadab sõnumi.
         if (room.getParticipants().contains(session)) {
             session.setCurrentRoom(room);
         }
         return null;
-
     }
 
     public String handlePrivateJoinCommand(ClientSession session, String input) {
@@ -139,7 +138,6 @@ public class MessageProcessor {
             room.join(session); // Liitub privaatvestlusega ja saadab sõnumi.
             session.setCurrentRoom(room);
         }
-
         return null;
     }
 
@@ -155,7 +153,6 @@ public class MessageProcessor {
             return "Te pole üheski chatruumis, kasuta " + GROUP_JOIN_COMMAND + " + chatruumi nimi, et liituda grupiga" +
                     "\n" + "või kasuta " + PRIVATE_JOIN_COMMAND + " + kasutaja nimi, et saata privaatsõnum";
         }
-
         room.broadcast(message, session, true);
         return null;
     }

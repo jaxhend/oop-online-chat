@@ -6,7 +6,7 @@ import java.util.*;
 
 public class ChatRoomManager {
     private final Map<String, ChatRoom> rooms;
-    private final List<String> defaultRooms = List.of("oop", "proge", "varia");
+    public final List<String> defaultRooms = List.of("oop", "proge", "varia");
 
     public ChatRoomManager() {
         this.rooms = new HashMap<>();
@@ -35,9 +35,6 @@ public class ChatRoomManager {
         ));
     }
 
-    public List<String> getDefaultRooms() {
-        return defaultRooms;
-    }
 
     public List<String> listJoinableRooms(String username) {
         List<String> joinableRooms = new ArrayList<>();

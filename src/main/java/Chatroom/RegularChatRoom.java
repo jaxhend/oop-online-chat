@@ -3,47 +3,27 @@ package Chatroom;
 import Server.ClientSession;
 
 import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class RegularChatRoom extends ChatRoom {
-    private final Set<ClientSession> participants = ConcurrentHashMap.newKeySet();
-
     public RegularChatRoom(String name) {
         super(name);
     }
+
     public boolean canJoin(String username) {
         return true;
     }
 
-    @Override
-    public Set<ClientSession> getParticipants() {
-        return participants;
-    }
 
     public void join(ClientSession session) {
-        participants.add(session);
+        addParticipants(session);
         broadcast(" liitus ruumiga ", session, false);
-    }
-
-    @Override
-    public void leave(ClientSession session) {
-        participants.remove(session);
-        if (!participants.isEmpty()) {
-            broadcast(" lahkus ruumist ", session, false);
-        }
-    }
-
-    @Override
-    public int activeMembers() {
-        return participants.size();
     }
 
     @Override
     public void broadcast(String message, ClientSession session, boolean isChatMessage) {
         String currentTime = LocalDateTime.now().format(timeformatter);
 
-        for (ClientSession participant : participants) {
+        for (ClientSession participant : getParticipants()) {
             boolean isSender = participant == session;
 
             if (isChatMessage) {

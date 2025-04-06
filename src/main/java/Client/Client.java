@@ -28,7 +28,7 @@ public final class Client {
                 String line = console.getReader().readLine("> ");
                 if (line.trim().isEmpty()) continue;
 
-                if (line.contains("/help")) {
+                if (line.startsWith("/help")) {
                     String help = """
                             Saadaval käsud:
                             /help       - Kuvab selle juhendi.
@@ -41,7 +41,7 @@ public final class Client {
                     console.getReader().printAbove(help);
                     continue;
                 }
-                if (line.equalsIgnoreCase("/quit")) {
+                if (line.startsWith("/quit")) {
                     console.getReader().printAbove("Programm lõpetas töö.");
                     channel.close();
                     break;
