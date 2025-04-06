@@ -14,6 +14,7 @@ public final class Client {
             // Ühendab serveriga
             Channel channel = networkClient.connect();
 
+            System.out.println("Abi saamiseks sisesta '/help'");
             String username;
             while (true) {
                 username = console.getReader().readLine("Sisesta username: ");
@@ -21,8 +22,10 @@ public final class Client {
                     console.getReader().printAbove("Sisesta korrektne username.");
                 else break;
             }
+
+            
+            //TODO: USERNAME KONTROLL
             channel.writeAndFlush(username);
-            System.out.println("Abi saamiseks sisesta '/help'");
 
             while (true) {
                 String line = console.getReader().readLine("> ");
