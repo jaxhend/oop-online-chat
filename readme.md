@@ -25,4 +25,5 @@ java -jar .\target\online-chat-1.jar
 ```
 
 ### Demo
-Sisesta siia pilt.
+![image](https://github.com/user-attachments/assets/9e752b99-e589-4163-9418-cd93d5cf507d)
+
