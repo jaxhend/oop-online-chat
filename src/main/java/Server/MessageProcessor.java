@@ -66,9 +66,7 @@ public class MessageProcessor {
     private String handleSeeMembersCommand(ClientSession session) {
         if (session.getCurrentRoom() != null) {
             List<String> members = new ArrayList<>();
-            session.getCurrentRoom().getParticipants().forEach(participant -> {
-                members.add(participant.getUsername());
-            });
+            session.getCurrentRoom().getParticipants().forEach(participant -> members.add(participant.getUsername()));
 
             return "Aktiivsed kasutajad chatroomis " + session.getCurrentRoom().getName() + ": " + String.join(", ", members);
         }

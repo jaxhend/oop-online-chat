@@ -3,7 +3,7 @@ package Client;
 import io.netty.channel.Channel;
 import org.jline.reader.UserInterruptException;
 
-import static Server.ServerHandler.sessions;
+
 
 public final class Client {
     public static void main(String[] args) throws Exception {

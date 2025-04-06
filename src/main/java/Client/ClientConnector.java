@@ -29,7 +29,7 @@ public class ClientConnector {
                 .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    public void initChannel(SocketChannel ch) throws Exception {
+                    public void initChannel(SocketChannel ch) {
                         ChannelPipeline p = ch.pipeline();
                         p.addLast("Decoder", new StringDecoder(StandardCharsets.UTF_8));
                         p.addLast("Encoder", new StringEncoder(StandardCharsets.UTF_8));

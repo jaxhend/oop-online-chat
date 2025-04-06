@@ -26,7 +26,7 @@ public final class Server {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() { // Iga kliendi interaktsioon läbib pipeline'i
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
+                        public void initChannel(SocketChannel ch) {
                             // Pipeline töötab automaatselt. Netty käivitab selle iga kord, kui kanal saab andmeid lugeda või kirjutada.
                             ChannelPipeline pipeline = ch.pipeline();
                             pipeline.addLast("Decoder", new StringDecoder());
