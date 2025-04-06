@@ -23,18 +23,9 @@ public class MessageProcessor {
 
     public String processMessage(ClientSession session, String input) {
         // Kasutajanime määramine
-        // Kontrollib, et kasutajanimi ei kattuks juba mõne aktiivse kasutajanimega.
         if (session.getUsername() == null) {
-            String username = input.trim();
-            for (ClientSession user : sessions.values()) {
-                if (username.equalsIgnoreCase(user.getUsername())) {
-                    return handleInvalidUsername();
-                }
-            }
-            session.setUsername(username);
-            return null;
+            return handleInvalidUsername(session, input);
         }
-
         // Chatroomiga liitumine
         if (input.startsWith(GROUP_JOIN_COMMAND)) {
             return handleGroupJoinCommand(session, input); // On "null", kui korrektne. Ruumi sisenedes saadetakse sõnum broadcast() poolt.
@@ -47,19 +38,30 @@ public class MessageProcessor {
         if (input.startsWith(SEE_CHATROOMS_COMMAND)) {
             return handleSeeChatroomsCommand(session);
         }
-
         // Aitab kuvada chatroomis olevad liikmed
         if (input.startsWith(SEE_MEMBERS_COMMAND)) {
             return handleSeeMembersCommand(session);
         }
-
         // Chatroomist lahkumine
         if (input.startsWith(LEAVE_COMMAND)) {
             return handleLeaveCommand(session);
         }
-
         // Tavalise sõnumi saatmine
         return handleChatMessage(session, input);
+    }
+
+    // Tagastab vastava teate ebasobiva kasutajanime kohta.
+    private String handleInvalidUsername(ClientSession session, String input) {
+        String username = input.trim();
+        for (ClientSession user : sessions.values()) {
+            if (username.equalsIgnoreCase(user.getUsername())) { //Kontrollib, et kasutajanimi ei kattuks juba mõne aktiivse kasutajanimega.
+                return "See kasutajanimi on juba võetud. Proovi uuesti: ";
+            } else if (username.contains("/")) {
+                return "Vigane kasutajanimi. Proovi uuesti: ";
+            }
+        }
+        session.setUsername(username);
+        return null;
     }
 
     // Kuvab aktiivsed kasutajad chatroomis ning serveris.
@@ -76,10 +78,6 @@ public class MessageProcessor {
         return "Aktiivsed kasutajad serveris: " + String.join(", ", allUsers);
     }
 
-    // Tagastab vastava teate ebasobiva kasutajanime kohta.
-    private String handleInvalidUsername() {
-        return "See kasutajanimi on juba võetud, palun vali uus." + "\n" + "Sisesta uus kasutajanimi: ";
-    }
 
     // Kuvab avalikud chatroomid ning nendes olevate liikmete arvu.
     private String handleSeeChatroomsCommand(ClientSession session) {
@@ -114,7 +112,6 @@ public class MessageProcessor {
         String roomName = input.substring(GROUP_JOIN_COMMAND.length()).trim();
         if (roomName.isEmpty()) {
             return "Chatroomi nimi ei tohi olla tühi! Proovi uuesti.";
-
         }
 
         if (roomName.contains(":")) {

@@ -13,7 +13,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, String msg) {
+    protected void channelRead0(ChannelHandlerContext ctx, String msg) {
         reader.printAbove(msg);
     }
 

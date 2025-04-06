@@ -15,20 +15,12 @@ public final class Client {
             Channel channel = networkClient.connect();
 
             System.out.println("Abi saamiseks sisesta '/help'");
-            String username;
-            while (true) {
-                username = console.getReader().readLine("Sisesta username: ");
-                if (username.trim().isEmpty() || username.contains("/"))
-                    console.getReader().printAbove("Sisesta korrektne username.");
-                else break;
-            }
-
-            
-            //TODO: USERNAME KONTROLL
-            channel.writeAndFlush(username);
+            System.out.print("Sisesta kasutajanimi: ");
+            String line = console.getReader().readLine();
+            channel.writeAndFlush(line);
 
             while (true) {
-                String line = console.getReader().readLine("> ");
+                line = console.getReader().readLine("> ");
                 if (line.trim().isEmpty()) continue;
 
                 if (line.startsWith("/help")) {
