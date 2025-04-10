@@ -8,14 +8,15 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.terminal.impl.DumbTerminal;
 
+import java.io.IOException;
+
 public class ChatConsole {
-    private final Terminal terminal;
     private final LineReader reader;
 
-    public ChatConsole() throws Exception {
+    public ChatConsole() throws IOException {
         ArgumentCompleter completer = new ArgumentCompleter(
                 new StringsCompleter("/quit", "/leave", "/room", "/direct", "/members", "/chatrooms", "/help"));
-        terminal = TerminalBuilder.builder()
+        Terminal terminal = TerminalBuilder.builder()
                 .name("Online Chat Console")
                 .system(true)
                 .build();

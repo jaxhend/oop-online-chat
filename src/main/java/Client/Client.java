@@ -4,7 +4,6 @@ import io.netty.channel.Channel;
 import org.jline.reader.UserInterruptException;
 
 
-
 public final class Client {
     public static void main(String[] args) throws Exception {
         ChatConsole console = new ChatConsole(); // JLine integratsioon

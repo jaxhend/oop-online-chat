@@ -24,6 +24,7 @@ public class PrivateChatRoom extends ChatRoom {
         }
     }
 
+    @Override
     public boolean canJoin(String username) {
         return allowedUsers.stream()
                 .anyMatch(allowed -> allowed.equalsIgnoreCase(username));
@@ -32,7 +33,7 @@ public class PrivateChatRoom extends ChatRoom {
     @Override
     public void broadcast(String message, ClientSession session, boolean isChatMessage) {
         String currentTime = LocalDateTime.now().format(timeformatter);
-        // kuvab sõnumeid ainult siis, kui teine inime on ka chatroomis
+        // kuvab sõnumeid ainult siis, kui teine inimene on ka chatroomis
         if (activeMembers() <= 1 && isChatMessage) {
             String emptyChat = String.format("%s%s%s", RED, "Kedagi teist pole ruumis", RESET);
             session.sendMessage(emptyChat);

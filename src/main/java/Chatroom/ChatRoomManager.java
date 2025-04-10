@@ -5,8 +5,8 @@ import Server.ClientSession;
 import java.util.*;
 
 public class ChatRoomManager {
-    private final Map<String, ChatRoom> rooms;
     public final List<String> defaultRooms = List.of("oop", "proge", "varia");
+    private final Map<String, ChatRoom> rooms;
 
     public ChatRoomManager() {
         this.rooms = new HashMap<>();
@@ -18,14 +18,14 @@ public class ChatRoomManager {
 
     // Kui kasutaja tahab ruumiga liituda, aga seda ei eksisteeri, siis luuakse ruum.
     public ChatRoom getOrCreateRoom(String roomName, ClientSession session, boolean isPublic) {
-
         if (isPublic) {
             return rooms.computeIfAbsent(roomName, RegularChatRoom::new);
         }
-        // Kui kasutaja tahab kellelegi privaatselt kirjutada
+
+        // Kui kasutaja tahab kellelegi privaatsõnumi saata
         List<String> users = Arrays.asList(session.getUsername().toUpperCase(), roomName.toUpperCase());
         // Kasutame Collection.sort-i, et mõlemad kasutajad saaksid liituda chatiga kasutades
-        // käsu parameetrina teise inimese nime
+        // käsu parameetrina teise inimese nime.
         Collections.sort(users);
         String privateRoomName = users.get(0) + ":" + users.get(1);
         return rooms.computeIfAbsent(privateRoomName, key -> new PrivateChatRoom(

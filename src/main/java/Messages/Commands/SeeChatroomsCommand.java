@@ -49,8 +49,4 @@ public class SeeChatroomsCommand implements CommandHandler {
         }
         return "Hetkel avalikud chatroomid: " + String.join(", ", roomInfoList);
     }
-
-    public String getCommand() {
-        return SEE_CHATROOMS_COMMAND;
-    }
 }

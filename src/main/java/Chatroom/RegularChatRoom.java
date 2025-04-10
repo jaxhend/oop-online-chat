@@ -9,11 +9,13 @@ public class RegularChatRoom extends ChatRoom {
         super(name);
     }
 
+    @Override
     public boolean canJoin(String username) {
         return true;
     }
 
 
+    @Override
     public void join(ClientSession session) {
         addParticipants(session);
         broadcast(" liitus ruumiga ", session, false);
@@ -38,7 +40,7 @@ public class RegularChatRoom extends ChatRoom {
                     participant.sendMessage(String.format("%s%s%s %sLiitusite chatroomiga %s%s",
                             CYAN, currentTime, RESET, WHITE, getName(), RESET));
                 } else {
-                    participant.sendMessage(String.format("%s%s%s [%s%s%s] %s%s%s%s%s",
+                    participant.sendMessage(String.format("%s%s%s [%s%s%s] %s%s%s%s%s%s",
                             CYAN, currentTime, RESET,
                             GREEN, getName(), RESET,
                             YELLOW, session.getUsername(), RESET, WHITE, message, RESET));

@@ -30,7 +30,4 @@ public class SeeMembersCommand implements CommandHandler {
         return "Aktiivsed kasutajad serveris: " + String.join(", ", allUsers);
     }
 
-    public String getCommand() {
-        return SEE_MEMBERS_COMMAND;
-    }
 }

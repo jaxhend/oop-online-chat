@@ -15,7 +15,7 @@ public class UsernameCommand implements CommandHandler {
     public String handle(ClientSession session, String input) {
         String username = input.trim();
 
-        if (username == null || username.isBlank())
+        if (username.isBlank())
             return "Kasutajanimi ei saa olla tühi, proovi uuesti.";
 
         if (username.contains("/"))
@@ -30,4 +30,5 @@ public class UsernameCommand implements CommandHandler {
         session.setUsername(username);
         return null;
     }
+
 }

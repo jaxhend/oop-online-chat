@@ -23,6 +23,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         this.chatRoomManager = new ChatRoomManager();
         this.processor = new MessageProcessor(chatRoomManager);
     }
+
     public static List<String> getAllUsernames() {
         return sessions.values().stream()
                 .map(ClientSession::getUsername)
@@ -44,12 +45,12 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
         String response = processor.processMessage(clientSession, input);
         if (response != null) {
-            ctx.writeAndFlush(response); // Saadab kasutajale personaalsed teated.
+            ctx.writeAndFlush(response); // Saadab kasutajale sõnumi.
         }
     }
 
     @Override
-    // Eemaldab kliendi sessiionsidest, kui ühendus katkeb või klient sulgeb programmi
+    // Eemaldab kliendi sessioonidest, kui ühendus katkeb või klient sulgeb programmi
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         ClientSession clientSession = sessions.remove(ctx.channel());
         if (clientSession != null) {
