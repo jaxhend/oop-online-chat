@@ -20,20 +20,19 @@ public class JoinRoomCommand implements CommandHandler {
     @Override
     public String handle(ClientSession session, String input) {
         String roomName = input.substring(ROOM_JOIN_COMMAND.length()).trim();
-        if (roomName.isEmpty()) {
+        if (roomName.isEmpty())
             return "Chatroomi nimi ei tohi olla tühi! Proovi uuesti.";
-        }
 
-        if (roomName.contains(":")) {
+        if (roomName.contains(":"))
             return "Keelatud chatroomi nimi, vali uuesti.";
-        }
 
         ChatRoom room = roomManager.getOrCreateRoom(roomName, session, true);
         roomManager.removeClientFromCurrentRoom(session);
         room.join(session); // Lisab ruumi ja saadab sõnumi.
-        if (room.getParticipants().contains(session)) {
+
+        if (room.getParticipants().contains(session))
             session.setCurrentRoom(room);
-        }
+
         return null;
     }
 }

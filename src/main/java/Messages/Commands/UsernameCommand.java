@@ -14,20 +14,19 @@ public class UsernameCommand implements CommandHandler {
     @Override
     public String handle(ClientSession session, String input) {
         String username = input.trim();
-        if (username == null || username.isEmpty()) {
-            return "Kasutajanimi ei saa olla tühi, vali uus.";
-        }
-        for (ClientSession user : sessions.values()) {
-            if (username.isEmpty() || username == null) {
-                return "Kasutaja nimi ei saa olla tühi, proovi uuesti.";
-            }
-            if (username.equalsIgnoreCase(user.getUsername())) { //Kontrollib, et kasutajanimi ei kattuks juba mõne aktiivse kasutajanimega.
-                return "See kasutajanimi on juba võetud. Proovi uuesti: ";
-            } else if (username.contains("/")) {
-                return "Vigane kasutajanimi. Proovi uuesti: ";
-            }
 
+        if (username == null || username.isBlank())
+            return "Kasutajanimi ei saa olla tühi, proovi uuesti.";
+
+        if (username.contains("/"))
+            return "Vigane kasutajanimi. Proovi uuesti: ";
+
+        for (ClientSession user : sessions.values()) {
+            if (username.equalsIgnoreCase(user.getUsername())) {
+                return "See kasutajanimi on juba võetud. Proovi uuesti: ";
+            }
         }
+
         session.setUsername(username);
         return null;
     }

@@ -5,7 +5,7 @@ import Server.ClientSession;
 
 public class LeaveCommand implements CommandHandler {
     private final static String LEAVE_COMMAND = "/leave";
-    private ChatRoomManager roomManager;
+    private final ChatRoomManager roomManager;
 
     public LeaveCommand(ChatRoomManager roomManager) {
         this.roomManager = roomManager;
