@@ -1,4 +1,4 @@
-rom flask import Flask, request, jsonify
+from flask import Flask, request, jsonify
 from llama_cpp import Llama
 
 app = Flask(__name__)
