@@ -18,7 +18,8 @@ public class MessageProcessor {
                 new SeeMembersCommand(),
                 new SeeChatroomsCommand(roomManager),
                 new LeaveCommand(roomManager),
-                new ChatMessageCommand() // tavasõnum
+                new ChatMessageCommand(), // tavasõnum
+                new NewsCommand()
         );
     }
 

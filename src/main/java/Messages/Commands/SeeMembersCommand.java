@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SeeMembersCommand implements CommandHandler {
-    public static final String SEE_MEMBERS_COMMAND = "/member";
+    public static final String SEE_MEMBERS_COMMAND = "/members";
 
 
     @Override

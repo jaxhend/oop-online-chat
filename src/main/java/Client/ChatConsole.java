@@ -15,7 +15,7 @@ public class ChatConsole {
 
     public ChatConsole() throws IOException {
         ArgumentCompleter completer = new ArgumentCompleter(
-                new StringsCompleter("/quit", "/leave", "/room", "/direct", "/members", "/chatrooms", "/help"));
+                new StringsCompleter("/quit", "/leave", "/room", "/direct", "/members", "/chatrooms", "/help", "/uudised"));
         Terminal terminal = TerminalBuilder.builder()
                 .name("Online Chat Console")
                 .system(true)

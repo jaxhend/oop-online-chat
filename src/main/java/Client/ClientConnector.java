@@ -13,8 +13,8 @@ import java.nio.charset.StandardCharsets;
 
 public class ClientConnector {
     // For testing
-    //private static final String HOST = "localhost";
-    private static final String HOST = "oop.atlante.ee";
+    private static final String HOST = "localhost";
+    //private static final String HOST = "oop.atlante.ee";
     private static final int PORT = 45367;
 
     private final EventLoopGroup group;

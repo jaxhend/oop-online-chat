@@ -44,7 +44,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         String input = (String) msg;
 
         String response = processor.processMessage(clientSession, input);
-        if (response != null) {
+        if (response != null && !response.isBlank()) {
             ctx.writeAndFlush(response); // Saadab kasutajale sõnumi.
         }
     }

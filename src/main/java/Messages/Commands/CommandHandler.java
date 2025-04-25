@@ -4,7 +4,7 @@ import Server.ClientSession;
 
 public interface CommandHandler {
 
-    boolean matches(String command);
+    boolean matches(String input);
 
     String handle(ClientSession session, String command);
 }
