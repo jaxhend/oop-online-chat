@@ -1,10 +1,5 @@
 package com.online_chat.websocket;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.ClientSessionManager;
 import com.online_chat.service.MessageProcessor;
@@ -13,6 +8,10 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 // extends TextWebSocketHandlerit, et töödelda tekstipõhiseid sõnumeid Websocketi kaudu
@@ -69,6 +68,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
         return null;
     }
+
     // Käivitatakse iga kord, kui klient saadab serverile WebSocketi kaudu sõnumi
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {

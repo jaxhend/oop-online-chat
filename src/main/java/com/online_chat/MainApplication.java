@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = "com.online_chat")
-public class NettyAdapterApplication {
-    // käivitab Spring Booti rakenduse ja seotud serveri
+public class MainApplication {
+    // käivitab Spring Booti rakenduse
     public static void main(String[] args) {
-        SpringApplication.run(NettyAdapterApplication.class, args);
+        SpringApplication.run(MainApplication.class, args);
     }
 }

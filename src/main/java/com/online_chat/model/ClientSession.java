@@ -33,9 +33,11 @@ public class ClientSession {
     public void setCurrentRoom(ChatRoom currentRoom) {
         this.currentRoom = currentRoom;
     }
+
     public WebSocketSession getWebSocketSession() {
         return webSocketSession;
     }
+
     public void setWebSocketSession(WebSocketSession webSocketSession) {
         this.webSocketSession = webSocketSession;
     }

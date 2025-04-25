@@ -11,6 +11,7 @@ public class RegularChatRoom extends ChatRoom {
     public boolean canJoin(ClientSession client) {
         return true;
     }
+
     public boolean isPublicChatRoom() {
         return true;
     }

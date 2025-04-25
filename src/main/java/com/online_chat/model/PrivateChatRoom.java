@@ -13,12 +13,14 @@ public class PrivateChatRoom extends ChatRoom {
                 invited.getUsername().toLowerCase()
         );
     }
+
     // kontrollime kas kasutaja tohib ruumiga liituda
     @Override
     public boolean canJoin(ClientSession client) {
         return client.getUsername() != null &&
                 allowedUsers.contains(client.getUsername().toLowerCase());
     }
+
     public boolean isPublicChatRoom() {
         return false;
     }

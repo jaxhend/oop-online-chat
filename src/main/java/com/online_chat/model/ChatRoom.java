@@ -33,11 +33,13 @@ public abstract class ChatRoom {
             client.setCurrentRoom(null);
         }
     }
+
     public Set<ClientSession> getClients() {
         return clients;
     }
 
     public abstract boolean canJoin(ClientSession client);
+
     public abstract boolean isPublicChatRoom();
 
 }

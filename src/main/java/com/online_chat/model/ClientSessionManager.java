@@ -47,6 +47,7 @@ public class ClientSessionManager {
                 username.contains(" ") ||
                 isUserOnline(username);
     }
+
     public void removeSession(String id) {
         sessions.remove(id);
     }

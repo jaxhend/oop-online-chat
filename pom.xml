@@ -32,34 +32,17 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
-
-        <dependency>
-            <groupId>jakarta.websocket</groupId>
-            <artifactId>jakarta.websocket-api</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.119.Final</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.jline</groupId>
-            <artifactId>jline</artifactId>
-            <version>3.29.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.fusesource.jansi</groupId>
-            <artifactId>jansi</artifactId>
-            <version>2.4.1</version>
-        </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <version>1.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope> <!-- Important: Usually provided by the server -->
         </dependency>
 
     </dependencies>
@@ -90,7 +73,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.example.MainApplication</mainClass> <!-- Update with correct class -->
+                            <mainClass>com.example.MainApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

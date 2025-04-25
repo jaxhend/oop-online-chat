@@ -40,6 +40,7 @@ public class ChatRestController {
         return ResponseEntity.ok(result);
         // Tagastab kliendile serveri vastuse
     }
+
     @PostMapping("/flask")
     public ResponseEntity<String> proxyToFlaskChat(
             @RequestBody FlaskRequestPayload payload
