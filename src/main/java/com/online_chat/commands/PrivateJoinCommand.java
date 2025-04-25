@@ -61,7 +61,7 @@ public class PrivateJoinCommand implements Command {
 
     // Genereerib privaatse ruumi ID kahe kasutajanime põhjal.
     private String buildPrivateRoomId(String user1, String user2) {
-        String[] users = { user1.toLowerCase(), user2.toLowerCase() };
+        String[] users = {user1.toLowerCase(), user2.toLowerCase()};
         Arrays.sort(users);
         return users[0] + "-" + users[1];
     }

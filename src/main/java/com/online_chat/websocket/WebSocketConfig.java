@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 .addHandler(chatHandler, "/ws")
                 // WebSocketi ühendused aadressil /ws käsitletakse ChatwebsocketHandleri kaudu
                 .setAllowedOrigins("*");
-                // lubab ühenduda kõikjalt
+        // lubab ühenduda kõikjalt
     }
 }
 
