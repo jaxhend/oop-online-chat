@@ -13,7 +13,8 @@ export default function OnlineChat() {
     const sessionId = useRef(crypto.randomUUID());
 
     useEffect(() => {
-        const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
+        //const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const protocol = 'ws://';
         const url = protocol + 'api.utchat.ee/ws?sessionId=' + sessionId.current;
         socketRef.current = new WebSocket(url);
 
@@ -50,7 +51,7 @@ export default function OnlineChat() {
 
     const sendToFlask = async (text) => {
         try {
-            const response = await fetch("https://api.utchat.ee/api/chat/flask", {
+            const response = await fetch("http://api.utchat.ee/api/chat/flask", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -67,7 +68,7 @@ export default function OnlineChat() {
 
     const fetchFlaskContent = async (prompt, setResult) => {
         try {
-            const response = await fetch("https://api.utchat.ee/api/chat/flask", {
+            const response = await fetch("http://api.utchat.ee/api/chat/flask", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
