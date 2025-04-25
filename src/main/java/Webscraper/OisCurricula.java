@@ -42,6 +42,7 @@ public class OisCurricula {
         String url = "https://ois2.ut.ee/#/curricula";
         WebDriverManager.chromedriver().setup(); // Seab automaatselt WebDriveri üles
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
         options.addArguments("--disable-gpu", "--window-size=1920,1080");
         WebDriver driver = new ChromeDriver(options);
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -81,6 +82,7 @@ public class OisCurricula {
     public static void getCurriculaInfo(String baseUrl) {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
         options.addArguments("--disable-gpu", "--window-size=1920,1080");
 
         WebDriver driver = new ChromeDriver(options);
