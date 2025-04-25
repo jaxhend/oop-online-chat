@@ -7,23 +7,13 @@ Online-chat, mille kaudu saavad tudengid omavahel suhelda ja jagada erinevates c
 
 ### Hetke funktsionaalsus:
 * Saab luua ja ühineda chatruumidega.
-* Saab üksteisele privaatseid sõnumeid saata. 
+* Saab üksteisele privaatseid sõnumeid saata.
+* Saab küsida küsimusi AI chatbotilt Tartu Ülikooli õppekavade kohta.
+* Kuvab tänast ilma, uudiseid ja Delta kohviku päevapakkumisi.
+
 
 ### Kasutusjuhend
-```
-Ava käsurida ja klooni projekt oma arvutisse:
-git clone https://github.com/jaxhend/oop-online-chat.git
-
-Liigu äsja kloonitud projekti juurkataloogi:
-cd online-chat 
-
-Enne rakenduse käivitamist tuleb see ehitada:
-mvn clean install
-
-Käivita kliendi rakendus:
-java -jar .\target\online-chat-1.jar
-```
-
-### Demo
-![image](https://github.com/user-attachments/assets/9e752b99-e589-4163-9418-cd93d5cf507d)
-
+~~~
+Ava brauseris:
+utchat.ee
+~~~

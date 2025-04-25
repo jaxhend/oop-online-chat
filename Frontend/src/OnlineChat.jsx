@@ -13,8 +13,7 @@ export default function OnlineChat() {
     const sessionId = useRef(crypto.randomUUID());
 
     useEffect(() => {
-        //const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
-        const protocol = 'ws://';
+        const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
         const url = protocol + 'api.utchat.ee/ws?sessionId=' + sessionId.current;
         socketRef.current = new WebSocket(url);
 
