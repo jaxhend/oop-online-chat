@@ -154,8 +154,7 @@ public class OisCurricula {
         List.of(chunk1, chunk2, chunk3).forEach(elem -> {
             elem.put("_id", getNextId(countersCollection));
             elem.put("õppekava", title);
-            elem.put("õppeaste", oppeaste);
-        });
+            elem.put("õppeaste", oppeaste); });
 
         // Käib kõik andmed läbi, et luua terviklik sõnastik.
         for (WebElement panel : panels) {
@@ -164,8 +163,12 @@ public class OisCurricula {
             extractChunk2Data(text, chunk2);
             extractChunk3Data(text, chunk3);
         }
-        // Salvesta andmebaasi
-        collection.insertMany(List.of(new Document(chunk1), new Document(chunk2), new Document(chunk3)));
+
+        // Salvestame andmebaasi
+        if (chunk3.containsKey("moodulid"))
+            collection.insertMany(List.of(new Document(chunk1), new Document(chunk2), new Document(chunk3)));
+        else
+            collection.insertMany(List.of(new Document(chunk1), new Document(chunk2)));
         mongoClient.close();
     }
 
@@ -346,7 +349,8 @@ public class OisCurricula {
                 }
             }
 
-            data.put("moodulid", String.join("\n", newLines));
+            if (!newLines.isEmpty())
+                data.put("moodulid", String.join("\n", newLines));
         }
     }
 }
