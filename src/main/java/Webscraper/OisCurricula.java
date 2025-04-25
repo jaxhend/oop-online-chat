@@ -147,14 +147,6 @@ public class OisCurricula {
         Map<String, Object> chunk2 = new HashMap<>();
         Map<String, Object> chunk3 = new HashMap<>();
 
-        /*
-        "_id": 1,
-        "õppekava": "Informaatika (180 EAP)",
-        "õppeaste": "Bakalaureuseõpe", */
-        List.of(chunk1, chunk2, chunk3).forEach(elem -> {
-            elem.put("_id", getNextId(countersCollection));
-            elem.put("õppekava", title);
-            elem.put("õppeaste", oppeaste); });
 
         // Käib kõik andmed läbi, et luua terviklik sõnastik.
         for (WebElement panel : panels) {
@@ -164,12 +156,26 @@ public class OisCurricula {
             extractChunk3Data(text, chunk3);
         }
 
+        /*
+        "_id": 1,
+        "õppekava": "Informaatika (180 EAP)",
+        "õppeaste": "Bakalaureuseõpe", */
+        List.of(chunk1, chunk2).forEach(elem -> {
+            elem.put("_id", getNextId(countersCollection));
+            elem.put("õppekava", title);
+            elem.put("õppeaste", oppeaste);
+        });
+
         // Salvestame andmebaasi
-        if (chunk3.containsKey("moodulid"))
+        if (chunk3.containsKey("moodulid")) {
+            chunk3.put("_id", getNextId(countersCollection));
+            chunk3.put("õppekava", title);
+            chunk3.put("õppeaste", oppeaste);
             collection.insertMany(List.of(new Document(chunk1), new Document(chunk2), new Document(chunk3)));
-        else
+        } else {
             collection.insertMany(List.of(new Document(chunk1), new Document(chunk2)));
-        mongoClient.close();
+            mongoClient.close();
+        }
     }
 
 
