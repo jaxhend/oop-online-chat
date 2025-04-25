@@ -9,6 +9,7 @@ import com.mongodb.client.model.Updates;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.bson.Document;
 import org.openqa.selenium.*;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -23,15 +24,17 @@ import java.util.regex.Pattern;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.ReturnDocument.AFTER;
 
-public class OisCurricula2 {
+public class OisCurricula {
 
     public static void main(String[] args) {
-//        Set<String> veebilehed = getAllCurriculas();
-//        for (String s : veebilehed) {
-//            System.out.println(getCurriculaInfo(s));
-//        }
 
-        getCurriculaInfo("https://ois2.ut.ee/#/curricula/2476");
+
+        Set<String> veebilehed = getAllCurriculas();
+        for (String s : veebilehed) {
+          getCurriculaInfo(s);
+        }
+
+//        getCurriculaInfo("https://ois2.ut.ee/#/curricula/2476");
     }
 
 
@@ -81,7 +84,7 @@ public class OisCurricula2 {
         options.addArguments("--disable-gpu", "--window-size=1920,1080");
 
         WebDriver driver = new ChromeDriver(options);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
 
         try {
             String workingUrl = findValidVersion(driver, baseUrl);
@@ -89,7 +92,7 @@ public class OisCurricula2 {
                 System.err.println("Töötavat veebilehte ei leitud!");
                 return;
             }
-            openAllPanels(wait); // Moodulite kirjelduse avamine
+            openAllPanels(wait, driver); // Moodulite kirjelduse avamine
             saveAllChunks(driver); // MongoDB andmebaasi salvestamine.
 
         } catch (TimeoutException e) {
@@ -121,11 +124,16 @@ public class OisCurricula2 {
     }
 
 
-    private static void openAllPanels(WebDriverWait wait) {
+    private static void openAllPanels(WebDriverWait wait, WebDriver driver) {
         By openAllButton = By.xpath("//button[.//span[normalize-space(.)='Ava kõik']]");
-        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(openAllButton));
-        button.click();
+        try {
+            WebElement button = wait.until(ExpectedConditions.elementToBeClickable(openAllButton));
+            button.click();
+        } catch (NoSuchElementException | TimeoutException e) {
+            System.out.println(driver.getCurrentUrl());
+        }
     }
+
 
 
     private static void saveAllChunks(WebDriver driver) {
@@ -156,12 +164,12 @@ public class OisCurricula2 {
         // Käib kõik andmed läbi, et luua terviklik sõnastik.
         for (WebElement panel : panels) {
             String text = panel.getText();
-            chunk1 = chunk1Data(text, chunk1);
-            chunk2 = chunk2Data(text, chunk2);
-            chunk3 = chunk3Data(text, chunk3);
+            extractChunk1Data(text, chunk1);
+            extractChunk2Data(text, chunk2);
+            extractChunk3Data(text, chunk3);
         }
         // Salvesta andmebaasi
-        collection.insertMany(List.of(new Document(chunk1), new Document(chunk2), new Document(chunk3)));
+        collection.insertMany(List.of(new Document(chunk1), new Document(chunk2)));
         mongoClient.close();
     }
 
@@ -193,15 +201,16 @@ public class OisCurricula2 {
 
 /*
         {
-        "oppekeeled": ["eesti", "inglise"],
-        "oppekohtade_arv": null,
-        "programmijuht": "Varmo Vene",
-        "oppekava_ingliskeelne_nimetus": "Computer Science"
-        "Kestus": "Päevaõpe"
-        "oppekava_maht": "180 EAP"
-        "valdkond": "Loodus- ja täppisteaduste valdkond LT"
-        "instituut": "Arvutiteaduse instituut LTAT"
-        "kirjeldus": "Bakalaureuse õppekava informaatika erialal (peaerialana) läbimisel omandatakse üldised ja praktilised
+        OK"oppekeeled": ["eesti", "inglise"],
+        OK"kestvus_aastates": 3,
+        !!!"oppekohtade_arv": null,
+        !!!"programmijuht": "Varmo Vene",
+        !!!"oppekava_ingliskeelne_nimetus": "Computer Science"
+        !!!"õppeliik": "Päevaõpe"
+        !!!"oppekava_maht": "180 EAP"
+        !!!"valdkond": "Loodus- ja täppisteaduste valdkond LT"
+        !!!"instituut": "Arvutiteaduse instituut LTAT"
+        !!!"kirjeldus": "Bakalaureuse õppekava informaatika erialal (peaerialana) läbimisel omandatakse üldised ja praktilised
         põhiteadmised arvutiteaduses ning selle mitmetes alamvaldkondades, sh tarkvaraarenduses (analüüs, kavandamine,
             teostamine, testimine). Saadakse vajalikud algteadmised lähemates kõrvaldistsipliinides, nagu pidev ja diskreetne
         matemaatika, matemaatiline statistika ja andmeanalüüs ning arvutisuhtlus, ja ühtlasi tõdemus, et hariduse omandamine
@@ -214,7 +223,7 @@ public class OisCurricula2 {
         },
     */
 
-    public static Map<String, Object> chunk1Data(String text, Map<String, Object> data) {
+    public static void extractChunk1Data(String text, Map<String, Object> data) {
         Pattern pattern;
         Matcher matcher;
 
@@ -228,23 +237,14 @@ public class OisCurricula2 {
         pattern = Pattern.compile("Õppekeeled\\s+([^\n]+)\\s+Teised vajalikud keeled\\s+([^\n]+)");
         matcher = pattern.matcher(text);
         if (matcher.find()) {
-            data.put("oppekeeled", List.of(matcher.group(1), matcher.group(2)));
+            data.put("õppekeeled", List.of(matcher.group(1), matcher.group(2)));
         }
-
-        // Extract "Programmijuht" value (VV)
-        pattern = Pattern.compile("Programmijuht\\s+([^\n]+)");
-        matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            data.put("programmijuht", matcher.group(1));
-        }
-
-        return data;
     }
 
 
     /*
         {
-         "oppekava_sisu":       "Õppekava koosneb
+         !!!"oppekava_sisu":       "Õppekava koosneb
                                 kahest alusmoodulist (kumbki 24 EAP):
                                 - matemaatika alusmoodul;
                                 - IT alusmoodul ;
@@ -260,10 +260,10 @@ public class OisCurricula2 {
                                 valikmoodulist (12 EAP);
                                 vabaainete moodulist (0 - 9 EAP) ;
                                 lõputöö moodulist, sh bakalaureusetöö 9 EAP (15 EAP). ",
-         "Vastuvõtutingimused": "Kandideerida on õigus isikul, kellel on keskharidus või sellele vastav kvalifikatsioon.
+         OK"Vastuvõtutingimused": "Kandideerida on õigus isikul, kellel on keskharidus või sellele vastav kvalifikatsioon.
                                     Õppekava muud kandideerimis- ja vastuvõtutingimused kehtestatakse Tartu Ülikooli vastuvõtueeskirjas.
                                         Lisainfo: https://ut.ee/et/oppekavad/informaatika",
-        "Lõpetamise tingimused":
+        OK "Lõpetamise tingimused":
                                 "Peaeriala omandamiseks miinimummahus tuleb üliõpilasel sooritada (108 EAP):
                                 1.1. Matemaatika alusmoodul (24 EAP)
                                 1.2. IT alusmoodul (24 EAP)
@@ -281,7 +281,7 @@ public class OisCurricula2 {
                                 3.3 Süsteemihalduse erialamoodul (24 EAP)
                                 3.4 Õpirändluse erialamoodul (24 EAP)
                                 Kokku: 180 EAP"
-         "opivaljundid":
+         OK "opivaljundid":
                                 "Õppekava läbinud üliõpilane
                                 1) omab süsteemset ülevaadet arvutiteaduse teoreetilistest printsiipidest, uurimismeetoditest ja rakendusvaldkondadest ning tunneb valdkonna põhimõisteid;
                                 2) tunneb erinevate infotehnoloogiliste süsteemide ülesehitust ja toimimise põhiprintsiipe;
@@ -291,10 +291,35 @@ public class OisCurricula2 {
                                 6) mõistab informaatika tähtsust ja rolli ühiskonnas ning saab aru oma erialase tegevuse sotsiaalsetest tagajärgedest."
         }*/
 
-    public static Map<String, Object> chunk2Data(String text, Map<String, Object> data) {
-        Pattern pattern;
-        Matcher matcher;
-        return data;
+    public static void extractChunk2Data(String text, Map<String, Object> data) {
+//        Pattern patternSisu = Pattern.compile("(?s)Õppekava sisu\\s+(.*?)(?:\\n\\n|\\Z|Vastuvõtutingimused|Lõpetamise tingimused|Õpiväljundid)");
+//        Matcher matcherSisu = patternSisu.matcher(text);
+//        if (matcherSisu.find()) {
+//            data.putIfAbsent("oppekava_sisu", matcherSisu.group(1).trim());
+//        }
+
+        // Vastuvõtutingimused
+        Pattern patternVastuvott = Pattern.compile("(?s)Vastuvõtutingimused\\s+(.*?)(?:\\n\\n|\\Z|Õppekava sisu|Lõpetamise tingimused|Õpiväljundid)");
+        Matcher matcherVastuvott = patternVastuvott.matcher(text);
+        if (matcherVastuvott.find()) {
+            data.putIfAbsent("vastuvotutingimused", matcherVastuvott.group(1).trim());
+        }
+
+        // Lõpetamise tingimused
+        Pattern patternLopetamine = Pattern.compile("(?s)Lõpetamise tingimused\\s+(.*?)(?:\\n\\n|\\Z|Õppekava sisu|Vastuvõtutingimused|Õpiväljundid)");
+        Matcher matcherLopetamine = patternLopetamine.matcher(text);
+        if (matcherLopetamine.find()) {
+            data.putIfAbsent("lopetamise_tingimused", matcherLopetamine.group(1).trim());
+        }
+
+        // Õpiväljundid
+        Pattern patternValjundid = Pattern.compile("(?s)Õpiväljundid\\s+(.*?)(?:\\n\\n|\\Z|Õppekava sisu|Vastuvõtutingimused|Lõpetamise tingimused)");
+        Matcher matcherValjundid = patternValjundid.matcher(text);
+        if (matcherValjundid.find()) {
+            data.putIfAbsent("opivaljundid", matcherValjundid.group(1).trim());
+        }
+
+
     }
 
 
@@ -359,12 +384,8 @@ public class OisCurricula2 {
         }
      */
 
-    public static Map<String, Object> chunk3Data(String text, Map<String, Object> data) {
-        Pattern pattern;
-        Matcher matcher;
-        return data;
+    public static void extractChunk3Data(String text, Map<String, Object> data) {
+
     }
-
-
 }
 
