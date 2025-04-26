@@ -1,9 +1,11 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  online-chat-app:
-    build: .
-    container_name: online-chat-spring
+  online-chat:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    container_name: online-chat-app
     restart: unless-stopped
