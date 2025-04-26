@@ -35,13 +35,13 @@ public class OisCurricula {
         }
 
 //        Testimiseks
-//        getCurriculaInfo("https://ois2.ut.ee/#/curricula/2476");
+       getCurriculaInfo("https://ois2.ut.ee/#/curricula/2476");
     }
 
 
     public static Set<String> getAllCurriculas() {
         String url = "https://ois2.ut.ee/#/curricula";
-        WebDriverManager.chromedriver().setup(); // Seab automaatselt WebDriveri üles
+        WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1080");
         WebDriver driver = new ChromeDriver(options);
@@ -51,8 +51,8 @@ public class OisCurricula {
             driver.get(url);
             long lastHeight = (long) js.executeScript("return document.body.scrollHeight");
             while (true) {
-                js.executeScript("window.scrollTo(0, document.body.scrollHeight);"); // Kerib veebilehe lõppu.
-                Thread.sleep(200); // Ootab, kuni sisu laeb.
+                js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+                Thread.sleep(200);
                 long newHeight = (long) js.executeScript("return document.body.scrollHeight");
                 if (newHeight == lastHeight) {
                     break;
@@ -60,16 +60,22 @@ public class OisCurricula {
                 lastHeight = newHeight;
             }
 
-            // Leiab kõik lingid, mis algavad "https://ois2.ut.ee/#/curricula"
+            // Selle asemel, et salvestada WebElemente -> salvestame ainult href-id
             List<WebElement> anchors = driver.findElements(By.tagName("a"));
             Set<String> links = new HashSet<>();
             for (WebElement a : anchors) {
-                String href = a.getAttribute("href");
-                if (href != null && !href.trim().isEmpty() && href.startsWith("https://ois2.ut.ee/#/curricula/")) {
-                    links.add(href.trim());
+                try {
+                    String href = a.getAttribute("href");
+                    if (href != null && !href.trim().isEmpty() && href.startsWith("https://ois2.ut.ee/#/curricula/")) {
+                        links.add(href.trim());
+                    }
+                } catch (StaleElementReferenceException e) {
+                    // Kui mingi element on stale, ignoreerime
+                    System.err.println("Stale element, ignoreerin: " + e.getMessage());
                 }
             }
-            return links; // Tagastab 184 linki
+
+            return links;
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -141,14 +147,12 @@ public class OisCurricula {
         List<WebElement> panels = driver.findElements(By.tagName("ois2-study-unit-shared-study-info-panel"));
 
         String title = getTitle(h1Element.getText());
-        String oppeaste = getLevel(panels.getFirst().getText());
+        String oppeaste = getLevel(panels.get(0).getText());
 
         Map<String, Object> chunk1 = new HashMap<>();
         Map<String, Object> chunk2 = new HashMap<>();
         Map<String, Object> chunk3 = new HashMap<>();
 
-
-        // Käib kõik andmed läbi, et luua terviklik sõnastik.
         for (WebElement panel : panels) {
             String text = panel.getText();
             extractChunk1Data(text, chunk1);
@@ -156,26 +160,31 @@ public class OisCurricula {
             extractChunk3Data(text, chunk3);
         }
 
-        /*
-        "_id": 1,
-        "õppekava": "Informaatika (180 EAP)",
-        "õppeaste": "Bakalaureuseõpe", */
-        List.of(chunk1, chunk2).forEach(elem -> {
-            elem.put("_id", getNextId(countersCollection));
-            elem.put("õppekava", title);
-            elem.put("õppeaste", oppeaste);
-        });
+        if (!chunk1.isEmpty()) {
+            chunk1.put("_id", getNextId(countersCollection));
+            chunk1.put("õppekava", title);
+            chunk1.put("õppeaste", oppeaste);
+            collection.insertOne(new Document(chunk1));
+            System.out.println("SALVESTATI chunk1: " + chunk1);
+        }
 
-        // Salvestame andmebaasi
+        if (!chunk2.isEmpty()) {
+            chunk2.put("_id", getNextId(countersCollection));
+            chunk2.put("õppekava", title);
+            chunk2.put("õppeaste", oppeaste);
+            collection.insertOne(new Document(chunk2));
+            System.out.println("SALVESTATI chunk2: " + chunk2);
+        }
+
         if (chunk3.containsKey("moodulid")) {
             chunk3.put("_id", getNextId(countersCollection));
             chunk3.put("õppekava", title);
             chunk3.put("õppeaste", oppeaste);
-            collection.insertMany(List.of(new Document(chunk1), new Document(chunk2), new Document(chunk3)));
-        } else {
-            collection.insertMany(List.of(new Document(chunk1), new Document(chunk2)));
-            mongoClient.close();
+            collection.insertOne(new Document(chunk3));
+            System.out.println("SALVESTATI chunk3: " + chunk3);
         }
+
+        mongoClient.close();
     }
 
 

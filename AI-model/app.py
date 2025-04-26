@@ -1,12 +1,10 @@
 from flask import Flask, request, jsonify
-from llama_cpp import Llama
 
 app = Flask(__name__)
-llm = Llama(model_path="/home/robinjuul/llama.cpp/models/llammas/llammasQ8.gguf", n_ctx=2048)
 
 user_histories = {}
 
-@app.route("/chat", methods=["POST"])
+@app.route("/flask/chat", methods=["POST"])
 def chat():
     data = request.json
     user_id = data.get("user_id")
@@ -15,13 +13,47 @@ def chat():
     if not user_id or not prompt:
         return jsonify({"error": "Missing user_id or prompt"}), 400
 
-    history = user_histories.get(user_id, "")
-    full_prompt = history + f"\nUser: {prompt}\nAI:"
+    response_text = f"Võtsin vastu sinu küsimuse: '{prompt}'"
 
-    output = llm(full_prompt, max_tokens=512, stop=["User:", "AI:"])
-    response = output["choices"][0]["text"]
+    history = user_histories.get(user_id, [])
+    history.append({"user": prompt, "bot": response_text})
 
-    # Save user's prompts and responses.
-    user_histories[user_id] = full_prompt + response
 
-    return jsonify({"response": response})
+    history = history[-2:]
+    user_histories[user_id] = history
+
+    return jsonify({
+        "response": response_text,
+        "history": history
+    })
+
+@app.route('/flask/päevapakumised', methods=['GET'])
+def get_deals():
+    return "Siin on päevapakkumised!"
+
+@app.route('/flask/ilm', methods=['GET'])
+def get_weather():
+    return "Ilm on päikeseline."
+
+@app.route('/flask/uudised', methods=['GET'])
+def get_news():
+    news_list = [
+        "Online Chat töötab hästi!",
+        "Täna on päikeseline ilm.",
+        "Krüptorahade hinnad tõusevad!",
+        "Uus tarkvaraversioon on saadaval.",
+        "Programmeerijate päev läheneb!",
+        "Tehisintellekt on tulevik!",
+        "Õpilased võitsid robootikavõistluse."
+    ]
+    return jsonify(news_list)
+
+@app.route('/flask/õppekava', methods=['GET'])
+def get_curriculum():
+    return "Psühholoogia peamiste teoreetiliste ja metodoloogiliste aluste tundmine."
+@app.route("/flask/chatbot", methods=["POST"])
+def chatbot_alias():
+    return chat()
+
+if __name__ == "__main__":
+    app.run(port=5001, debug=True)

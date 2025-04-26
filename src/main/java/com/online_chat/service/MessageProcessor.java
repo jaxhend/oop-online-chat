@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
-public class MessageProcessor {
+public class  MessageProcessor {
 
     private final CommandHandler commandHandler;
     private final ClientSessionManager sessionManager;
@@ -57,6 +57,15 @@ public class MessageProcessor {
     // Edastab sõnumi kõigile kasutajatele, kes on saatjaga samas ruumis
     private void broadcastToRoom(ClientSession sender, String message) {
 
+        long otherUsers = sessionManager.getAllSessions().stream()
+                .filter(s -> sender.getCurrentRoom().equals(s.getCurrentRoom()))
+                .filter(s -> !s.equals(sender))
+                .count();
+
+        if (otherUsers == 0) {
+            sendMessage(sender, "Oled ruumis üksi.");
+            return;
+        }
         String formatted = String.format("[%s] [%s] %s: %s",
                 currentTime(),
                 sender.getCurrentRoom().getName(),
@@ -79,8 +88,8 @@ public class MessageProcessor {
 
     private void sendMessage(ClientSession session, String message) {
         try {
-            String withTime = "[" + currentTime() + "] " + message;
-            session.getWebSocketSession().sendMessage(new TextMessage(withTime));
+            String formatted = "[" + currentTime() + "] " + message;
+            session.getWebSocketSession().sendMessage(new TextMessage(formatted));
         } catch (Exception e) {
             e.printStackTrace();
         }

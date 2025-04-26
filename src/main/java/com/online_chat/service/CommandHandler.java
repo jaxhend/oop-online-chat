@@ -37,6 +37,6 @@ public class CommandHandler {
             return command.execute(session, parts);
         }
 
-        return "Tundmatu käsk: " + parts[0];
+        return "Tundmatu käsk: " + parts[0] + ". Kasuta /help, et näha käske.";
     }
 }

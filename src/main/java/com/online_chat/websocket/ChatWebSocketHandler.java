@@ -1,5 +1,6 @@
 package com.online_chat.websocket;
 
+import com.online_chat.model.ChatRoomManager;
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.ClientSessionManager;
 import com.online_chat.service.MessageProcessor;
@@ -21,11 +22,14 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final Set<WebSocketSession> sessions = Collections.synchronizedSet(new HashSet<>());
     private final ClientSessionManager sessionManager;
     private final MessageProcessor messageProcessor;
+    private final ChatRoomManager chatRoomManager;
 
 
-    public ChatWebSocketHandler(ClientSessionManager sessionManager, MessageProcessor messageProcessor) {
+
+    public ChatWebSocketHandler(ClientSessionManager sessionManager, MessageProcessor messageProcessor, ChatRoomManager chatRoomManager) {
         this.sessionManager = sessionManager;
         this.messageProcessor = messageProcessor;
+        this.chatRoomManager = chatRoomManager;
     }
 
     // Meetod, mis aktiveeritakse, kui kasutaja loob brauseris ühenduse.
@@ -56,6 +60,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 .filter(cs -> session.equals(cs.getWebSocketSession()))
                 .findFirst()
                 .ifPresent(cs -> {
+                    // Eemaldame kliendi tema praegusest ruumist korrektselt
+                    chatRoomManager.removeClientFromCurrentRoom(cs);
+
+                    // Eemaldame ClientSessioni sessionManagerist
                     sessionManager.removeSession(cs.getId());
                 });
     }
@@ -73,16 +81,12 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String sessionId = getSessionIdFromQuery(session);
-        if (sessionId == null || sessionId.isBlank()) return; // kui sessioni puudub, siis ei töödelda sõnumit
+        if (sessionId == null || sessionId.isBlank()) return;
 
-        // otsitakse vastav Clientsession ning kui WebSocketSession pole Clientsessioniga seotud jääb protsess pooleli.
         ClientSession clientSession = sessionManager.getSession(sessionId);
         if (clientSession == null) return;
 
-
-        // Sõnumi sisu HTML-st
         String payload = message.getPayload();
-        // sõnum edastatakse MessageProcessorile, kes tegeleb käsu realiseerumisega
         messageProcessor.processAndBroadcast(clientSession, payload);
     }
 }

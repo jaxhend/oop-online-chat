@@ -1,52 +1,46 @@
 package com.online_chat.controller;
 
-
-import com.online_chat.model.ClientSession;
-import com.online_chat.model.ClientSessionManager;
-import com.online_chat.service.MessageProcessor;
-import org.springframework.http.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
-
 @RestController
+@RequestMapping("/flask")
 public class ChatRestController {
 
-    private final MessageProcessor processor;
-    private final ClientSessionManager sessionManager;
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    public ChatRestController(MessageProcessor processor, ClientSessionManager sessionManager) {
-        this.processor = processor;
-        this.sessionManager = sessionManager;
+    @GetMapping("/päevapakumised")
+    public ResponseEntity<String> getDeals() {
+        String flaskResponse = restTemplate.getForObject("http://localhost:5000/flask/päevapakumised", String.class);
+        return ResponseEntity.ok(flaskResponse);
     }
 
-    @PostMapping("/flask")
-    public ResponseEntity<String> proxyToFlaskChat(
-            @RequestBody FlaskRequestPayload payload
-    ) {
-        String flaskUrl = "http://localhost:5001/chat";
+    @GetMapping("/ilm")
+    public ResponseEntity<String> getWeather() {
+        String flaskResponse = restTemplate.getForObject("http://localhost:5000/flask/ilm", String.class);
+        return ResponseEntity.ok(flaskResponse);
+    }
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    @GetMapping("/uudised")
+    public ResponseEntity<String> getNews() {
+        String flaskResponse = restTemplate.getForObject("http://localhost:5000/flask/uudised", String.class);
+        return ResponseEntity.ok(flaskResponse);
+    }
 
-        Map<String, String> body = Map.of(
-                "user_id", payload.getUserId(),
-                "prompt", payload.getPrompt()
+    @PostMapping("/chatbot")
+    public ResponseEntity<String> talkToBot(@RequestBody String userMessage) {
+        String botResponse = restTemplate.postForObject(
+                "http://localhost:5000/flask/chat",
+                userMessage,
+                String.class
         );
-
-        HttpEntity<Map<String, String>> entity = new HttpEntity<>(body, headers);
-
-        try {
-            ResponseEntity<String> response = restTemplate.postForEntity(flaskUrl, entity, String.class);
-            return ResponseEntity.ok(response.getBody());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-                    .body("Viga Flaski ühendamisel: " + e.getMessage());
-        }
+        return ResponseEntity.ok(botResponse);
     }
 
-    //TODO: chatbot, päevapakkumised, ilm, uudised
-
+    @GetMapping("/õppekava")
+    public ResponseEntity<String> getCurriculum() {
+        String flaskResponse = restTemplate.getForObject("http://localhost:5000/flask/õppekava", String.class);
+        return ResponseEntity.ok(flaskResponse);
+    }
 }
