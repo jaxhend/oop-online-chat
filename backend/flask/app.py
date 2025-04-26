@@ -6,6 +6,7 @@ llm = Llama(model_path="/home/robinjuul/llama.cpp/models/llammas/llammasQ8.gguf"
 
 user_histories = {}
 
+
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.json
