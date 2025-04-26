@@ -3,7 +3,7 @@ version: "3.9"
 services:
   online-chat:
     build:
-      context: ../.. # Lähme juurkausta
+      context: ..
       dockerfile: backend/spring/Dockerfile
     ports:
       - "8080:8080"
