@@ -3,8 +3,8 @@ version: "3.9"
 services:
   online-chat:
     build:
-      context: ..
-      dockerfile: backend/spring/Dockerfile
+      context: .
+      dockerfile: spring/Dockerfile
     ports:
       - "8080:8080"
     container_name: online-chat-spring

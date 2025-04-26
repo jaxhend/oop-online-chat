@@ -3,13 +3,13 @@ FROM maven:3.9-eclipse-temurin-17 as builder
 
 WORKDIR /app
 
-COPY ../../pom.xml .
+COPY spring/pom.xml .
 
 RUN mvn dependency:go-offline
 
-COPY ../../backend/spring/src /app/src
+COPY spring/src /app/src
 
-WORKDIR /app/backend/spring
+WORKDIR /app/src
 
 RUN mvn clean package -DskipTests
 
@@ -21,7 +21,7 @@ WORKDIR /app
 RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
 
 # Kopeerime ehitatud JAR-faili
-COPY --from=builder --chown=appuser:appgroup /app/backend/spring/target/spring-1.0.0.jar /app/spring.jar
+COPY --from=builder --chown=appuser:appgroup /app/target/spring-1.0.0.jar /app/spring.jar
 
 USER appuser
 
