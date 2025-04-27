@@ -4,16 +4,17 @@ body {
     font-size: 18px;
     min-height: 100vh;
     background-color: #f8f8f8;
+
     display: flex;
     flex-direction: column;
 }
 
 .container {
     margin-top: 50px;
-    max-width: 1200px;
     width: 100%;
+    max-width: 1400px;
+    min-height: 80vh;
     margin: 0 auto;
-    flex: 1;
     display: flex;
     flex-direction: row;
     padding: 30px;
@@ -37,16 +38,16 @@ body {
 }
 
 .fixed-flex-1 {
-    flex: 0 0 25%;
-    max-width: 25%;
+    flex: 1 1 25%;
+    min-width: 250px;
 }
 .fixed-flex-2 {
-    flex: 0 0 50%;
-    max-width: 50%;
+    flex: 2 1 50%;
+    min-width: 300px;
 }
 .fixed-flex-1-right {
-    flex: 0 0 25%;
-    max-width: 25%;
+    flex: 1 1 25%;
+    min-width: 250px;
 }
 
 .gap-2 {
@@ -133,21 +134,29 @@ body {
 }
 
 .chat-pane {
-    height: 600px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 }
 
 .chat-log-fixed {
-    flex: 1;
+    max-height: 400px;
+    min-height: 400px;
     overflow-y: auto;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    border: 2px solid #ccc;
-    background-color: #fff;
-    border-radius: 8px;
+    overflow-x: hidden;
     padding: 1rem;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.chat-log-fixed div {
+    margin-bottom: 0.5rem;
 }
 
 .news-ticker {
@@ -179,4 +188,44 @@ body {
 @keyframes marquee {
     0% { transform: translateX(0%); }  /* Start from the right (completely outside) */
     100% { transform: translateX(-100%); } /* End on the left (completely outside) */
+}
+
+
+.bot-chat-log {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    border: 2px solid #ccc;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+
+@media (max-width: 1000px) {
+    .container {
+        flex-direction: column;
+        width: 100%;
+        padding: 15px;
+    }
+
+    .fixed-flex-1,
+    .fixed-flex-2,
+    .fixed-flex-1-right {
+        flex: 1 0 auto;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        width: 100%;
+        padding: 15px;
+    }
+
+    .fixed-flex-2,
+    .fixed-flex-1-right {
+        display: flex;
+        flex-direction: column;
+    }
 }

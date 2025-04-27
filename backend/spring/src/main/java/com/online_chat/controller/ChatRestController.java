@@ -33,6 +33,7 @@ public class ChatRestController {
         return ResponseEntity.ok(lunchHtml);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/ilm")
     public ResponseEntity<String> getWeather() throws IOException {
         String weatherHtml = seleniumWeatherScraper.fetchWeather();
