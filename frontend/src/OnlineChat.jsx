@@ -125,7 +125,7 @@ export default function OnlineChat() {
                 </div>
 
                 <div className="flex flex-col fixed-flex-2 border p-3 overflow-hidden chat-pane">
-                    <h2 className="text-xl font-semibold mb-2">Online-chat</h2>
+                    <h2 className="text-xl font-semibold mb-2">Vestlusplats</h2>
                     <div ref={chatLogRef} className="chat-log-fixed whitespace-pre-wrap mb-2">
                         {chatMessages.map((line, i) => (
                             <div key={i}>{line}</div>
