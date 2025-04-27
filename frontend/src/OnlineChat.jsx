@@ -16,7 +16,7 @@ export default function OnlineChat() {
     const reconnectTimeoutRef = useRef(null);
     const sessionId = useRef(crypto.randomUUID());
 
-    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+    const API_URL = "http://localhost:8080";
 
     const initialConnectDone = useRef(false);
     const isConnectingRef = useRef(false);
