@@ -36,10 +36,19 @@
             <version>1.3.2</version>
         </dependency>
         <dependency>
-            <groupId>com.online-chat</groupId>
-            <artifactId>webscraper</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.31.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>6.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.17.2</version>
         </dependency>
     </dependencies>
 
