@@ -17,7 +17,7 @@ export default function OnlineChat() {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const response = await fetch("/flask/uudised");
+                const response = await fetch("/uudised");
                 const news = await response.json();
                 setNewsList(news);
             } catch (err) {
@@ -47,8 +47,8 @@ export default function OnlineChat() {
             if (connected) addChatMessage('Ühendus suleti: kood ' + e.code);
         };
 
-        fetchContent("/flask/päevapakumised", setDailyDeals);
-        fetchContent("/flask/ilm", setWeatherInfo);
+        fetchContent("/päevapakumised", setDailyDeals);
+        fetchContent("/ilm", setWeatherInfo);
         fetchNews();
 
         return () => socket.close();
@@ -76,7 +76,7 @@ export default function OnlineChat() {
 
     const sendToBot = async (text) => {
         try {
-            const response = await fetch("/flask/chatbot", {
+            const response = await fetch("/chatbot", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -146,7 +146,7 @@ export default function OnlineChat() {
                 </div>
 
                 <div className="flex flex-col fixed-flex-1-right border p-3 overflow-y-auto">
-                    <h3 className="font-semibold mb-2">Chatbot</h3>
+                    <h3 className="font-semibold mb-2">AI juturobot</h3>
                     <textarea
                         rows={6}
                         value={botInput}
