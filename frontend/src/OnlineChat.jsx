@@ -170,7 +170,7 @@ export default function OnlineChat() {
                         <ul>{weatherInfo.map((weather, i) => <li key={i}>{weather}</li>)}</ul>
                     </div>
                 </div>
-                <div className="flex flex-col fixed-flex-2 border p-3 chat-pane">
+                <div className="flex flex-col fixed-flex-2 border p-3 chat-pane flex-1">
                     <h2 className="text-xl font-semibold mb-2">Vestlusplats</h2>
                     <div ref={chatLogRef} className="chat-log-fixed whitespace-pre-wrap mb-2">
                         {chatMessages.map((line, i) => <div key={i}>{line}</div>)}
@@ -186,36 +186,37 @@ export default function OnlineChat() {
                         <button onClick={sendChatMessage} className="border px-3 py-1 h-10">Saada</button>
                     </div>
                 </div>
-                <div className="flex flex-col fixed-flex-1-right border p-3 overflow-y-auto">
+                <div className="flex flex-col fixed-flex-1-right border p-3 overflow-y-auto flex-1">
                     <h3 className="font-semibold mb-2">AI juturobot</h3>
-                    {Array.isArray(chatHistory) && chatHistory.length > 0 && (
-                        <div className="chat-log-fixed whitespace-pre-wrap mb-2">
-                            {chatHistory.map((entry, index) => (
-                                entry && entry.sender && entry.text ? (
-                                    <div key={index}>
-                                        <strong>{entry.sender}:</strong> {entry.text}
-                                    </div>
-                                ) : null
-                            ))}
-                        </div>
-                    )}
-                    <textarea
-                        rows={1}
-                        value={botInput}
-                        onChange={e => setBotInput(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleBotSend(); } }}
-                        className="border p-2 mb-2 resize-none h-10"
-                        placeholder="Sisesta küsimus..."
-                    />
-                    <button onClick={handleBotSend} className="border px-3 py-1 mb-2">Saada botile</button>
-                    <div className="mb-2">{botResponse}</div>
-                </div>
-            </div>
-            <div className="news-ticker">
-                <div className="animate-marquee text-lg font-semibold">
-                    {[...newsList, ...newsList].map((news, index) => (
-                        <span key={index} className="news-item">{news}</span>
-                    ))}
+
+                    <div className="chat-log-fixed whitespace-pre-wrap flex-1 overflow-y-auto mb-2">
+                        {chatHistory.length > 0 ? (
+                            chatHistory.map((entry, index) => (
+                                <div key={index}>
+                                    <strong>{entry.sender}:</strong> {entry.text}
+                                </div>
+                            ))
+                        ) : (
+                            <div></div>
+                        )}
+                    </div>
+
+                    <div className="flex gap-2">
+        <textarea
+            rows={1}
+            value={botInput}
+            onChange={e => setBotInput(e.target.value)}
+            onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleBotSend();
+                }
+            }}
+            className="border p-2 mb-2 resize-none flex-1 h-10"
+            placeholder="Sisesta küsimus..."
+        />
+                        <button onClick={handleBotSend} className="border px-3 py-1 h-10 mb-2">Saada botile</button>
+                    </div>
                 </div>
             </div>
         </div>
