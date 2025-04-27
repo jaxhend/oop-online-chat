@@ -5,53 +5,109 @@ export default function OnlineChat() {
     const [chatInput, setChatInput] = useState("");
     const [botInput, setBotInput] = useState("");
     const [botResponse, setBotResponse] = useState("");
-    const [dailyDeals, setDailyDeals] = useState("");
-    const [weatherInfo, setWeatherInfo] = useState("");
+    const [dailyDeals, setDailyDeals] = useState([]);
+    const [weatherInfo, setWeatherInfo] = useState([]);
     const [newsList, setNewsList] = useState([]);
     const [chatHistory, setChatHistory] = useState([]);
 
     const chatLogRef = useRef(null);
     const socketRef = useRef(null);
+    const pingIntervalRef = useRef(null);
+    const reconnectTimeoutRef = useRef(null);
     const sessionId = useRef(crypto.randomUUID());
 
-    useEffect(() => {
-        const fetchNews = async () => {
-            try {
-                const response = await fetch("/uudised");
-                const news = await response.json();
-                setNewsList(news);
-            } catch (err) {
-                console.error("Uudiste laadimine ebaõnnestus:", err);
-            }
-        };
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
+    const initialConnectDone = useRef(false);
+    const isConnectingRef = useRef(false);
+    const isReconnectingRef = useRef(false);
+
+    const connectWebSocket = () => {
+        if (isConnectingRef.current) {
+            return;
+        }
+
+        isConnectingRef.current = true;
 
         const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
         const url = protocol + (location.hostname === 'localhost' ? 'localhost:8080' : 'api.utchat.ee') + '/ws?sessionId=' + sessionId.current;
         const socket = new WebSocket(url);
         socketRef.current = socket;
 
-        let connected = false;
-
         socket.onopen = () => {
-            connected = true;
             addChatMessage('Ühendus loodud. Sisestage oma nimi:');
+            initialConnectDone.current = true;
+            if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+            pingIntervalRef.current = setInterval(() => {
+                if (socket.readyState === WebSocket.OPEN) {
+                    socket.send('ping');
+                }
+            }, 20000);
+            isConnectingRef.current = false;
+            isReconnectingRef.current = false;
         };
 
-        socket.onmessage = e => addChatMessage(e.data);
-
-        socket.onerror = () => {
-            if (connected) addChatMessage('Viga WebSocketi ühenduses');
+        socket.onmessage = (e) => {
+            if (e.data !== 'pong') {
+                addChatMessage(e.data);
+            }
         };
 
-        socket.onclose = e => {
-            if (connected) addChatMessage('Ühendus suleti: kood ' + e.code);
+        socket.onerror = (err) => {
+            console.error('WebSocket viga:', err);
+        };
+
+        socket.onclose = () => {
+            if (initialConnectDone.current) {
+                addChatMessage('Ühendus suleti.');
+            }
+            if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+            if (socketRef.current) {
+                socketRef.current = null;
+            }
+            isConnectingRef.current = false;
+            if (!isReconnectingRef.current) {
+                isReconnectingRef.current = true;
+                reconnectTimeoutRef.current = setTimeout(() => {
+                    connectWebSocket();
+                }, 1000);
+            }
+        };
+    };
+
+    useEffect(() => {
+        connectWebSocket();
+
+        const fetchNews = async () => {
+            try {
+                const response = await fetch(`${API_URL}/uudised`);
+                const news = await response.json();
+                setNewsList(news);
+            } catch {}
+        };
+
+        const fetchContent = async (endpoint, setResult) => {
+            try {
+                const response = await fetch(`${API_URL}${endpoint}`);
+                const content = await response.json();
+                setResult(content);
+            } catch {
+                setResult(["Viga"]);
+            }
         };
 
         fetchContent("/päevapakumised", setDailyDeals);
         fetchContent("/ilm", setWeatherInfo);
         fetchNews();
 
-        return () => socket.close();
+        return () => {
+            if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+            if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+            if (socketRef.current) {
+                socketRef.current.close();
+                socketRef.current = null;
+            }
+        };
     }, []);
 
     const addChatMessage = (message) => {
@@ -76,31 +132,21 @@ export default function OnlineChat() {
 
     const sendToBot = async (text) => {
         try {
-            const response = await fetch("/chatbot", {
+            const response = await fetch(`${API_URL}/chatbot`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    user_id: sessionId.current,
-                    prompt: text
-                })
+                body: JSON.stringify({ user_id: sessionId.current, prompt: text })
             });
             const data = await response.json();
             setBotResponse("Bot: " + data.response);
             if (data.history) {
                 setChatHistory(data.history);
+            } else {
+                setChatHistory(prev => [...prev, { sender: "Sina", text }, { sender: "Bot", text: data.response }]);
             }
         } catch (error) {
-            setBotResponse("Flask viga: " + error.message);
-        }
-    };
-
-    const fetchContent = async (endpoint, setResult) => {
-        try {
-            const response = await fetch(endpoint);
-            const content = await response.text();
-            setResult(content);
-        } catch (err) {
-            setResult("Viga: " + err.message);
+            setBotResponse("Flask viga");
+            setChatHistory(prev => [...prev, { sender: "Sina", text }, { sender: "Bot", text: "Flask viga" }]);
         }
     };
 
@@ -108,28 +154,26 @@ export default function OnlineChat() {
         const trimmed = botInput.trim();
         if (!trimmed) return;
         sendToBot(trimmed);
+        setBotInput("");
     };
 
     return (
-        <div className="flex flex-col h-screen">
-            <div className="container mx-auto flex flex-1 p-5 gap-5 font-sans overflow-hidden flex-row">
+        <div className="flex flex-col min-h-screen">
+            <div className="container mx-auto flex flex-1 p-5 gap-5 font-sans flex-row">
                 <div className="flex flex-col fixed-flex-1 border p-3 overflow-y-auto">
                     <div className="flex-1 border-b mb-2">
                         <h4 className="font-bold mb-1">Päevapakkumised</h4>
-                        <div>{dailyDeals}</div>
+                        <ul>{dailyDeals.map((deal, i) => <li key={i}>{deal}</li>)}</ul>
                     </div>
                     <div className="flex-1 border-b mb-2">
                         <h4 className="font-bold mb-1">Ilm</h4>
-                        <div>{weatherInfo}</div>
+                        <ul>{weatherInfo.map((weather, i) => <li key={i}>{weather}</li>)}</ul>
                     </div>
                 </div>
-
-                <div className="flex flex-col fixed-flex-2 border p-3 overflow-hidden chat-pane">
+                <div className="flex flex-col fixed-flex-2 border p-3 chat-pane">
                     <h2 className="text-xl font-semibold mb-2">Vestlusplats</h2>
                     <div ref={chatLogRef} className="chat-log-fixed whitespace-pre-wrap mb-2">
-                        {chatMessages.map((line, i) => (
-                            <div key={i}>{line}</div>
-                        ))}
+                        {chatMessages.map((line, i) => <div key={i}>{line}</div>)}
                     </div>
                     <div className="flex gap-2">
                         <input
@@ -137,45 +181,36 @@ export default function OnlineChat() {
                             onChange={e => setChatInput(e.target.value)}
                             className="flex-1 border px-2 py-1 h-10"
                             placeholder="Sisesta sõnum..."
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") sendChatMessage();
-                            }}
+                            onKeyDown={(e) => { if (e.key === "Enter") sendChatMessage(); }}
                         />
                         <button onClick={sendChatMessage} className="border px-3 py-1 h-10">Saada</button>
                     </div>
                 </div>
-
                 <div className="flex flex-col fixed-flex-1-right border p-3 overflow-y-auto">
                     <h3 className="font-semibold mb-2">AI juturobot</h3>
+                    {Array.isArray(chatHistory) && chatHistory.length > 0 && (
+                        <div className="chat-log-fixed whitespace-pre-wrap mb-2">
+                            {chatHistory.map((entry, index) => (
+                                entry && entry.sender && entry.text ? (
+                                    <div key={index}>
+                                        <strong>{entry.sender}:</strong> {entry.text}
+                                    </div>
+                                ) : null
+                            ))}
+                        </div>
+                    )}
                     <textarea
-                        rows={6}
+                        rows={1}
                         value={botInput}
                         onChange={e => setBotInput(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter" && !e.shiftKey) {
-                                e.preventDefault();
-                                handleBotSend();
-                            }
-                        }}
-                        className="border p-2 mb-2 resize-none"
+                        onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleBotSend(); } }}
+                        className="border p-2 mb-2 resize-none h-10"
                         placeholder="Sisesta küsimus..."
                     />
                     <button onClick={handleBotSend} className="border px-3 py-1 mb-2">Saada botile</button>
                     <div className="mb-2">{botResponse}</div>
-                    {chatHistory.length >= 2 && (
-                        <div className="text-sm">
-                            <h4 className="font-bold mt-4 mb-2">Viimased vestlused:</h4>
-                            {chatHistory.slice(0, -1).map((entry, index) => (
-                                <div key={index} className="mb-2">
-                                    <div><strong>Sina:</strong> {entry.user}</div>
-                                    <div><strong>Bot:</strong> {entry.bot}</div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
                 </div>
             </div>
-
             <div className="news-ticker">
                 <div className="animate-marquee text-lg font-semibold">
                     {[...newsList, ...newsList].map((news, index) => (

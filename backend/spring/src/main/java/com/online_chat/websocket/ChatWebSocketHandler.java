@@ -87,7 +87,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         if (clientSession == null) return;
 
         String payload = message.getPayload();
-
         // Websocket ping pong, et ühendus ei kaoks
         if ("ping".equalsIgnoreCase(payload)) {
             if (session.isOpen()) {
