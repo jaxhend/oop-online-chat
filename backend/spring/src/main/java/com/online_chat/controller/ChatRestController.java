@@ -9,6 +9,7 @@ public class ChatRestController {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/päevapakumised")
     public ResponseEntity<String[]> getDeals() {
         String[] deals = {
@@ -19,22 +20,29 @@ public class ChatRestController {
         return ResponseEntity.ok(deals);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/ilm")
     public ResponseEntity<String[]> getWeather() {
         String[] weather = {
-                "Tartu, 17 kraadi",
-                "Pärnu, 18 kraadi",
-                "Tallinn, 16 kraadi"
+                "Tartu, 17 kraadi"
         };
         return ResponseEntity.ok(weather);
     }
 
     @GetMapping("/uudised")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<String[]> getNews() {
         String[] news = {
-                "Online Chat töötab hästi!",
-                "Täna toimub serveri hooldus.",
-                "Uued funktsioonid on peatselt tulemas!"
+                "Eesti valitsus kiitis heaks uue digistrateegia aastani 2030.",
+                "Tartus avati uus rohetehnoloogia innovatsioonikeskus.",
+                "Tallinna börsil tõusid täna enamik aktsiaid.",
+                "Ilmateenistus: nädalavahetusel saabub Eestisse soojalaine.",
+                "TÜ teadlased töötavad välja uut tehisintellekti mudelit meditsiinis.",
+                "Valitsus arutab täiendavaid toetusi noorte ettevõtluse edendamiseks.",
+                "Eesti jalgpallikoondis alistas Läti 2:1 ja pääses finaali.",
+                "Tallinnas avatakse sel nädalal rahvusvaheline filmifestival.",
+                "Majandusprognoos: Eesti SKP kasvab 2025. aastal 2,5%.",
+                "Haridusministeerium plaanib suurendada programmeerimise õpet koolides."
         };
         return ResponseEntity.ok(news);
     }
