@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  online-chat:
+    build:
+      context: ..
+      dockerfile: backend/spring/Dockerfile
+    ports:
+      - "8080"
+    container_name: online-chat-spring
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/app/certbot-webroot:/var/www/certbot
+      - /etc/app/certs:/etc/letsencrypt
+    depends_on:
+      - online-chat
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot-renew
+    restart: unless-stopped
+    volumes:
+      - /etc/app/certbot-webroot:/var/www/certbot
+      - /etc/app/certs:/etc/letsencrypt
+    # Iga 12h tagant kontrollib certi.
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done;'"
