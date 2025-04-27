@@ -15,7 +15,7 @@ public class SeleniumWeatherScraper {
     private static final String URL = "https://ilm.ee/tartu";
 
     public String fetchWeather() {
-        WebDriverManager.chromedriver().setup();
+        WebDriverManager.chromedriver().browserInDocker().setup();
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");

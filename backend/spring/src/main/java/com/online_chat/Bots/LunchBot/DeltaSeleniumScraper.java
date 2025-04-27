@@ -16,7 +16,7 @@ public class DeltaSeleniumScraper {
     private static String URL = "https://xn--pevapakkumised-5hb.ee/tartu/delta-kohvik";
 
     public List<String> fetchLunchOffer() {
-        WebDriverManager.chromedriver().setup();
+        WebDriverManager.chromedriver().browserInDocker().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");
         WebDriver driver = new ChromeDriver(options);
