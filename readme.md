@@ -8,7 +8,6 @@ Online-chat, mille kaudu saavad tudengid omavahel suhelda ja jagada erinevates c
 ### Hetke funktsionaalsus:
 * Saab luua ja ühineda chatruumidega.
 * Saab üksteisele privaatseid sõnumeid saata.
-* Saab küsida küsimusi AI chatbotilt Tartu Ülikooli õppekavade kohta.
 * Kuvab tänast ilma, uudiseid ja Delta kohviku päevapakkumisi.
 
 
@@ -17,3 +16,5 @@ Online-chat, mille kaudu saavad tudengid omavahel suhelda ja jagada erinevates c
 Ava brauseris:
 utchat.ee
 ~~~
+### Kuvatõmmis
+![Kuvatõmmis 2025-04-27 233637](https://github.com/user-attachments/assets/5d9d6ee1-0a74-47cd-9b3c-b5d70ad42277)
