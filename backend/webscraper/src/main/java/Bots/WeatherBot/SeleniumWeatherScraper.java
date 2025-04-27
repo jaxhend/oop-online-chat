@@ -43,8 +43,8 @@ public class SeleniumWeatherScraper {
                 }
             }
 
-            // !!! KOOSTAME STRINGI HTML KUJUL !!!
-            return "Tartu temperatuur on: " + temperature + "<br><img src=\"" + iconUrl + "\" alt=\"Ilma ikoon\">";
+            // Koostame objekti, mis saadetakse JSON-vormingus
+            return String.format("{\"temperatuur\": \"%s\", \"icon\": \"%s\"}", temperature, iconUrl);
         } catch (InterruptedException | NoSuchElementException e) {
             throw new RuntimeException(e);
         } finally {

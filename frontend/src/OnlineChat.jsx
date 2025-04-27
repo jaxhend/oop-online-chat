@@ -90,6 +90,7 @@ export default function OnlineChat() {
             try {
                 const response = await fetch(`${API_URL}${endpoint}`);
                 const content = await response.json();
+                console.log(content);
                 setResult(content);
             } catch {
                 setResult(["Viga"]);
@@ -181,11 +182,26 @@ export default function OnlineChat() {
                 <div className="flex flex-col fixed-flex-1 border p-3 overflow-y-auto">
                     <div className="flex-1 border-b mb-2">
                         <h4 className="font-bold mb-1">Päevapakkumised</h4>
-                        <ul>{dailyDeals.map((deal, i) => <li key={i}>{deal}</li>)}</ul>
+                        <ul>
+                            {dailyDeals.length > 0 ? (
+                                dailyDeals.map((deal,i) => (
+                                    <li key={i}>{deal}</li> // Kuvame pakkumise teksti
+                                ))
+                            ): (
+                                <li>Ei ole saadaval lõunapakkumisi</li>
+                            )}
+                        </ul>
                     </div>
                     <div className="flex-1 border-b mb-2">
                         <h4 className="font-bold mb-1">Ilm</h4>
-                        <ul>{weatherInfo.map((weather, i) => <li key={i}>{weather}</li>)}</ul>
+                        {weatherInfo && weatherInfo.temperatuur && weatherInfo.icon ? (
+                            <div>
+                                <p>Temperatuur: {weatherInfo.temperatuur}</p>
+                                <img src={weatherInfo.icon} alt = "Ilma ikoon"/>
+                            </div>
+                        ) : (
+                            <p>Ilma andmeid ei ole saadaval</p>
+                        )}
                     </div>
                 </div>
                 <div className="flex flex-col fixed-flex-2 border p-3 chat-pane flex-1">

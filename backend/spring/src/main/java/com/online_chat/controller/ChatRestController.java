@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -26,21 +29,22 @@ public class ChatRestController {
         this.deltaSeleniumScraper = deltaSeleniumScraper;
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/paevapakkumised")
-    public ResponseEntity<String> getDeals() {
-        String lunchHtml = deltaSeleniumScraper.fetchLunchOffer()
-                .replace("\n", "<br/>");
-        return ResponseEntity.ok(lunchHtml);
+    public ResponseEntity<List<String>> getDeals() {
+        List<String> deals = deltaSeleniumScraper.fetchLunchOffer();
+        return ResponseEntity.ok(deals);
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/ilm")
     public ResponseEntity<String> getWeather() throws IOException {
-        String weatherHtml = seleniumWeatherScraper.fetchWeather();
-        return ResponseEntity.ok(weatherHtml);
+        String weatherData = seleniumWeatherScraper.fetchWeather();
+        return ResponseEntity.ok(weatherData);
 
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/uudised")
     public ResponseEntity<List<NewsItem>> getNews(@RequestParam(defaultValue = "1") String topic) throws IOException {
         List<NewsItem> newsItems = rssScraper.scrape(topic);

@@ -7,15 +7,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class DeltaSeleniumScraper {
     private static String URL = "https://xn--pevapakkumised-5hb.ee/tartu/delta-kohvik";
 
-    public String fetchLunchOffer() {
+    public List<String> fetchLunchOffer() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");
@@ -28,17 +28,17 @@ public class DeltaSeleniumScraper {
             WebElement deltaSection = driver.findElement(By.cssSelector("div.meal.selected"));
             List<WebElement> offers = deltaSection.findElements(By.cssSelector("div.offer"));
 
-            StringBuilder result = new StringBuilder();
+            List<String> result = new ArrayList<>();
             for (WebElement offer : offers) {
                 String[] parts = offer.getText().split("\n");
                 if (parts.length >= 2) {
-                    result.append("— ").append(parts[0].trim()).append("\n").append("   ")
-                            .append(parts[1].trim()).append("\n");
+                    result.add(parts[0].trim());
+
                 } else {
-                    result.append("— ").append(offer.getText().trim()).append("\n");
+                    result.add(offer.getText().trim());
                 }
             }
-            return result.toString();  // Return the plain text, just like command-line output
+            return result;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
