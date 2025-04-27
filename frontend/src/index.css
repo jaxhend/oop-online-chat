@@ -139,6 +139,7 @@ body {
 
 .chat-log-fixed {
     max-height: 400px;
+    min-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 1rem;
@@ -212,10 +213,9 @@ body {
         padding: 15px;
     }
 
-    .fixed-flex-1,
     .fixed-flex-2,
     .fixed-flex-1-right {
-        flex: 1 0 auto;
-        max-width: 100%;
+        display: flex;
+        flex-direction: column;
     }
 }
