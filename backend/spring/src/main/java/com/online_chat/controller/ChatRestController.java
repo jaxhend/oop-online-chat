@@ -54,12 +54,21 @@ public class ChatRestController {
 
     @PostMapping("/chatbot")
     public ResponseEntity<String> chatbot(@RequestBody String userMessage) {
-        String botResponse = restTemplate.postForObject(
-                "http://localhost:5000/flask/chat",
-                userMessage,
-                String.class
-        );
-        return ResponseEntity.ok(botResponse);
+        String flaskUrl = "http://localhost:5000/flask/chat";
+        String userId = "UserID";
+        String prompt = userMessage;
+        String jsonPayload = String.format("{\"user_id\": \"%s\", \"prompt\": \"%s\"}", userId, prompt);
+
+        try {
+            String botResponse = restTemplate.postForObject(
+                    flaskUrl,
+                    jsonPayload,
+                    String.class
+            );
+            return ResponseEntity.ok(botResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error communicating with Flask API.");
+        }
     }
 
 }
