@@ -19,11 +19,17 @@ export default function OnlineChat() {
             try {
                 const response = await fetch("/uudised");
                 const news = await response.json();
-                setNewsList(news);
+                console.log("Uudised: ", news);
+                if (Array.isArray(news)) {
+                    setNewsList(news)
+                } else {
+                    console.error("Uudised ei ole massiiv: ", news);
+                }
             } catch (err) {
                 console.error("Uudiste laadimine ebaõnnestus:", err);
             }
         };
+
 
         const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
         const url = protocol + (location.hostname === 'localhost' ? 'localhost:8080' : 'api.utchat.ee') + '/ws?sessionId=' + sessionId.current;
@@ -47,7 +53,7 @@ export default function OnlineChat() {
             if (connected) addChatMessage('Ühendus suleti: kood ' + e.code);
         };
 
-        fetchContent("/päevapakumised", setDailyDeals);
+        fetchContent("/paevapakkumised", setDailyDeals);
         fetchContent("/ilm", setWeatherInfo);
         fetchNews();
 
@@ -62,6 +68,8 @@ export default function OnlineChat() {
             }
         }, 100);
     };
+
+
 
     const sendChatMessage = () => {
         const trimmed = chatInput.trim();
@@ -110,17 +118,33 @@ export default function OnlineChat() {
         sendToBot(trimmed);
     };
 
+    const NewsList = ({ newsItems }) => {
+        return (
+            <div>
+                {newsItems.length? (
+                    newsItems.map((newsItem, index) => (
+                        <span key={index} className="news-item">
+                            {newsItem.title}
+                        </span>
+                    ))
+                ) : (
+                    <p>No news available</p>
+                )}
+            </div>
+        );
+    };
+
     return (
         <div className="flex flex-col h-screen">
             <div className="container mx-auto flex flex-1 p-5 gap-5 font-sans overflow-hidden flex-row">
                 <div className="flex flex-col fixed-flex-1 border p-3 overflow-y-auto">
                     <div className="flex-1 border-b mb-2">
                         <h4 className="font-bold mb-1">Päevapakkumised</h4>
-                        <div>{dailyDeals}</div>
+                        <div dangerouslySetInnerHTML={{__html: dailyDeals}}/>
                     </div>
                     <div className="flex-1 border-b mb-2">
                         <h4 className="font-bold mb-1">Ilm</h4>
-                        <div>{weatherInfo}</div>
+                        <div dangerouslySetInnerHTML={{__html: weatherInfo}}/>
                     </div>
                 </div>
 
@@ -178,9 +202,16 @@ export default function OnlineChat() {
 
             <div className="news-ticker">
                 <div className="animate-marquee text-lg font-semibold">
-                    {[...newsList, ...newsList].map((news, index) => (
+
+                    {/*
+                        [...newsList, ...newsList].map((news, index) => (
                         <span key={index} className="news-item">{news}</span>
-                    ))}
+                    ))
+                    */
+
+                    }
+                    <NewsList newsItems={newsList}/>
+
                 </div>
             </div>
         </div>

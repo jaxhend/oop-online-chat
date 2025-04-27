@@ -9,6 +9,7 @@ body {
 }
 
 .container {
+    margin-top: 50px;
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
@@ -150,10 +151,32 @@ body {
 }
 
 .news-ticker {
-    position: relative;
+    position: fixed;
+    top:0;
+    left:0;
     width: 100%;
-    overflow: hidden;
-    height: 50px;
+    overflow: hidden;   /* Prevent overflow and clipping of content */
+    height: 50px;       /* Adjust the height as needed */
     background-color: #fff;
     border-top: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+}
+
+.animate-marquee {
+    display: flex;
+    animation: marquee 100s linear infinite;  /* Adjust speed by changing 20s */
+}
+
+.news-item {
+    margin-right: 4rem; /* Space between items, can be reduced or increased */
+    white-space: nowrap; /* Prevent text wrapping */
+    padding: 0 20px;     /* Padding for spacing */
+    font-weight: bold;   /* Make news items stand out */
+    font-size: 16px;     /* Adjust size for readability */
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0%); }  /* Start from the right (completely outside) */
+    100% { transform: translateX(-100%); } /* End on the left (completely outside) */
 }

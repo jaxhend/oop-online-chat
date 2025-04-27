@@ -9,7 +9,10 @@ export default defineConfig({
                 target: 'ws://localhost:8080',
                 ws: true
             },
-            '/api': 'http://localhost:8080',
+            '/ilm': 'http://localhost:8080',
+            '/paevapakkumised': 'http://localhost:8080',
+            '/uudised': 'http://localhost:8080',
+            '/chatbot': 'http://localhost:8080',
             '/flask': 'http://localhost:5001'
         }
     }

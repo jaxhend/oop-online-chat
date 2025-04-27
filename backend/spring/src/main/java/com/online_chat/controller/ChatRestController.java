@@ -1,29 +1,50 @@
 package com.online_chat.controller;
 
+
+import Bots.LunchBot.DeltaSeleniumScraper;
+import Bots.NewsBot.NewsItem;
+import Bots.NewsBot.RssScraper;
+import Bots.WeatherBot.SeleniumWeatherScraper;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.util.List;
+
 
 @RestController
 public class ChatRestController {
-
+    private final RssScraper rssScraper;
+    private final SeleniumWeatherScraper seleniumWeatherScraper;
     private final RestTemplate restTemplate = new RestTemplate();
+    private final DeltaSeleniumScraper deltaSeleniumScraper;
 
-    @GetMapping("/päevapakumised")
+    public ChatRestController(RssScraper rssScraper, SeleniumWeatherScraper seleniumWeatherScraper, DeltaSeleniumScraper deltaSeleniumScraper) {
+        this.rssScraper = rssScraper;
+        this.seleniumWeatherScraper = seleniumWeatherScraper;
+        this.deltaSeleniumScraper = deltaSeleniumScraper;
+    }
+
+    @GetMapping("/paevapakkumised")
     public ResponseEntity<String> getDeals() {
-        return ResponseEntity.ok("Kohvi 1 euro");
+        String lunchHtml = deltaSeleniumScraper.fetchLunchOffer()
+                .replace("\n", "<br/>");
+        return ResponseEntity.ok(lunchHtml);
     }
 
     @GetMapping("/ilm")
-    public ResponseEntity<String> getWeather() {
-        return ResponseEntity.ok("Tartu, 17 kraadi");
+    public ResponseEntity<String> getWeather() throws IOException {
+        String weatherHtml = seleniumWeatherScraper.fetchWeather();
+        return ResponseEntity.ok(weatherHtml);
 
     }
 
     @GetMapping("/uudised")
-    public ResponseEntity<String> getNews() {
-        return ResponseEntity.ok(  "Online Chat töötab hästi!");
+    public ResponseEntity<List<NewsItem>> getNews(@RequestParam(defaultValue = "1") String topic) throws IOException {
+        List<NewsItem> newsItems = rssScraper.scrape(topic);
+        newsItems.forEach(newsItem -> System.out.println(newsItem));
+        return ResponseEntity.ok(newsItems);
     }
 
     @PostMapping("/chatbot")
