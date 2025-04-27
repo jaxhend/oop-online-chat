@@ -1,4 +1,4 @@
-package com.online_chat.Bots.LunchBot;
+package com.online_chat.bots.lunchBot;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 public class DeltaSeleniumScraper {
-    private static String URL = "https://xn--pevapakkumised-5hb.ee/tartu/delta-kohvik";
+    private static final String URL = "https://xn--pevapakkumised-5hb.ee/tartu/delta-kohvik";
 
     public List<String> fetchLunchOffer() {
         WebDriverManager.chromedriver().browserInDocker().setup();

@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
-public class  MessageProcessor {
+public class MessageProcessor {
 
     private final CommandHandler commandHandler;
     private final ClientSessionManager sessionManager;

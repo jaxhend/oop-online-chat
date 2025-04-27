@@ -1,11 +1,11 @@
 package com.online_chat.controller;
 
 
-import com.online_chat.Bots.LunchBot.DeltaSeleniumScraper;
-import com.online_chat.Bots.NewsBot.NewsItem;
-import com.online_chat.Bots.NewsBot.RssScraper;
-import com.online_chat.Bots.WeatherBot.SeleniumWeatherScraper;
-import org.springframework.http.*;
+import com.online_chat.bots.lunchBot.DeltaSeleniumScraper;
+import com.online_chat.bots.newsBot.NewsItem;
+import com.online_chat.bots.newsBot.RssScraper;
+import com.online_chat.bots.weatherBot.SeleniumWeatherScraper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -45,7 +45,6 @@ public class ChatRestController {
     @GetMapping("/uudised")
     public ResponseEntity<List<NewsItem>> getNews(@RequestParam(defaultValue = "1") String topic) throws IOException {
         List<NewsItem> newsItems = rssScraper.scrape(topic);
-        newsItems.forEach(newsItem -> System.out.println(newsItem));
         return ResponseEntity.ok(newsItems);
     }
 

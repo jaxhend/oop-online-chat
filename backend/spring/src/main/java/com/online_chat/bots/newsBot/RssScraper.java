@@ -1,4 +1,4 @@
-package com.online_chat.Bots.NewsBot;
+package com.online_chat.bots.newsBot;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

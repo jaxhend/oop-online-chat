@@ -25,7 +25,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final ChatRoomManager chatRoomManager;
 
 
-
     public ChatWebSocketHandler(ClientSessionManager sessionManager, MessageProcessor messageProcessor, ChatRoomManager chatRoomManager) {
         this.sessionManager = sessionManager;
         this.messageProcessor = messageProcessor;

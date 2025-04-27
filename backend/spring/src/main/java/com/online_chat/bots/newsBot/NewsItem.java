@@ -1,10 +1,10 @@
-package com.online_chat.Bots.NewsBot;
+package com.online_chat.bots.newsBot;
 
 public class NewsItem {
-    private String title;
-    private String link;
-    private String publishDate;
-    private String description;
+    private final String title;
+    private final String link;
+    private final String publishDate;
+    private final String description;
 
 
     public NewsItem(String title, String link, String publishDate, String description) {
@@ -33,12 +33,12 @@ public class NewsItem {
     @Override
     public String toString() {
         return """
-        📰 %s
-        📅 %s
-        📝 %s
-        🔗 %s
-        
-        """.formatted(title, publishDate, description, link);
+                📰 %s
+                📅 %s
+                📝 %s
+                🔗 %s
+                
+                """.formatted(title, publishDate, description, link);
     }
 }
 
