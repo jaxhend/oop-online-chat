@@ -30,7 +30,7 @@ export default function OnlineChat() {
         isConnectingRef.current = true;
 
         const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
-        const url = protocol + (location.hostname === 'localhost' ? 'localhost:8080' : 'api.utchat.ee') + '/ws?sessionId=' + sessionId.current;
+        const url = protocol + 'api.utchat.ee' + '/ws?sessionId=' + sessionId.current;
         const socket = new WebSocket(url);
         socketRef.current = socket;
 
