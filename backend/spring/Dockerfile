@@ -18,6 +18,18 @@ ENV TZ=Europe/Tallinn
 
 RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
 
+RUN apt-get update \
+    && apt-get install -y wget gnupg2 \
+    && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && dpkg -i google-chrome-stable_current_amd64.deb \
+    && apt-get install -f -y \
+    && wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip \
+    && apt-get install -y unzip \
+    && unzip chromedriver_linux64.zip -d /usr/local/bin/ \
+    && chmod +x /usr/local/bin/chromedriver \
+    && rm chromedriver_linux64.zip
+
+
 # Kopeerime ehitatud JAR-faili
 COPY --from=builder --chown=appuser:appgroup /app/backend/spring/target/spring-1.0.0.jar /app/spring.jar
 
