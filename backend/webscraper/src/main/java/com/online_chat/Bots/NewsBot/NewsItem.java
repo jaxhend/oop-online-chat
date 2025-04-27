@@ -1,4 +1,4 @@
-package Bots.NewsBot;
+package com.online_chat.Bots.NewsBot;
 
 public class NewsItem {
     private String title;

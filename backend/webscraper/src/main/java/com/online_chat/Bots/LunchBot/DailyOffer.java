@@ -1,4 +1,4 @@
-package Bots.LunchBot;
+package com.online_chat.Bots.LunchBot;
 
 import java.util.List;
 

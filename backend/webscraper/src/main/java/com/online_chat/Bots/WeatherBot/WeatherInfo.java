@@ -1,4 +1,4 @@
-package Bots.WeatherBot;
+package com.online_chat.Bots.WeatherBot;
 
 import java.io.IOException;
 

@@ -1,19 +1,16 @@
 package com.online_chat.controller;
 
 
-import Bots.LunchBot.DeltaSeleniumScraper;
-import Bots.NewsBot.NewsItem;
-import Bots.NewsBot.RssScraper;
-import Bots.WeatherBot.SeleniumWeatherScraper;
+import com.online_chat.Bots.LunchBot.DeltaSeleniumScraper;
+import com.online_chat.Bots.NewsBot.NewsItem;
+import com.online_chat.Bots.NewsBot.RssScraper;
+import com.online_chat.Bots.WeatherBot.SeleniumWeatherScraper;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
