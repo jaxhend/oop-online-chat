@@ -14,6 +14,8 @@ FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
+ENV TZ=Europe/Tallinn
+
 RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
 
 # Kopeerime ehitatud JAR-faili
