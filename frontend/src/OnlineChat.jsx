@@ -16,7 +16,7 @@ export default function OnlineChat() {
     const reconnectTimeoutRef = useRef(null);
     const sessionId = useRef(crypto.randomUUID());
 
-    const API_URL = "http://localhost:8080";
+    const API_URL = "https://api.utchat.ee";
 
     const initialConnectDone = useRef(false);
     const isConnectingRef = useRef(false);
