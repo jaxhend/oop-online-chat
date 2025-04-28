@@ -1,22 +1,27 @@
-# Etapp 1: ehita Maveniga
+# Etapp 1: Buildime Springi rakenduse
 FROM maven:3.9-eclipse-temurin-17 as builder
 
-WORKDIR /app
+WORKDIR /build
+
+# Kopeerime kogu projekti
 COPY . .
 
-# Lae sõltuvused ja paki JAR
+# Laeme sõltuvused ja ehitame JAR-i
 RUN mvn clean package -DskipTests
 
-# Etapp 2: jooksuta Selenium Chrome peal
+# Etapp 2: Päris jooksutamise etapp koos Chrome'iga
 FROM selenium/standalone-chrome:124.0
 
+# Kasutame õigesti kasutajat, et vältida permission erroreid
 USER seluser
+
 WORKDIR /home/seluser/app
 
-# Võta ainult valmis JAR ehitusest
-COPY --from=builder /app/backend/spring/target/spring-1.0.0.jar ./spring.jar
+# Kopeerime valminud Spring Boot JAR-faili
+COPY --from=builder --chown=seluser:seluser /build/backend/spring/target/spring-1.0.0.jar ./spring.jar
 
+# Avame pordi
 EXPOSE 8080
 
+# Käivitame Spring rakenduse
 ENTRYPOINT ["java", "-jar", "spring.jar"]
-
