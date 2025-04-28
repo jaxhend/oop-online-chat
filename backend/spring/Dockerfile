@@ -1,28 +1,22 @@
-# Esimene etapp: ehitame rakenduse
+# Etapp 1: ehita Maveniga
 FROM maven:3.9-eclipse-temurin-17 as builder
 
 WORKDIR /app
-
 COPY . .
 
-RUN mvn dependency:go-offline
-
+# Lae sõltuvused ja paki JAR
 RUN mvn clean package -DskipTests
 
-# Teine etapp: väiksem image
-FROM openjdk:17-jdk-slim
+# Etapp 2: jooksuta Selenium Chrome peal
+FROM selenium/standalone-chrome:124.0
 
-WORKDIR /app
+USER seluser
+WORKDIR /home/seluser/app
 
-ENV TZ=Europe/Tallinn
-
-RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
-
-# Kopeerime ehitatud JAR-faili
-COPY --from=builder --chown=appuser:appgroup /app/backend/spring/target/spring-1.0.0.jar /app/spring.jar
-
-USER appuser
+# Võta ainult valmis JAR ehitusest
+COPY --from=builder /app/backend/spring/target/spring-1.0.0.jar ./spring.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/spring.jar"]
+ENTRYPOINT ["java", "-jar", "spring.jar"]
+

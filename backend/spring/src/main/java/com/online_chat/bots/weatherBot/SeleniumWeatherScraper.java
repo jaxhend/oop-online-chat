@@ -1,6 +1,6 @@
 package com.online_chat.bots.weatherBot;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -9,18 +9,35 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.util.UUID;
+
 @Component
 public class SeleniumWeatherScraper {
     private static final String URL = "https://ilm.ee/tartu";
 
     public String fetchWeather() {
-        WebDriverManager.chromedriver().browserInDocker().setup();
-
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new");
+        options.addArguments("--headless"); // Kasutame vana headless
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-gpu");
+        options.addArguments("--remote-debugging-port=9222");
+        options.addArguments("--disable-software-rasterizer");
+        options.addArguments("--disable-extensions");
+        options.addArguments("--disable-background-networking");
+        options.addArguments("--disable-sync");
+        options.addArguments("--metrics-recording-only");
+        options.addArguments("--mute-audio");
+        options.addArguments("--no-first-run");
+        options.addArguments("--safebrowsing-disable-auto-update");
 
+// User Data Directory
+        String userDataDir = "/tmp/chrome-" + UUID.randomUUID();
+        new File(userDataDir).mkdirs();  // Make sure the folder exists
+        options.addArguments("--user-data-dir=" + userDataDir);
         WebDriver driver = new ChromeDriver(options);
+
 
         try {
             driver.get(URL);
