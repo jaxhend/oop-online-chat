@@ -24,6 +24,7 @@ public class SeleniumWeatherScraper {
         options.addArguments("--disable-gpu");
         options.addArguments("--remote-debugging-port=9222");
         options.addArguments("--disable-software-rasterizer");
+        options.addArguments("--single-process");
         options.addArguments("--disable-extensions");
         options.addArguments("--disable-background-networking");
         options.addArguments("--disable-sync");
