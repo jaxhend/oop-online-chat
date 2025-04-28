@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export default function OnlineChat() {
     const [chatMessages, setChatMessages] = useState([]);
     const [chatInput, setChatInput] = useState("");
     const [botInput, setBotInput] = useState("");
-    const [botResponse, setBotResponse] = useState("");
     const [dailyDeals, setDailyDeals] = useState([]);
     const [weatherInfo, setWeatherInfo] = useState([]);
     const [newsList, setNewsList] = useState([]);
@@ -15,6 +14,7 @@ export default function OnlineChat() {
     const pingIntervalRef = useRef(null);
     const reconnectTimeoutRef = useRef(null);
     const sessionId = useRef(crypto.randomUUID());
+    const marqueeRef = useRef(null);
 
     const API_URL = "https://api.utchat.ee";
 
@@ -23,14 +23,12 @@ export default function OnlineChat() {
     const isReconnectingRef = useRef(false);
 
     const connectWebSocket = () => {
-        if (isConnectingRef.current) {
-            return;
-        }
+        if (isConnectingRef.current) return;
 
         isConnectingRef.current = true;
 
         const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
-        const url = protocol + 'api.utchat.ee' + '/ws?sessionId=' + sessionId.current;
+        const url = protocol + 'api.utchat.ee/ws?sessionId=' + sessionId.current;
         const socket = new WebSocket(url);
         socketRef.current = socket;
 
@@ -62,9 +60,7 @@ export default function OnlineChat() {
                 addChatMessage('Ühendus suleti.');
             }
             if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
-            if (socketRef.current) {
-                socketRef.current = null;
-            }
+            if (socketRef.current) socketRef.current = null;
             isConnectingRef.current = false;
             if (!isReconnectingRef.current) {
                 isReconnectingRef.current = true;
@@ -83,14 +79,15 @@ export default function OnlineChat() {
                 const response = await fetch(`${API_URL}/uudised`);
                 const news = await response.json();
                 setNewsList(news);
-            } catch {}
+            } catch {
+                console.error("Uudiste laadimine ebaõnnestus");
+            }
         };
 
         const fetchContent = async (endpoint, setResult) => {
             try {
                 const response = await fetch(`${API_URL}${endpoint}`);
                 const content = await response.json();
-                console.log(content);
                 setResult(content);
             } catch {
                 setResult(["Viga"]);
@@ -111,6 +108,17 @@ export default function OnlineChat() {
         };
     }, []);
 
+    useLayoutEffect(() => {
+        if (!marqueeRef.current || newsList.length === 0) return;
+
+        const contentWidth = marqueeRef.current.scrollWidth;
+        const containerWidth = marqueeRef.current.parentElement.offsetWidth;
+        const speed = 50;
+        const duration = (contentWidth + containerWidth) / speed;
+
+        marqueeRef.current.style.animationDuration = `${duration}s`;
+    }, [newsList]);
+
     const addChatMessage = (message) => {
         setChatMessages(prev => [...prev, message]);
         setTimeout(() => {
@@ -119,8 +127,6 @@ export default function OnlineChat() {
             }
         }, 100);
     };
-
-
 
     const sendChatMessage = () => {
         const trimmed = chatInput.trim();
@@ -141,14 +147,12 @@ export default function OnlineChat() {
                 body: JSON.stringify({ user_id: sessionId.current, prompt: text })
             });
             const data = await response.json();
-            setBotResponse("Bot: " + data.response);
             if (data.history) {
                 setChatHistory(data.history);
             } else {
                 setChatHistory(prev => [...prev, { sender: "Sina", text }, { sender: "Bot", text: data.response }]);
             }
         } catch (error) {
-            setBotResponse("Flask viga");
             setChatHistory(prev => [...prev, { sender: "Sina", text }, { sender: "Bot", text: "Flask viga" }]);
         }
     };
@@ -161,50 +165,80 @@ export default function OnlineChat() {
     };
 
     const NewsList = ({ newsItems }) => {
+        const repeatedNews = [...newsItems, ...newsItems];
+
+        const duration = repeatedNews.length * 5;
+
         return (
-            <div>
-                {newsItems.length? (
-                    newsItems.map((newsItem, index) => (
-                        <span key={index} className="news-item">
+            <div
+                className="news-wrapper animate-marquee"
+                style={{ animationDuration: `${duration}s` }}
+            >
+                {repeatedNews.map((newsItem, index) => (
+                    <span key={index} className="news-item">
+                    {newsItem.sourceName && newsItem.link ? (
+                        <>
+                            <a
+                                href={newsItem.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="news-source-link"
+                            >
+                                {newsItem.sourceName}
+                            </a>
+                            {" - "}
                             {newsItem.title}
-                        </span>
-                    ))
-                ) : (
-                    <p>No news available</p>
-                )}
+                        </>
+                    ) : (
+                        newsItem.title
+                    )}
+                </span>
+                ))}
             </div>
         );
     };
 
     return (
         <div className="flex flex-col min-h-screen">
+            {newsList.length > 0 ? (
+                <div className="news-ticker">
+                    <div className="animate-marquee text-lg font-semibold">
+                        <NewsList newsItems={newsList} />
+                    </div>
+                </div>
+            ) : (
+                <div className="text-lg font-semibold">Laen uudiseid...</div>
+            )}
+
             <div className="container mx-auto flex flex-1 p-5 gap-5 font-sans flex-row">
                 <div className="flex flex-col fixed-flex-1 border p-3 overflow-y-auto">
                     <div className="flex-1 border-b mb-2">
                         <h4 className="font-bold mb-1">Päevapakkumised</h4>
                         <ul>
                             {dailyDeals.length > 0 ? (
-                                dailyDeals.map((deal,i) => (
-                                    <li key={i}>{deal}</li> // Kuvame pakkumise teksti
+                                dailyDeals.map((deal, i) => (
+                                    <li key={i}>{deal}</li>
                                 ))
-                            ): (
+                            ) : (
                                 <li>Ei ole saadaval lõunapakkumisi</li>
                             )}
                         </ul>
                     </div>
-                    <div className="flex-1 border-b mb-2">
+                    <div className="flex-1">
                         <h4 className="font-bold mb-1">Ilm</h4>
-                        {weatherInfo && weatherInfo.temperatuur && weatherInfo.icon ? (
+                        {weatherInfo?.temperatuur && weatherInfo?.icon ? (
                             <div>
                                 <p>Temperatuur: {weatherInfo.temperatuur}</p>
-                                <img src={weatherInfo.icon} alt = "Ilma ikoon"/>
+                                <img src={weatherInfo.icon} alt="Ilma ikoon" />
                             </div>
                         ) : (
                             <p>Ilma andmeid ei ole saadaval</p>
                         )}
                     </div>
                 </div>
-                <div className="flex flex-col fixed-flex-2 border p-3 chat-pane flex-1">
+
+
+                <div className="flex flex-col fixed-flex-2 border p-3 flex-1 chat-pane">
                     <h2 className="text-xl font-semibold mb-2">Vestlusplats</h2>
                     <div ref={chatLogRef} className="chat-log-fixed whitespace-pre-wrap mb-2">
                         {chatMessages.map((line, i) => <div key={i}>{line}</div>)}
@@ -220,52 +254,32 @@ export default function OnlineChat() {
                         <button onClick={sendChatMessage} className="border px-3 py-1 h-10">Saada</button>
                     </div>
                 </div>
-                <div className="flex flex-col fixed-flex-1-right border p-3 overflow-y-auto flex-1">
+
+                <div className="flex flex-col fixed-flex-1-right border p-3 flex-1 overflow-y-auto">
                     <h3 className="font-semibold mb-2">AI juturobot</h3>
-
-                    <div className="chat-log-fixed whitespace-pre-wrap flex-1 overflow-y-auto mb-2">
-                        {chatHistory.length > 0 ? (
-                            chatHistory.map((entry, index) => (
-                                <div key={index}>
-                                    <strong>{entry.sender}:</strong> {entry.text}
-                                </div>
-                            ))
-                        ) : (
-                            <div></div>
-                        )}
+                    <div className="chat-log-fixed whitespace-pre-wrap mb-2">
+                        {chatHistory.map((entry, i) => (
+                            <div key={i}>
+                                <strong>{entry.sender}:</strong> {entry.text}
+                            </div>
+                        ))}
                     </div>
-
                     <div className="flex gap-2">
-        <textarea
-            rows={1}
-            value={botInput}
-            onChange={e => setBotInput(e.target.value)}
-            onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleBotSend();
-                }
-            }}
-            className="border p-2 mb-2 resize-none flex-1 h-10"
-            placeholder="Sisesta küsimus..."
-        />
+                    <textarea
+                        rows={1}
+                        value={botInput}
+                        onChange={e => setBotInput(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                handleBotSend();
+                            }
+                        }}
+                        className="border p-2 mb-2 resize-none flex-1 h-10"
+                        placeholder="Sisesta küsimus..."
+                    />
                         <button onClick={handleBotSend} className="border px-3 py-1 h-10 mb-2">Saada botile</button>
                     </div>
-                </div>
-            </div>
-
-            <div className="news-ticker">
-                <div className="animate-marquee text-lg font-semibold">
-
-                    {/*
-                        [...newsList, ...newsList].map((news, index) => (
-                        <span key={index} className="news-item">{news}</span>
-                    ))
-                    */
-
-                    }
-                    <NewsList newsItems={newsList}/>
-
                 </div>
             </div>
         </div>
