@@ -167,7 +167,7 @@ export default function OnlineChat() {
     const NewsList = ({ newsItems }) => {
         const repeatedNews = [...newsItems, ...newsItems];
 
-        const duration = repeatedNews.length * 5;
+        const duration = repeatedNews.length * 8;
 
         return (
             <div
