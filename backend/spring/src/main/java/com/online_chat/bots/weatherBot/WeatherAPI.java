@@ -14,7 +14,7 @@ public class WeatherAPI {
 
 @Value("${api.key}")
 private String API_KEY;
-private static final String ENDPOINT = "https://api.weatherapi.com/v1/current.json?key=%s&q=tartu&lang=et";
+private static final String ENDPOINT = "https://api.weatherapi.com/v1/current.json?key=%s&q=Tartu,Estonia&lang=et";
 
 
     public  String fetchWeather() {
