@@ -12,7 +12,7 @@ import java.util.Scanner;
 @Component
 public class WeatherAPI {
 
-@Value("${api.key}")
+@Value("${weather.key}")
 private String API_KEY;
 private static final String ENDPOINT = "https://api.weatherapi.com/v1/current.json?key=%s&q=Tartu,Estonia&lang=et";
 
