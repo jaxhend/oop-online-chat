@@ -21,7 +21,7 @@
  # Kopeerime ehitatud JAR-faili
   COPY --from=builder --chown=appuser:appgroup /app/backend/spring/target/spring-1.0.0.jar /app/spring.jar
 
-  CMD ["java", "-jar", "app.jar"]
+
   USER appuser
 
   EXPOSE 8080

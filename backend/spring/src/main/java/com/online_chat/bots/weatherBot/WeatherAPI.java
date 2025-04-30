@@ -13,11 +13,11 @@ import java.util.Scanner;
 public class WeatherAPI {
 
 @Value("${api.key}")
-private static String API_KEY;
+private String API_KEY;
 private static final String ENDPOINT = "https://api.weatherapi.com/v1/current.json?key=%s&q=tartu&lang=et";
 
 
-    public static String fetchWeather() {
+    public  String fetchWeather() {
         try{
             String requestUrl = String.format(ENDPOINT, API_KEY);
             URL url = new URL(requestUrl);

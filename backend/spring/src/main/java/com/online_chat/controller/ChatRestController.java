@@ -35,8 +35,8 @@ public class ChatRestController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/ilm")
-    public ResponseEntity<String> getWeather() throws IOException {
-        String weatherData = WeatherAPI.fetchWeather();
+    public ResponseEntity<String> getWeather() {
+        String weatherData = weatherAPI.fetchWeather();
         return ResponseEntity.ok(weatherData);
 
     }
