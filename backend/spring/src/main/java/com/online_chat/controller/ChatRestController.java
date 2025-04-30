@@ -22,14 +22,14 @@ public class ChatRestController {
         this.weatherAPI = weatherAPI;
     }
 
-    @CrossOrigin(origins = "https://utchat.ee")
+    @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
     @GetMapping("/paevapakkumised")
     public ResponseEntity<List<String>> getDeals() throws IOException {
         List<String> deals = DeltaJsoupScraper.lunchOffers();
         return ResponseEntity.ok(deals);
     }
 
-    @CrossOrigin(origins = "https://utchat.ee")
+    @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
     @GetMapping("/ilm")
     public ResponseEntity<String> getWeather() {
         String weatherData = weatherAPI.fetchWeather();
@@ -37,7 +37,7 @@ public class ChatRestController {
 
     }
 
-    @CrossOrigin(origins = "https://utchat.ee")
+    @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
     @GetMapping("/uudised")
     public ResponseEntity<List<NewsItem>> getNews(@RequestParam(defaultValue = "1") String topic) throws IOException {
         List<NewsItem> newsItems = rssScraper.scrape(topic);
