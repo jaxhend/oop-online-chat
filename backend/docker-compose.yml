@@ -5,6 +5,8 @@ services:
     build:
       context: ..
       dockerfile: backend/spring/Dockerfile
+    environment:
+      - API_KEY=557863b6445245e084e55902253004
     ports:
       - "8080:8080"
     container_name: online-chat-spring

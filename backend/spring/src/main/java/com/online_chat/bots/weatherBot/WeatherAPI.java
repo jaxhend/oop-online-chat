@@ -2,6 +2,7 @@ package com.online_chat.bots.weatherBot;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.HttpURLConnection;
@@ -10,7 +11,9 @@ import java.util.Scanner;
 
 @Component
 public class WeatherAPI {
-private static final String API_KEY = "557863b6445245e084e55902253004";
+
+@Value("${api.key}")
+private static String API_KEY;
 private static final String ENDPOINT = "https://api.weatherapi.com/v1/current.json?key=%s&q=tartu&lang=et";
 
 
