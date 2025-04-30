@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import "./index.css";
 
+// Memoiseeritud uudiste riba komponent
 const NewsTicker = React.memo(({ newsList }) => {
     const tickerRef = useRef(null);
     const repeatedNews = useMemo(() => [...newsList, ...newsList], [newsList]);
@@ -22,30 +23,38 @@ const NewsTicker = React.memo(({ newsList }) => {
 
     return (
         <div className="news-ticker">
-            <div
-                ref={tickerRef}
-                className="news-wrapper animate-marquee"
-            >
-                {repeatedNews.map((item, idx) => (
-                    <span className="news-item" key={idx}>
-            {item.sourceName && item.link ? (
-                <>
-                    <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="news-source-link"
-                    >
-                        {item.sourceName}
-                    </a>
-                    {" - "}
-                    {item.title}
-                </>
-            ) : (
-                item.title
-            )}
-          </span>
-                ))}
+            <div ref={tickerRef} className="news-wrapper animate-marquee">
+                {repeatedNews.map((item, idx) => {
+                    const content = (
+                        <>
+                            {item.sourceName && item.link ? (
+                                <>
+                                    <span className="news-source-link">{item.sourceName}</span>
+                                    {" - "}
+                                    {item.title}
+                                </>
+                            ) : (
+                                item.title
+                            )}
+                        </>
+                    );
+
+                    return item.link ? (
+                        <a
+                            key={idx}
+                            className="news-item"
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {content}
+                        </a>
+                    ) : (
+                        <span key={idx} className="news-item">
+              {content}
+            </span>
+                    );
+                })}
             </div>
         </div>
     );
@@ -67,7 +76,6 @@ export default function OnlineChat() {
     const sessionId = useRef(crypto.randomUUID());
 
     const API_URL = "https://api.utchat.ee";
-
     const initialConnectDone = useRef(false);
     const isConnectingRef = useRef(false);
     const isReconnectingRef = useRef(false);
@@ -91,12 +99,8 @@ export default function OnlineChat() {
             isReconnectingRef.current = false;
         };
 
-        socket.onmessage = (e) => {
-            if (e.data !== 'pong') addChatMessage(e.data);
-        };
-
+        socket.onmessage = (e) => { if (e.data !== 'pong') addChatMessage(e.data); };
         socket.onerror = (err) => console.error('WebSocket viga:', err);
-
         socket.onclose = () => {
             if (initialConnectDone.current) addChatMessage('Ühendus suleti.');
             clearInterval(pingIntervalRef.current);
@@ -109,10 +113,8 @@ export default function OnlineChat() {
         };
     };
 
-
     useEffect(() => {
         connectWebSocket();
-
         const fetchContent = async (endpoint, setter) => {
             try {
                 const res = await fetch(`${API_URL}${endpoint}`);
@@ -134,12 +136,9 @@ export default function OnlineChat() {
         };
     }, []);
 
-
     const addChatMessage = (message) => {
         setChatMessages(prev => [...prev, message]);
-        setTimeout(() => {
-            if (chatLogRef.current) chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
-        }, 100);
+        setTimeout(() => { if (chatLogRef.current) chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight; }, 100);
     };
 
     const sendChatMessage = () => {
@@ -150,7 +149,6 @@ export default function OnlineChat() {
             setChatInput('');
         } else addChatMessage('WebSocket pole ühendatud');
     };
-
 
     const sendToBot = async (text) => {
         try {
@@ -176,11 +174,10 @@ export default function OnlineChat() {
 
     return (
         <div className="flex flex-col min-h-screen">
-
             {newsList.length > 0 ? <NewsTicker newsList={newsList} /> : <div className="text-lg font-semibold">Laen uudiseid...</div>}
 
             <div className="container mx-auto flex flex-1 p-5 gap-5 font-sans flex-row">
-
+                {/* Päevapakkumised ja ilm */}
                 <div className="flex flex-col fixed-flex-1 border p-3 overflow-y-auto">
                     <div className="flex-1 border-b mb-2">
                         <h4 className="font-bold mb-1">Päevapakkumised</h4>
@@ -195,7 +192,7 @@ export default function OnlineChat() {
                     </div>
                 </div>
 
-
+                {/* Vestlusplats */}
                 <div className="flex flex-col fixed-flex-2 border p-3 flex-1 chat-pane">
                     <h2 className="text-xl font-semibold mb-2">Vestlusplats</h2>
                     <div ref={chatLogRef} className="chat-log-fixed whitespace-pre-wrap mb-2">
@@ -213,7 +210,7 @@ export default function OnlineChat() {
                     </div>
                 </div>
 
-
+                {/* AI juturobot */}
                 <div className="flex flex-col fixed-flex-1-right border p-3 flex-1 overflow-y-auto">
                     <h3 className="font-semibold mb-2">AI juturobot</h3>
                     <div className="chat-log-fixed whitespace-pre-wrap mb-2">
@@ -228,7 +225,7 @@ export default function OnlineChat() {
                 onChange={e => setBotInput(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleBotSend(); } }}
                 className="border p-2 resize-none flex-1 h-10"
-                placeholder="Sisesta küsimus..."
+                placeholder="Sisesta kysimus..."
             />
                         <button onClick={handleBotSend} className="border px-3 py-1 h-10">Saada botile</button>
                     </div>
