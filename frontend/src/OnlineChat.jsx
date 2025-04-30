@@ -8,7 +8,7 @@ import React, {
 import "./index.css";
 
 // Memoiseeritud uudiste riba komponent
-const NewsTicker = React.memo(({ newsList }) => {
+const NewsTicker = React.memo(({ newsList, animate }) => {
     const tickerRef = useRef(null);
     const repeatedNews = useMemo(() => [...newsList, ...newsList], [newsList]);
 
@@ -23,7 +23,10 @@ const NewsTicker = React.memo(({ newsList }) => {
 
     return (
         <div className="news-ticker">
-            <div ref={tickerRef} className="news-wrapper animate-marquee">
+            <div
+                ref={tickerRef}
+                className={`news-wrapper ${animate ? 'animate-marquee' : ''}`}
+            >
                 {repeatedNews.map((item, idx) => {
                     const content = (
                         <>
@@ -68,6 +71,7 @@ export default function OnlineChat() {
     const [weatherInfo, setWeatherInfo] = useState({});
     const [newsList, setNewsList] = useState([]);
     const [chatHistory, setChatHistory] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const chatLogRef = useRef(null);
     const socketRef = useRef(null);
@@ -114,6 +118,9 @@ export default function OnlineChat() {
     };
 
     useEffect(() => {
+        let loadedCount = 0;
+        const totalToLoad = 3;
+
         connectWebSocket();
         const fetchContent = async (endpoint, setter) => {
             try {
@@ -122,6 +129,11 @@ export default function OnlineChat() {
                 setter(data);
             } catch {
                 setter([]);
+            } finally {
+                loadedCount += 1;
+                if (loadedCount >= totalToLoad) {
+                    setLoading(false);
+                }
             }
         };
 
@@ -173,64 +185,66 @@ export default function OnlineChat() {
     };
 
     return (
-        <div className="flex flex-col min-h-screen">
-            {newsList.length > 0 ? <NewsTicker newsList={newsList} /> : <div className="text-lg font-semibold">Laen uudiseid...</div>}
-
-            <div className="container mx-auto flex flex-1 p-5 gap-5 font-sans flex-row">
-                {/* Päevapakkumised ja ilm */}
-                <div className="flex flex-col fixed-flex-1 border p-3 overflow-y-auto">
-                    <div className="flex-1 border-b mb-2">
-                        <h4 className="font-bold mb-1">Päevapakkumised</h4>
-                        <ul>
-                            {dailyDeals.length > 0 ? dailyDeals.map((deal, i) => <li key={i}>{deal}</li>) : <li>Ei ole saadaval lõunapakkumisi</li>}
-                        </ul>
-                    </div>
-                    <div className="flex-1">
-                        <h4 className="font-bold mb-1">Ilm</h4>
-                        {weatherInfo.temperatuur ? <p>Temperatuur: {weatherInfo.temperatuur}</p> : <p>Ilma andmeid ei ole saadaval</p>}
-                        {weatherInfo.icon && <img src={weatherInfo.icon} alt="Ilma ikoon" />}
-                    </div>
+        <>
+            {loading && (
+                <div className="loading-overlay">
+                    <div className="loader"></div>
                 </div>
+            )}
+            <div className="flex flex-col min-h-screen">
+                <NewsTicker newsList={newsList} animate={!loading} />
 
-                {/* Vestlusplats */}
-                <div className="flex flex-col fixed-flex-2 border p-3 flex-1 chat-pane">
-                    <h2 className="text-xl font-semibold mb-2">Vestlusplats</h2>
-                    <div ref={chatLogRef} className="chat-log-fixed whitespace-pre-wrap mb-2">
-                        {chatMessages.map((line, i) => <div key={i}>{line}</div>)}
+                <div className="container mx-auto flex flex-1 p-5 gap-5 font-sans flex-row">
+                    {/* Päevapakkumised ja ilm */}
+                    <div className="flex flex-col fixed-flex-1 border p-3 overflow-y-auto">
+                        <div className="flex-1 border-b mb-2">
+                            <h4 className="font-bold mb-1">Päevapakkumised</h4>
+                            <ul>{dailyDeals.length > 0 ? dailyDeals.map((deal,i)=><li key={i}>{deal}</li>) : <li>Ei ole saadaval lõunapakkumisi</li>}</ul>
+                        </div>
+                        <div className="flex-1">
+                            <h4 className="font-bold mb-1">Ilm</h4>
+                            {weatherInfo.temperatuur? <p>Temperatuur: {weatherInfo.temperatuur}</p> : <p>Ilma andmeid ei ole saadaval</p>}
+                            {weatherInfo.icon && <img src={weatherInfo.icon} alt="Ilma ikoon"/>}
+                        </div>
                     </div>
-                    <div className="flex gap-2">
-                        <input
-                            value={chatInput}
-                            onChange={e => setChatInput(e.target.value)}
-                            onKeyDown={e => e.key === 'Enter' && sendChatMessage()}
-                            className="flex-1 border px-2 py-1 h-10"
-                            placeholder="Sisesta sõnum..."
-                        />
-                        <button onClick={sendChatMessage} className="border px-3 py-1 h-10">Saada</button>
+                    {/* Vestlusplats */}
+                    <div className="flex flex-col fixed-flex-2 border p-3 flex-1 chat-pane">
+                        <h2 className="text-xl font-semibold mb-2">Vestlusplats</h2>
+                        <div ref={chatLogRef} className="chat-log-fixed whitespace-pre-wrap mb-2">
+                            {chatMessages.map((line,i)=><div key={i}>{line}</div>)}
+                        </div>
+                        <div className="flex gap-2">
+                            <input
+                                value={chatInput}
+                                onChange={e=>setChatInput(e.target.value)}
+                                onKeyDown={e=>e.key==='Enter'&&sendChatMessage()}
+                                className="flex-1 border px-2 py-1 h-10"
+                                placeholder="Sisesta sõnum..."
+                            />
+                            <button onClick={sendChatMessage} className="border px-3 py-1 h-10">Saada</button>
+                        </div>
                     </div>
-                </div>
+                    {/* AI juturobot */}
+                    <div className="flex flex-col fixed-flex-1-right border p-3 flex-1 overflow-y-auto">
+                        <h3 className="font-semibold mb-2">AI juturobot</h3>
+                        <div className="chat-log-fixed whitespace-pre-wrap mb-2">
+                            {chatHistory.map((entry,i)=>(<div key={i}><strong>{entry.sender}:</strong> {entry.text}</div>))}
+                        </div>
+                        <div className="flex gap-2">
+              <textarea
+                  rows={1}
+                  value={botInput}
+                  onChange={e=>setBotInput(e.target.value)}
+                  onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleBotSend();}}}
+                  className="border p-2 resize-none flex-1 h-10"
+                  placeholder="Sisesta kysimus..."
 
-                {/* AI juturobot */}
-                <div className="flex flex-col fixed-flex-1-right border p-3 flex-1 overflow-y-auto">
-                    <h3 className="font-semibold mb-2">AI juturobot</h3>
-                    <div className="chat-log-fixed whitespace-pre-wrap mb-2">
-                        {chatHistory.map((entry, i) => (
-                            <div key={i}><strong>{entry.sender}:</strong> {entry.text}</div>
-                        ))}
-                    </div>
-                    <div className="flex gap-2">
-            <textarea
-                rows={1}
-                value={botInput}
-                onChange={e => setBotInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleBotSend(); } }}
-                className="border p-2 resize-none flex-1 h-10"
-                placeholder="Sisesta kysimus..."
-            />
-                        <button onClick={handleBotSend} className="border px-3 py-1 h-10">Saada botile</button>
+              />
+                            <button onClick={handleBotSend} className="border px-3 py-1 h-10">Saada botile</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
