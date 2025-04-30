@@ -90,6 +90,10 @@ body {
     flex-shrink: 0;
     min-width: 200%;
     white-space: nowrap;
+
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .animate-marquee {
@@ -98,6 +102,8 @@ body {
     animation-name: marquee;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
+
+    will-change: transform;
 }
 
 @keyframes marquee {
