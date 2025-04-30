@@ -16,7 +16,7 @@ const NewsTicker = React.memo(({ newsList, animate }) => {
         if (!tickerRef.current || newsList.length === 0) return;
         const contentWidth = tickerRef.current.scrollWidth;
         const containerWidth = tickerRef.current.parentElement.offsetWidth;
-        const speed = 50;
+        const speed = 100;
         const duration = (contentWidth + containerWidth) / speed;
         tickerRef.current.style.animationDuration = `${duration}s`;
     }, [newsList]);
