@@ -7,7 +7,6 @@ import com.online_chat.bots.newsBot.RssScraper;
 import com.online_chat.bots.weatherBot.WeatherAPI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,13 +16,10 @@ import java.util.List;
 public class ChatRestController {
     private final RssScraper rssScraper;
     private final WeatherAPI weatherAPI;
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final DeltaJsoupScraper jsoupScraper;
 
-    public ChatRestController(RssScraper rssScraper, WeatherAPI weatherAPI, DeltaJsoupScraper jsoupScraper) {
+    public ChatRestController(RssScraper rssScraper, WeatherAPI weatherAPI) {
         this.rssScraper = rssScraper;
         this.weatherAPI = weatherAPI;
-        this.jsoupScraper = jsoupScraper;
     }
 
     @CrossOrigin(origins = "https://utchat.ee")
@@ -46,25 +42,6 @@ public class ChatRestController {
     public ResponseEntity<List<NewsItem>> getNews(@RequestParam(defaultValue = "1") String topic) throws IOException {
         List<NewsItem> newsItems = rssScraper.scrape(topic);
         return ResponseEntity.ok(newsItems);
-    }
-
-    @PostMapping("/chatbot")
-    public ResponseEntity<String> chatbot(@RequestBody String userMessage) {
-        String flaskUrl = "http://localhost:5000/flask/chat";
-        String userId = "UserID";
-        String prompt = userMessage;
-        String jsonPayload = String.format("{\"user_id\": \"%s\", \"prompt\": \"%s\"}", userId, prompt);
-
-        try {
-            String botResponse = restTemplate.postForObject(
-                    flaskUrl,
-                    jsonPayload,
-                    String.class
-            );
-            return ResponseEntity.ok(botResponse);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error communicating with Flask API.");
-        }
     }
 
 }
