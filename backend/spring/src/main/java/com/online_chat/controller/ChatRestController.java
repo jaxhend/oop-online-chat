@@ -1,10 +1,10 @@
 package com.online_chat.controller;
 
 
-import com.online_chat.bots.lunchBot.DeltaSeleniumScraper;
+import com.online_chat.bots.lunchBot.DeltaJsoupScraper;
 import com.online_chat.bots.newsBot.NewsItem;
 import com.online_chat.bots.newsBot.RssScraper;
-import com.online_chat.bots.weatherBot.SeleniumWeatherScraper;
+import com.online_chat.bots.weatherBot.WeatherAPI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -16,27 +16,27 @@ import java.util.List;
 @RestController
 public class ChatRestController {
     private final RssScraper rssScraper;
-    private final SeleniumWeatherScraper seleniumWeatherScraper;
+    private final WeatherAPI weatherAPI;
     private final RestTemplate restTemplate = new RestTemplate();
-    private final DeltaSeleniumScraper deltaSeleniumScraper;
+    private final DeltaJsoupScraper jsoupScraper;
 
-    public ChatRestController(RssScraper rssScraper, SeleniumWeatherScraper seleniumWeatherScraper, DeltaSeleniumScraper deltaSeleniumScraper) {
+    public ChatRestController(RssScraper rssScraper, WeatherAPI weatherAPI, DeltaJsoupScraper jsoupScraper) {
         this.rssScraper = rssScraper;
-        this.seleniumWeatherScraper = seleniumWeatherScraper;
-        this.deltaSeleniumScraper = deltaSeleniumScraper;
+        this.weatherAPI = weatherAPI;
+        this.jsoupScraper = jsoupScraper;
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/paevapakkumised")
-    public ResponseEntity<List<String>> getDeals() {
-        List<String> deals = deltaSeleniumScraper.fetchLunchOffer();
+    public ResponseEntity<List<String>> getDeals() throws IOException {
+        List<String> deals = DeltaJsoupScraper.lunchOffers();
         return ResponseEntity.ok(deals);
     }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/ilm")
     public ResponseEntity<String> getWeather() throws IOException {
-        String weatherData = seleniumWeatherScraper.fetchWeather();
+        String weatherData = WeatherAPI.fetchWeather();
         return ResponseEntity.ok(weatherData);
 
     }
