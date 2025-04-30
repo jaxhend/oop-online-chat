@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class ChatRoomManager {
     // 3 default chatruumi, mis on alati olemas.
-    public final List<String> defaultRooms = List.of("oop", "proge", "varia");
+    public final List<String> defaultRooms = List.of("proge", "majandus", "varia");
     private final Map<String, ChatRoom> rooms = new ConcurrentHashMap<>();
 
     public ChatRoomManager() {
