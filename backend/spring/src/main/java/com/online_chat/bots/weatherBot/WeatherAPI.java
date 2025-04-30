@@ -35,7 +35,7 @@ private static final String ENDPOINT = "https://api.weatherapi.com/v1/current.js
             JsonNode root = mapper.readTree(jsonText.toString());
 
             String temp = root.path("current").path("temp_c").asText() + "°C";
-            String icon = "https: " + root.path("current").path("condition").path("icon").asText();
+            String icon = "https:" + root.path("current").path("condition").path("icon").asText();
             return String.format("{\"temperatuur\": \"%s\", \"icon\": \"%s\"}", temp, icon);
         } catch (Exception e) {
             throw new RuntimeException(e);
