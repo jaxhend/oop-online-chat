@@ -28,8 +28,9 @@ public class DeltaJsoupScraper {
                 for (Element offer : offers) {
                     String description = offer.ownText();
                     String price = offer.select("strong").text();
-
-                    offersList.add(description + " — " + price);
+                    if (!description.isEmpty()) {
+                        offersList.add(description + " — " + price);
+                    }
                 }
             }
         }
@@ -37,11 +38,11 @@ public class DeltaJsoupScraper {
         return offersList;
     }
 
-    /*
+
     public static void main(String[] args) throws IOException {
         DeltaJsoupScraper scraper = new DeltaJsoupScraper();
         System.out.println(scraper.lunchOffers());
     }
 
-     */
+
 }
