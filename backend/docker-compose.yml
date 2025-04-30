@@ -6,7 +6,7 @@ services:
       context: ..
       dockerfile: backend/spring/Dockerfile
     env_file:
-      - .env.custom
+      - ../.env.custom
     ports:
       - "8080:8080"
     container_name: online-chat-spring
