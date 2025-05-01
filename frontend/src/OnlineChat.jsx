@@ -74,6 +74,7 @@ export default function OnlineChat() {
     const [loading, setLoading] = useState(true);
     const [username, setUsername] = useState("");
     const [usernameAccepted, setUsernameAccepted] = useState(false);
+    const [usernameError, setUsernameError] = useState("");
 
     const chatLogRef = useRef(null);
     const socketRef = useRef(null);
@@ -108,14 +109,32 @@ export default function OnlineChat() {
             if (e.data !== 'pong') {
                 try {
                     const parsed = JSON.parse(e.data);
-                    if (parsed.text?.includes("Tere tulemast")) {
-                        setUsernameAccepted(true);
+                    const msg = parsed.text || e.data;
+
+                    // Kui on veateade kasutajanime kohta
+                    if (msg.toLowerCase().includes("kasutajanimi on keelatud")) {
+                        setUsernameError(msg); // kuva dialoogis
+                        return;
                     }
+
+                    if (msg.includes("Tere tulemast")) {
+                        setUsernameAccepted(true);
+                        setUsernameError(""); // eemalda veateade
+                    }
+
                     addChatMessage(parsed);
                 } catch {
+                    // fallback kui ei ole JSON
+                    if (e.data.toLowerCase().includes("kasutajanimi on keelatud")) {
+                        setUsernameError(e.data);
+                        return;
+                    }
+
                     if (e.data.includes("Tere tulemast")) {
                         setUsernameAccepted(true);
+                        setUsernameError("");
                     }
+
                     addChatMessage({ text: e.data });
                 }
             }
@@ -223,6 +242,11 @@ export default function OnlineChat() {
                             placeholder="Sisesta kasutajanimi"
                             autoFocus
                         />
+                        {usernameError && (
+                            <p className="username-error">
+                                {usernameError}
+                            </p>
+                        )}
                     </div>
                 </div>
             )}
