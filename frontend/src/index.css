@@ -229,3 +229,8 @@ button:hover {
     font-size: 0.9rem;
     transition: opacity 0.3s ease;
 }
+@media (max-width: 768px) {
+    .news-ticker {
+        display: none;
+    }
+}
