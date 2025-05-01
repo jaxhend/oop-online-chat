@@ -209,3 +209,9 @@ body {
 .username-input::placeholder {
     color: rgba(255, 255, 255, 0.6);
 }
+.username-error {
+    color: #ff5555;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    transition: opacity 0.3s ease;
+}
