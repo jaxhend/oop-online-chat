@@ -233,10 +233,8 @@ export default function OnlineChat() {
 
     return (
         <>
-            <button onClick={toggleTheme} className="theme-toggle">
-                {theme === "dark" ? "Light Mode" : "Dark Mode"}
-            </button>
             {loading && <div className="loading-overlay"><div className="loader"></div></div>}
+
             {!usernameAccepted && !loading && (
                 <div className="overlay">
                     <div className="username-dialog">
@@ -257,31 +255,39 @@ export default function OnlineChat() {
                     </div>
                 </div>
             )}
+
+            {/* Teema nupu konteiner */}
+            <div className="theme-toggle-container">
+                <button onClick={toggleTheme} className="theme-toggle">
+                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                </button>
+            </div>
+
             <div className="flex flex-col min-h-screen">
                 <NewsTicker newsList={newsList} animate={!loading} />
 
                 <div className="container mx-auto flex flex-1 p-5 gap-5 font-sans flex-row">
-                 
+                    {/* Päevapakkumised ja ilm */}
                     <div className="flex flex-col fixed-flex-1 border p-3 overflow-y-auto">
                         <div className="flex-1 border-b mb-2">
                             <h4 className="font-bold mb-1">Päevapakkumised</h4>
-                            <ul>{dailyDeals.length > 0 ? dailyDeals.map((deal,i)=>(
-                                    <li key={i}>
-                                        <strong>{deal.restaurant}</strong>: {deal.offer}
-                                    </li>
-                                ))
-                                : <li>Ei ole saadaval lõunapakkumisi</li>}
+                            <ul>{dailyDeals.length > 0 ? dailyDeals.map((deal, i) => (
+                                <li key={i}>
+                                    <strong>{deal.restaurant}</strong>: {deal.offer}
+                                </li>
+                            )) : <li>Ei ole saadaval lõunapakkumisi</li>}
                             </ul>
                         </div>
                         <div className="flex-1">
                             <h4 className="font-bold mb-1">Ilm</h4>
-                            {weatherInfo.temperature? <p>Temperatuur: {weatherInfo.temperature}</p> : <p>Ilma andmeid ei ole saadaval</p>}
-                            {weatherInfo.feelsLike? <p>Tundub nagu: {weatherInfo.feelsLike}</p> : <p>Ilma andmeid ei ole saadaval</p>}
-                            {weatherInfo.precipitation? <p>Sademed: {weatherInfo.precipitation}</p> : <p>Ilma andmeid ei ole saadaval</p>}
-                            {weatherInfo.iconUrl && <img src={weatherInfo.iconUrl} alt="Ilma ikoon"/>}
+                            {weatherInfo.temperature ? <p>Temperatuur: {weatherInfo.temperature}</p> : <p>Ilma andmeid ei ole saadaval</p>}
+                            {weatherInfo.feelsLike ? <p>Tundub nagu: {weatherInfo.feelsLike}</p> : <p>Ilma andmeid ei ole saadaval</p>}
+                            {weatherInfo.precipitation ? <p>Sademed: {weatherInfo.precipitation}</p> : <p>Ilma andmeid ei ole saadaval</p>}
+                            {weatherInfo.iconUrl && <img src={weatherInfo.iconUrl} alt="Ilma ikoon" />}
                         </div>
                     </div>
-          
+
+                    {/* Vestlusplats */}
                     <div className="flex flex-col fixed-flex-2 border p-3 flex-1 chat-pane">
                         <h2 className="text-xl font-semibold mb-2">Vestlusplats</h2>
                         <div ref={chatLogRef} className="chat-log-fixed whitespace-pre-wrap mb-2">
@@ -292,38 +298,45 @@ export default function OnlineChat() {
                             ))}
                         </div>
                         <div className="flex gap-2">
-                            <textarea
-                                rows={1}
-                                value={chatInput}
-                                onChange={e => setChatInput(e.target.value)}
-                                onKeyDown={e => {
-                                    if (e.key === 'Enter' && !e.shiftKey) {
-                                        e.preventDefault();
-                                        sendChatMessage();
-                                    }
-                                }}
-                                className="border p-2 resize-none flex-1 h-10"
-                                placeholder="Sisesta sõnum..."
-                            />
+                        <textarea
+                            rows={1}
+                            value={chatInput}
+                            onChange={e => setChatInput(e.target.value)}
+                            onKeyDown={e => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    sendChatMessage();
+                                }
+                            }}
+                            className="border p-2 resize-none flex-1 h-10"
+                            placeholder="Sisesta sõnum..."
+                        />
                             <button onClick={sendChatMessage} className="border px-3 py-1 h-10">Saada</button>
                         </div>
                     </div>
+
                     {/* AI juturobot */}
                     <div className="flex flex-col fixed-flex-1-right border p-3 flex-1 overflow-y-auto">
                         <h3 className="font-semibold mb-2">AI juturobot</h3>
                         <div className="chat-log-fixed whitespace-pre-wrap mb-2">
-                            {chatHistory.map((entry,i)=>(<div key={i}><strong>{entry.sender}:</strong> {entry.text}</div>))}
+                            {chatHistory.map((entry, i) => (
+                                <div key={i}><strong>{entry.sender}:</strong> {entry.text}</div>
+                            ))}
                         </div>
                         <div className="flex gap-2">
-              <textarea
-                  rows={1}
-                  value={botInput}
-                  onChange={e=>setBotInput(e.target.value)}
-                  onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleBotSend();}}}
-                  className="border p-2 resize-none flex-1 h-10"
-                  placeholder="Sisesta küsimus..."
-
-              />
+                        <textarea
+                            rows={1}
+                            value={botInput}
+                            onChange={e => setBotInput(e.target.value)}
+                            onKeyDown={e => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    handleBotSend();
+                                }
+                            }}
+                            className="border p-2 resize-none flex-1 h-10"
+                            placeholder="Sisesta küsimus..."
+                        />
                             <button onClick={handleBotSend} className="border px-3 py-1 h-10">Saada botile</button>
                         </div>
                     </div>
