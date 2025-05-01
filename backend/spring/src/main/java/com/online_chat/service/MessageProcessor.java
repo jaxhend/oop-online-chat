@@ -1,6 +1,6 @@
 package com.online_chat.service;
 
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.ClientSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ public class MessageProcessor {
 
     private final CommandHandler commandHandler;
     private final ClientSessionManager sessionManager;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     public MessageProcessor(CommandHandler commandHandler, ClientSessionManager sessionManager) {
@@ -28,7 +29,8 @@ public class MessageProcessor {
             return handleUsernameAssignment(session, message);
         } else if (message.startsWith("/")) {
             String response = commandHandler.handle(session, message);
-            sendMessage(session, response);
+            String color = message.startsWith("/join") ? "#9B59B6" : "#E74C3C";
+            sendMessage(session, response, color);
             return response;
         } else if (session.getCurrentRoom() != null) {
             broadcastToRoom(session, message);
@@ -49,47 +51,52 @@ public class MessageProcessor {
         } else {
             session.setUsername(message);
             String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha käske.", message);
-            sendMessage(session, welcome);
+            sendMessage(session, welcome, "#2ECC71");
             return welcome;
         }
     }
 
     // Edastab sõnumi kõigile kasutajatele, kes on saatjaga samas ruumis
     private void broadcastToRoom(ClientSession sender, String message) {
-
         long otherUsers = sessionManager.getAllSessions().stream()
                 .filter(s -> sender.getCurrentRoom().equals(s.getCurrentRoom()))
                 .filter(s -> !s.equals(sender))
                 .count();
 
         if (otherUsers == 0) {
-            sendMessage(sender, "Oled ruumis üksi.");
+            sendMessage(sender, "Oled ruumis üksi.", "#FFA500");
             return;
         }
+
         String formatted = String.format("[%s] [%s] %s: %s",
                 currentTime(),
                 sender.getCurrentRoom().getName(),
                 sender.getUsername(),
                 message);
-        // Leiame kõik kasutajad, kes on samas ruumis
+
+        String color = "#34495E";
+
         sessionManager.getAllSessions().stream()
-                .filter(s -> // leiame kõik, kes on kasutajaga samas chatroomis
-                        sender.getCurrentRoom().equals(s.getCurrentRoom()))
-                .map(ClientSession::getWebSocketSession) // kõikide kasutajate WebSocketSessionid
+                .filter(s -> sender.getCurrentRoom().equals(s.getCurrentRoom()))
+                .map(ClientSession::getWebSocketSession)
                 .filter(ws -> ws != null && ws.isOpen())
-                .forEach(ws -> { // saadame kõigile WebSocketSessionidele sõnumid
+                .forEach(ws -> {
                     try {
-                        ws.sendMessage(new TextMessage(formatted));
+                        ColoredMessage msg = new ColoredMessage(formatted, color);
+                        String json = objectMapper.writeValueAsString(msg);
+                        ws.sendMessage(new TextMessage(json));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
     }
 
-    private void sendMessage(ClientSession session, String message) {
+    private void sendMessage(ClientSession session, String message, String color) {
         try {
             String formatted = "[" + currentTime() + "] " + message;
-            session.getWebSocketSession().sendMessage(new TextMessage(formatted));
+            ColoredMessage coloredMessage = new ColoredMessage(formatted, color);
+            String json = objectMapper.writeValueAsString(coloredMessage);
+            session.getWebSocketSession().sendMessage(new TextMessage(json));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,8 +104,10 @@ public class MessageProcessor {
 
     private void sendErrorMessage(ClientSession session, String error) {
         try {
-            String withTime = String.format("[%s] %s", currentTime(), error);
-            session.getWebSocketSession().sendMessage(new TextMessage(withTime));
+            String withTime = "[" + currentTime() + "] " + error;
+            ColoredMessage errorMessage = new ColoredMessage(withTime, "red");
+            String json = objectMapper.writeValueAsString(errorMessage);
+            session.getWebSocketSession().sendMessage(new TextMessage(json));
         } catch (Exception e) {
             e.printStackTrace();
         }

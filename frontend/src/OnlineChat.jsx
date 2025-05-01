@@ -103,7 +103,16 @@ export default function OnlineChat() {
             isReconnectingRef.current = false;
         };
 
-        socket.onmessage = (e) => { if (e.data !== 'pong') addChatMessage(e.data); };
+        socket.onmessage = (e) => {
+            if (e.data !== 'pong') {
+                try {
+                    const parsed = JSON.parse(e.data);
+                    addChatMessage(parsed);
+                } catch {
+                    addChatMessage({ text: e.data });
+                }
+            }
+        };
         socket.onerror = (err) => console.error('WebSocket viga:', err);
         socket.onclose = () => {
             if (initialConnectDone.current) addChatMessage('Ühendus suleti.');
@@ -219,7 +228,11 @@ export default function OnlineChat() {
                     <div className="flex flex-col fixed-flex-2 border p-3 flex-1 chat-pane">
                         <h2 className="text-xl font-semibold mb-2">Vestlusplats</h2>
                         <div ref={chatLogRef} className="chat-log-fixed whitespace-pre-wrap mb-2">
-                            {chatMessages.map((line,i)=><div key={i}>{line}</div>)}
+                            {chatMessages.map((msg, i) => (
+                                <div key={i} style={{ color: msg.color || "#000" }}>
+                                    {msg.text}
+                                </div>
+                            ))}
                         </div>
                         <div className="flex gap-2">
                             <input
