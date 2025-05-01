@@ -72,6 +72,8 @@ export default function OnlineChat() {
     const [newsList, setNewsList] = useState([]);
     const [chatHistory, setChatHistory] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [username, setUsername] = useState("");
+    const [usernameAccepted, setUsernameAccepted] = useState(false);
 
     const chatLogRef = useRef(null);
     const socketRef = useRef(null);
@@ -93,7 +95,6 @@ export default function OnlineChat() {
         socketRef.current = socket;
 
         socket.onopen = () => {
-            addChatMessage('Ühendus loodud. Sisestage oma nimi:');
             initialConnectDone.current = true;
             clearInterval(pingIntervalRef.current);
             pingIntervalRef.current = setInterval(() => {
@@ -107,8 +108,14 @@ export default function OnlineChat() {
             if (e.data !== 'pong') {
                 try {
                     const parsed = JSON.parse(e.data);
+                    if (parsed.text?.includes("Tere tulemast")) {
+                        setUsernameAccepted(true);
+                    }
                     addChatMessage(parsed);
                 } catch {
+                    if (e.data.includes("Tere tulemast")) {
+                        setUsernameAccepted(true);
+                    }
                     addChatMessage({ text: e.data });
                 }
             }
@@ -198,6 +205,25 @@ export default function OnlineChat() {
             {loading && (
                 <div className="loading-overlay">
                     <div className="loader"></div>
+                </div>
+            )}
+            {!usernameAccepted && !loading && (
+                <div className="overlay">
+                    <div className="username-dialog">
+                        <h2>Sisestage kasutajanimi</h2>
+                        <input
+                            className="username-input"
+                            value={username}
+                            onChange={e => setUsername(e.target.value)}
+                            onKeyDown={e => {
+                                if (e.key === "Enter" && socketRef.current?.readyState === WebSocket.OPEN) {
+                                    socketRef.current.send(username);
+                                }
+                            }}
+                            placeholder="Sisesta kasutajanimi"
+                            autoFocus
+                        />
+                    </div>
                 </div>
             )}
             <div className="flex flex-col min-h-screen">
