@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import "./index.css";
 
-// Memoiseeritud uudiste riba komponent
+
 const NewsTicker = React.memo(({ newsList, animate }) => {
     const tickerRef = useRef(null);
     const repeatedNews = useMemo(() => [...newsList, ...newsList], [newsList]);
@@ -261,7 +261,7 @@ export default function OnlineChat() {
                 <NewsTicker newsList={newsList} animate={!loading} />
 
                 <div className="container mx-auto flex flex-1 p-5 gap-5 font-sans flex-row">
-                    {/* Päevapakkumised ja ilm */}
+                 
                     <div className="flex flex-col fixed-flex-1 border p-3 overflow-y-auto">
                         <div className="flex-1 border-b mb-2">
                             <h4 className="font-bold mb-1">Päevapakkumised</h4>
@@ -281,7 +281,7 @@ export default function OnlineChat() {
                             {weatherInfo.iconUrl && <img src={weatherInfo.iconUrl} alt="Ilma ikoon"/>}
                         </div>
                     </div>
-                    {/* Vestlusplats */}
+          
                     <div className="flex flex-col fixed-flex-2 border p-3 flex-1 chat-pane">
                         <h2 className="text-xl font-semibold mb-2">Vestlusplats</h2>
                         <div ref={chatLogRef} className="chat-log-fixed whitespace-pre-wrap mb-2">
