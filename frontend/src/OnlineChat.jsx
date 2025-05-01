@@ -237,7 +237,7 @@ export default function OnlineChat() {
                   onChange={e=>setBotInput(e.target.value)}
                   onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleBotSend();}}}
                   className="border p-2 resize-none flex-1 h-10"
-                  placeholder="Sisesta kysimus..."
+                  placeholder="Sisesta küsimus..."
 
               />
                             <button onClick={handleBotSend} className="border px-3 py-1 h-10">Saada botile</button>
