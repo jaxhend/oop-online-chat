@@ -50,11 +50,11 @@ public class WeatherAPI {
             JsonNode root = mapper.readTree(jsonText.toString());
 
             String temp = root.path("current").path("temp_c").asText() + "°C";
-            String feelsLike = root.path("current").path("feels_like_c").asText() + "°C";
-            String precip = root.path("current").path("precipitative_mm").asText() + " mm";
+            String feelsLike = root.path("current").path("feelslike_c").asText() + "°C";
+            String precip = root.path("current").path("precip_mm").asText() + " mm";
             String icon = "https:" + root.path("current").path("condition").path("icon").asText();
 
-            return String.format("{\"temperature\": \"%s\",\"feels like\": \"%s\", \"precipitation\": \"%s\" \"icon\": \"%s\"}", temp,feelsLike,precip, icon);
+            return String.format("{\"temperature\": \"%s\",\"feels_like\": \"%s\", \"precipitation\": \"%s\" \"icon\": \"%s\"}", temp,feelsLike,precip, icon);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

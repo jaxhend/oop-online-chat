@@ -30,7 +30,7 @@ public class DeltaJsoupScraper {
         return cachedOffers;
     }
 
-    public static List<String> lunchOffers() throws IOException {
+    public  List<String> lunchOffers() throws IOException {
         String url = "https://xn--pevapakkumised-5hb.ee/tartu/delta-kohvik";
 
         Document doc = Jsoup.connect(url).get();
