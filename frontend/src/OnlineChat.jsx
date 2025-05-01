@@ -204,6 +204,8 @@ export default function OnlineChat() {
                         <div className="flex-1">
                             <h4 className="font-bold mb-1">Ilm</h4>
                             {weatherInfo.temperatuur? <p>Temperatuur: {weatherInfo.temperatuur}</p> : <p>Ilma andmeid ei ole saadaval</p>}
+                            {weatherInfo.feelsLike? <p>Tundub nagu: {weatherInfo.feelsLike}</p> : <p>Ilma andmeid ei ole saadaval</p>}
+                            {weatherInfo.precipitation? <p>Sademed: {weatherInfo.precipitation}</p> : <p>Ilma andmeid ei ole saadaval</p>}
                             {weatherInfo.icon && <img src={weatherInfo.icon} alt="Ilma ikoon"/>}
                         </div>
                     </div>

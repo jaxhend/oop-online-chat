@@ -3,6 +3,7 @@ package com.online_chat.bots.weatherBot;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.net.HttpURLConnection;
@@ -14,8 +15,17 @@ public class WeatherAPI {
 
     @Value("${weather.key}")
     private String API_KEY;
+    private String latestWeather;
     private static final String ENDPOINT = "https://api.weatherapi.com/v1/current.json?key=%s&q=Tartu,Estonia&lang=et";
 
+    @Scheduled(fixedRate = 1800000)
+    public void scheduledUpdate() {
+        this.latestWeather = fetchWeather();
+    }
+
+    public String getLatestWeather() {
+        return latestWeather;
+    }
 
     public String fetchWeather() {
         try {
@@ -35,8 +45,11 @@ public class WeatherAPI {
             JsonNode root = mapper.readTree(jsonText.toString());
 
             String temp = root.path("current").path("temp_c").asText() + "°C";
+            String feelsLike = root.path("current").path("feels_like_c").asText() + "°C";
+            String precip = root.path("current").path("precipitative_mm").asText() + " mm";
             String icon = "https:" + root.path("current").path("condition").path("icon").asText();
-            return String.format("{\"temperatuur\": \"%s\", \"icon\": \"%s\"}", temp, icon);
+
+            return String.format("{\"temperature\": \"%s\",\"feels like\": \"%s\", \"precipitation\": \"%s\" \"icon\": \"%s\"}", temp,feelsLike,precip, icon);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
