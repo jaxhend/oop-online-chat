@@ -16,23 +16,25 @@ import java.util.List;
 public class ChatRestController {
     private final RssScraper rssScraper;
     private final WeatherAPI weatherAPI;
+    private final DeltaJsoupScraper deltaJsoupScraper;
 
-    public ChatRestController(RssScraper rssScraper, WeatherAPI weatherAPI) {
+    public ChatRestController(RssScraper rssScraper, WeatherAPI weatherAPI, DeltaJsoupScraper deltaJsoupScraper) {
         this.rssScraper = rssScraper;
         this.weatherAPI = weatherAPI;
+        this.deltaJsoupScraper = deltaJsoupScraper;
     }
 
     @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
     @GetMapping("/paevapakkumised")
     public ResponseEntity<List<String>> getDeals() throws IOException {
-        List<String> deals = DeltaJsoupScraper.lunchOffers();
+        List<String> deals = deltaJsoupScraper.getLatestLunchOffers();
         return ResponseEntity.ok(deals);
     }
 
     @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
     @GetMapping("/ilm")
     public ResponseEntity<String> getWeather() {
-        String weatherData = weatherAPI.fetchWeather();
+        String weatherData = weatherAPI.getLatestWeather();
         return ResponseEntity.ok(weatherData);
 
     }
@@ -40,7 +42,7 @@ public class ChatRestController {
     @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
     @GetMapping("/uudised")
     public ResponseEntity<List<NewsItem>> getNews(@RequestParam(defaultValue = "1") String topic) throws IOException {
-        List<NewsItem> newsItems = rssScraper.scrape(topic);
+        List<NewsItem> newsItems = rssScraper.getLatestNews(topic);
         return ResponseEntity.ok(newsItems);
     }
 

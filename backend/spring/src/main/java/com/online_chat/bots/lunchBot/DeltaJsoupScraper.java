@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -12,6 +13,17 @@ import java.util.List;
 
 @Component
 public class DeltaJsoupScraper {
+
+    private List<String> cachedOffers = new ArrayList<>();
+
+    @Scheduled(cron = "0 0 11 * * MON-FRI")
+    public void updateLunchOffers() throws IOException {
+        cachedOffers = lunchOffers();
+    }
+
+    public List<String> getLatestLunchOffers() {
+        return cachedOffers;
+    }
 
     public static List<String> lunchOffers() throws IOException {
         String url = "https://xn--pevapakkumised-5hb.ee/tartu/delta-kohvik";

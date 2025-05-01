@@ -5,14 +5,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Component
 public class RssScraper {
@@ -22,7 +21,7 @@ public class RssScraper {
     private static final String spordiUudised = "http://sport.postimees.ee/rss/";
     private static final String teadusUudised = "http://www.postimees.ee/rss/?r=145";
     private static final String kultuuriUudised = "http://www.postimees.ee/rss/?r=129";
-
+    private static final Map<String, List<NewsItem>> newsCache = new HashMap<>();
     private String getFeedUrlByChoice(String chosenTopic) {
         return switch (chosenTopic) {
             case "1" -> eestiUudised;
@@ -32,6 +31,20 @@ public class RssScraper {
             case "5" -> kultuuriUudised;
             default -> eestiUudised;
         };
+    }
+
+    @Scheduled(fixedRate = 1800000)
+    public void updateAllFeeds() throws IOException {
+        for (String topic : List.of("1", "2", "3", "4", "5")) {
+            List<NewsItem> items = scrape(topic);
+            newsCache.put(topic, items);
+        }
+    }
+
+    public List<NewsItem> getLatestNews(String topic) throws IOException {
+        return newsCache.getOrDefault(topic, List.of(
+                new NewsItem("Uudiseid pole hetkel saadaval.", "", "", "")
+        ));
     }
 
     public List<NewsItem> scrape(String topic) throws IOException {
