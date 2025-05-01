@@ -2,6 +2,7 @@ package com.online_chat.bots.weatherBot;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,10 @@ public class WeatherAPI {
     private String latestWeather;
     private static final String ENDPOINT = "https://api.weatherapi.com/v1/current.json?key=%s&q=Tartu,Estonia&lang=et";
 
+    @PostConstruct
+    public void init() {
+        this.latestWeather = fetchWeather();
+    }
     @Scheduled(fixedRate = 1800000)
     public void scheduledUpdate() {
         this.latestWeather = fetchWeather();

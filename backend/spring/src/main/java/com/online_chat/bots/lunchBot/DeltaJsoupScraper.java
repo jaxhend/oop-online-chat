@@ -1,5 +1,6 @@
 package com.online_chat.bots.lunchBot;
 
+import jakarta.annotation.PostConstruct;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,6 +17,10 @@ public class DeltaJsoupScraper {
 
     private List<String> cachedOffers = new ArrayList<>();
 
+    @PostConstruct
+    public void init() throws IOException {
+        this.cachedOffers = lunchOffers();
+    }
     @Scheduled(cron = "0 0 11 * * MON-FRI")
     public void updateLunchOffers() throws IOException {
         cachedOffers = lunchOffers();

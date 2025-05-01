@@ -1,5 +1,6 @@
 package com.online_chat.bots.newsBot;
 
+import jakarta.annotation.PostConstruct;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -33,6 +34,10 @@ public class RssScraper {
         };
     }
 
+    @PostConstruct
+    public void init() throws IOException {
+        updateAllFeeds();
+    }
     @Scheduled(fixedRate = 1800000)
     public void updateAllFeeds() throws IOException {
         for (String topic : List.of("1", "2", "3", "4", "5")) {
