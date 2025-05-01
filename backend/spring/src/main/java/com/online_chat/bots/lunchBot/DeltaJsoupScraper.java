@@ -15,28 +15,36 @@ import java.util.List;
 @Component
 public class DeltaJsoupScraper {
 
-    private List<String> cachedOffers = new ArrayList<>();
+    private List<DailyOffer> cachedOffers = List.of(new DailyOffer("Delta", "Pakkumised pole veel saadaval"));
 
     @PostConstruct
     public void init() throws IOException {
-        this.cachedOffers = lunchOffers();
+        updateCache();
     }
     @Scheduled(cron = "0 0 11 * * MON-FRI")
     public void updateLunchOffers() throws IOException {
         cachedOffers = lunchOffers();
     }
 
-    public List<String> getLatestLunchOffers() {
+    private void updateCache() {
+        try {
+            this.cachedOffers = lunchOffers();
+        } catch (IOException e) {
+            e.printStackTrace();
+            this.cachedOffers = List.of(new DailyOffer("Delta", "Pakkumiste laadimine ebaõnnestus"));
+        }
+    }
+    public List<DailyOffer> getLatestLunchOffers() {
         return cachedOffers;
     }
 
-    public  List<String> lunchOffers() throws IOException {
+    public  List<DailyOffer> lunchOffers() throws IOException {
         String url = "https://xn--pevapakkumised-5hb.ee/tartu/delta-kohvik";
 
         Document doc = Jsoup.connect(url).get();
         Elements diners = doc.select("div.meal");
 
-        List<String> offersList = new ArrayList<>();
+        List<DailyOffer> offersList = new ArrayList<>();
         for (Element diner : diners) {
             String dinerName = diner.select("h3").text();
             if (dinerName.toLowerCase().contains("delta")) {
@@ -46,7 +54,7 @@ public class DeltaJsoupScraper {
                     String description = offer.ownText();
                     String price = offer.select("strong").text();
                     if (!description.isEmpty()) {
-                        offersList.add(description + " — " + price);
+                        offersList.add(new DailyOffer(description, description + " - " + price));
                     }
                 }
             }

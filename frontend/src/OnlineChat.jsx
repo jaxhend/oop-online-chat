@@ -199,14 +199,20 @@ export default function OnlineChat() {
                     <div className="flex flex-col fixed-flex-1 border p-3 overflow-y-auto">
                         <div className="flex-1 border-b mb-2">
                             <h4 className="font-bold mb-1">Päevapakkumised</h4>
-                            <ul>{dailyDeals.length > 0 ? dailyDeals.map((deal,i)=><li key={i}>{deal}</li>) : <li>Ei ole saadaval lõunapakkumisi</li>}</ul>
+                            <ul>{dailyDeals.length > 0 ? dailyDeals.map((deal,i)=>(
+                                    <li key={i}>
+                                        <strong>{deal.restaurant}</strong>: {deal.offer}
+                                    </li>
+                                ))
+                                : <li>Ei ole saadaval lõunapakkumisi</li>}
+                            </ul>
                         </div>
                         <div className="flex-1">
                             <h4 className="font-bold mb-1">Ilm</h4>
-                            {weatherInfo.temperatuur? <p>Temperatuur: {weatherInfo.temperatuur}</p> : <p>Ilma andmeid ei ole saadaval</p>}
-                            {weatherInfo.feels_like? <p>Tundub nagu: {weatherInfo.feels_like}</p> : <p>Ilma andmeid ei ole saadaval</p>}
+                            {weatherInfo.temperature? <p>Temperatuur: {weatherInfo.temperature}</p> : <p>Ilma andmeid ei ole saadaval</p>}
+                            {weatherInfo.feelsLike? <p>Tundub nagu: {weatherInfo.feelsLike}</p> : <p>Ilma andmeid ei ole saadaval</p>}
                             {weatherInfo.precipitation? <p>Sademed: {weatherInfo.precipitation}</p> : <p>Ilma andmeid ei ole saadaval</p>}
-                            {weatherInfo.icon && <img src={weatherInfo.icon} alt="Ilma ikoon"/>}
+                            {weatherInfo.iconUrl && <img src={weatherInfo.iconUrl} alt="Ilma ikoon"/>}
                         </div>
                     </div>
                     {/* Vestlusplats */}

@@ -1,6 +1,7 @@
 package com.online_chat.controller;
 
 
+import com.online_chat.bots.lunchBot.DailyOffer;
 import com.online_chat.bots.lunchBot.DeltaJsoupScraper;
 import com.online_chat.bots.newsBot.NewsItem;
 import com.online_chat.bots.newsBot.RssScraper;
@@ -27,8 +28,8 @@ public class ChatRestController {
 
     @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
     @GetMapping("/paevapakkumised")
-    public ResponseEntity<List<String>> getDeals() throws IOException {
-        List<String> deals = deltaJsoupScraper.getLatestLunchOffers();
+    public ResponseEntity<List<DailyOffer>> getDeals() throws IOException {
+        List<DailyOffer> deals = deltaJsoupScraper.getLatestLunchOffers();
         return ResponseEntity.ok(deals);
     }
 
