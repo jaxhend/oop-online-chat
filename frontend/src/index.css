@@ -1,10 +1,26 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --card-bg: #f5f5f5;
+    --border-color: #ccc;
+    --input-bg: #ffffff;
+}
+
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e1e;
+    --border-color: #333;
+    --input-bg: #2a2a2a;
+}
+
 
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     font-size: 18px;
-    background-color: #121212;
-    color: #e0e0e0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -40,7 +56,7 @@ body {
 
 .border {
     border: 1px solid #333;
-    background-color: #1e1e1e;
+    background-color: var(--bg-color);
     border-radius: 8px;
 }
 
@@ -67,7 +83,7 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 1rem;
-    background-color: #1e1e1e;
+    background-color: var(--bg-color);
     border: 1px solid #333;
     border-radius: 8px;
     margin-bottom: 1rem;
@@ -78,24 +94,24 @@ body {
 }
 
 input, textarea {
-    background-color: #2a2a2a;
+    background-color: var(--input-bg);
     border: 1px solid #444;
-    color: #e0e0e0;
+    color: var(--text-color);
 }
 
 input::placeholder, textarea::placeholder {
-    color: #888;
+    color: var(--text-color);
 }
 
 button {
-    background-color: #333;
-    color: #e0e0e0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     border: 1px solid #444;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #444;
+    background-color: var(--bg-color);
 }
 
 .news-ticker {
@@ -105,7 +121,7 @@ button:hover {
     width: 100%;
     overflow: hidden;
     height: 50px;
-    background-color: #1e1e1e;
+    background-color: var(--bg-color);
     border-bottom: 1px solid #333;
     display: flex;
     align-items: center;
@@ -141,13 +157,13 @@ button:hover {
     padding: 0 20px;
     font-weight: bold;
     font-size: 16px;
-    color: #e0e0e0;
+    color: var(--text-color);
     text-decoration: none;
 }
 
 .news-item:hover {
     text-decoration: underline;
-    color: #90caf9;
+    color: var(--text-color);
 }
 
 
@@ -196,7 +212,7 @@ button:hover {
     text-align: center;
     max-width: 400px;
     width: 90%;
-    color: #f0f0f0;
+    color: var(--text-color);
     backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -204,17 +220,17 @@ button:hover {
 .username-dialog h2 {
     margin-bottom: 1rem;
     font-size: 1.5rem;
-    color: #ffffff;
+    color: var(--text-color);
 }
 
 .username-input {
     padding: 0.75rem 1rem;
     font-size: 1rem;
     width: 100%;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    color: #fff;
+    color: var(--text-color);
     outline: none;
     box-sizing: border-box;
 }
@@ -228,6 +244,27 @@ button:hover {
     margin-top: 1rem;
     font-size: 0.9rem;
     transition: opacity 0.3s ease;
+}
+@media (max-width: 768px) {
+    .news-ticker {
+        display: none;
+    }
+}
+.theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 5000;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+.theme-toggle:hover {
+    font-weight: bold;
 }
 @media (max-width: 768px) {
     .news-ticker {
