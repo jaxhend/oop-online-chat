@@ -54,8 +54,8 @@ const NewsTicker = React.memo(({ newsList, animate }) => {
                         </a>
                     ) : (
                         <span key={idx} className="news-item">
-              {content}
-            </span>
+                            {content}
+                        </span>
                     );
                 })}
             </div>
@@ -75,6 +75,7 @@ export default function OnlineChat() {
     const [username, setUsername] = useState("");
     const [usernameAccepted, setUsernameAccepted] = useState(false);
     const [usernameError, setUsernameError] = useState("");
+    const [theme, setTheme] = useState("light");
 
     const chatLogRef = useRef(null);
     const socketRef = useRef(null);
@@ -86,6 +87,22 @@ export default function OnlineChat() {
     const initialConnectDone = useRef(false);
     const isConnectingRef = useRef(false);
     const isReconnectingRef = useRef(false);
+
+    useEffect(() => {
+        const saved = localStorage.getItem("theme");
+        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+        const initialTheme = saved || (systemPrefersDark ? "dark" : "light");
+        setTheme(initialTheme);
+        document.documentElement.setAttribute("data-theme", initialTheme);
+    }, []);
+
+    const toggleTheme = () => {
+        const newTheme = theme === "dark" ? "light" : "dark";
+        setTheme(newTheme);
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+    };
 
     const connectWebSocket = () => {
         if (isConnectingRef.current) return;
@@ -111,34 +128,29 @@ export default function OnlineChat() {
                     const parsed = JSON.parse(e.data);
                     const msg = parsed.text || e.data;
 
-                    // Kui on veateade kasutajanime kohta
                     if (msg.toLowerCase().includes("kasutajanimi on keelatud")) {
-                        setUsernameError(msg); // kuva dialoogis
+                        setUsernameError(msg);
                         return;
                     }
-
                     if (msg.includes("Tere tulemast")) {
                         setUsernameAccepted(true);
-                        setUsernameError(""); // eemalda veateade
+                        setUsernameError("");
                     }
-
                     addChatMessage(parsed);
                 } catch {
-                    // fallback kui ei ole JSON
                     if (e.data.toLowerCase().includes("kasutajanimi on keelatud")) {
                         setUsernameError(e.data);
                         return;
                     }
-
                     if (e.data.includes("Tere tulemast")) {
                         setUsernameAccepted(true);
                         setUsernameError("");
                     }
-
                     addChatMessage({ text: e.data });
                 }
             }
         };
+
         socket.onerror = (err) => console.error('WebSocket viga:', err);
         socket.onclose = () => {
             if (initialConnectDone.current) addChatMessage('Ühendus suleti.');
@@ -155,8 +167,8 @@ export default function OnlineChat() {
     useEffect(() => {
         let loadedCount = 0;
         const totalToLoad = 3;
-
         connectWebSocket();
+
         const fetchContent = async (endpoint, setter) => {
             try {
                 const res = await fetch(`${API_URL}${endpoint}`);
@@ -166,9 +178,7 @@ export default function OnlineChat() {
                 setter([]);
             } finally {
                 loadedCount += 1;
-                if (loadedCount >= totalToLoad) {
-                    setLoading(false);
-                }
+                if (loadedCount >= totalToLoad) setLoading(false);
             }
         };
 
@@ -185,7 +195,9 @@ export default function OnlineChat() {
 
     const addChatMessage = (message) => {
         setChatMessages(prev => [...prev, message]);
-        setTimeout(() => { if (chatLogRef.current) chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight; }, 100);
+        setTimeout(() => {
+            if (chatLogRef.current) chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
+        }, 100);
     };
 
     const sendChatMessage = () => {
@@ -221,11 +233,10 @@ export default function OnlineChat() {
 
     return (
         <>
-            {loading && (
-                <div className="loading-overlay">
-                    <div className="loader"></div>
-                </div>
-            )}
+            <button onClick={toggleTheme} className="theme-toggle">
+                {theme === "dark" ? "Light Mode" : "Dark Mode"}
+            </button>
+            {loading && <div className="loading-overlay"><div className="loader"></div></div>}
             {!usernameAccepted && !loading && (
                 <div className="overlay">
                     <div className="username-dialog">
@@ -242,11 +253,7 @@ export default function OnlineChat() {
                             placeholder="Sisesta kasutajanimi"
                             autoFocus
                         />
-                        {usernameError && (
-                            <p className="username-error">
-                                {usernameError}
-                            </p>
-                        )}
+                        {usernameError && <p className="username-error">{usernameError}</p>}
                     </div>
                 </div>
             )}
@@ -285,11 +292,17 @@ export default function OnlineChat() {
                             ))}
                         </div>
                         <div className="flex gap-2">
-                            <input
+                            <textarea
+                                rows={1}
                                 value={chatInput}
-                                onChange={e=>setChatInput(e.target.value)}
-                                onKeyDown={e=>e.key==='Enter'&&sendChatMessage()}
-                                className="flex-1 border px-2 py-1 h-10"
+                                onChange={e => setChatInput(e.target.value)}
+                                onKeyDown={e => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        sendChatMessage();
+                                    }
+                                }}
+                                className="border p-2 resize-none flex-1 h-10"
                                 placeholder="Sisesta sõnum..."
                             />
                             <button onClick={sendChatMessage} className="border px-3 py-1 h-10">Saada</button>
