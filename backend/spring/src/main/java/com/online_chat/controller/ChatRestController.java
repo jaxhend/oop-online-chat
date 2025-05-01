@@ -5,6 +5,7 @@ import com.online_chat.bots.lunchBot.DeltaJsoupScraper;
 import com.online_chat.bots.newsBot.NewsItem;
 import com.online_chat.bots.newsBot.RssScraper;
 import com.online_chat.bots.weatherBot.WeatherAPI;
+import com.online_chat.bots.weatherBot.WeatherInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +34,8 @@ public class ChatRestController {
 
     @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
     @GetMapping("/ilm")
-    public ResponseEntity<String> getWeather() {
-        String weatherData = weatherAPI.getLatestWeather();
+    public ResponseEntity<WeatherInfo> getWeather() {
+        WeatherInfo weatherData = weatherAPI.getLatestWeather();
         return ResponseEntity.ok(weatherData);
 
     }

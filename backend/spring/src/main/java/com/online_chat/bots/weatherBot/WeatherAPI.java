@@ -16,7 +16,7 @@ public class WeatherAPI {
 
     @Value("${weather.key}")
     private String API_KEY;
-    private String latestWeather;
+    private WeatherInfo latestWeather;
     private static final String ENDPOINT = "https://api.weatherapi.com/v1/current.json?key=%s&q=Tartu,Estonia&lang=et";
 
     @PostConstruct
@@ -28,11 +28,11 @@ public class WeatherAPI {
         this.latestWeather = fetchWeather();
     }
 
-    public String getLatestWeather() {
+    public WeatherInfo getLatestWeather() {
         return latestWeather;
     }
 
-    public String fetchWeather() {
+    public WeatherInfo fetchWeather() {
         try {
             String requestUrl = String.format(ENDPOINT, API_KEY);
             URL url = new URL(requestUrl);
@@ -54,7 +54,7 @@ public class WeatherAPI {
             String precip = root.path("current").path("precip_mm").asText() + " mm";
             String icon = "https:" + root.path("current").path("condition").path("icon").asText();
 
-            return String.format("{\"temperature\": \"%s\",\"feels_like\": \"%s\", \"precipitation\": \"%s\" \"icon\": \"%s\"}", temp,feelsLike,precip, icon);
+            return new WeatherInfo(temp,icon,precip,feelsLike);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
