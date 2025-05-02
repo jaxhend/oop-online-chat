@@ -79,6 +79,7 @@ export default function OnlineChat() {
 
     const chatLogRef = useRef(null);
     const socketRef = useRef(null);
+    const botChatLogRef = useRef(null);
     const pingIntervalRef = useRef(null);
     const reconnectTimeoutRef = useRef(null);
     const sessionId = useRef(crypto.randomUUID());
@@ -263,8 +264,8 @@ export default function OnlineChat() {
                 </button>
             </div>
 
-            <div className="flex flex-col min-h-screen">
-                <NewsTicker newsList={newsList} animate={!loading} />
+            <div className="flex flex-col h-screen">
+            <NewsTicker newsList={newsList} animate={!loading} />
 
                 <div className="container mx-auto flex flex-1 p-5 gap-5 font-sans flex-row">
                     {/* Päevapakkumised ja ilm */}
