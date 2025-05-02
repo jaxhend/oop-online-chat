@@ -211,10 +211,10 @@ export default function OnlineChat() {
 
     const sendToBot = async (text) => {
         try {
-            const res = await fetch(`${API_URL}/chatbot`, {
+            const res = await fetch(`http://193.40.154.119:80/chatbot`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: sessionId.current, prompt: text })
+                body: JSON.stringify({ query: text })
             });
             const data = await res.json();
             if (data.history) setChatHistory(data.history);
