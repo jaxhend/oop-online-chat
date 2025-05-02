@@ -212,7 +212,7 @@ export default function OnlineChat() {
 
     const sendToBot = async (text) => {
         try {
-            const res = await fetch(`http://193.40.154.119:80/chatbot`, {
+            const res = await fetch(`https://llm.utchat.ee/chatbot`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ query: text })
