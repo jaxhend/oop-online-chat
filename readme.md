@@ -6,10 +6,10 @@
 Online-chat, mille kaudu saavad tudengid omavahel suhelda ja jagada erinevates chatroomides vastavate õppeainete alast teavet / muljeid.
 
 ### Hetke funktsionaalsus:
-* Saab luua ja ühineda chatruumidega.
-* Saab üksteisele privaatseid sõnumeid saata.
-* Kuvab tänast ilma, uudiseid ja Delta kohviku päevapakkumisi.
-
+* Võimalus luua uusi ja liituda olemasolevate vestlusruumidega.
+* Võimalus saata teistele kasutajatele privaatseid sõnumeid.
+* Kuvab reaalajas tänast ilma, uudiseid ja Delta kohviku päevapakkumisi.
+* Võimalus vestelda AI juturobotiga, kes annab infot Tartu Ülikooli õppekavade kohta.
 
 ### Kasutusjuhend
 ~~~
