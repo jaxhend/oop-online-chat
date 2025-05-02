@@ -219,9 +219,9 @@ export default function OnlineChat() {
             });
             const data = await res.json();
             if (data.history) setChatHistory(data.history);
-            else setChatHistory(prev => [...prev, { sender: 'Sina', text }, { sender: 'Bot', text: data.response }]);
+            else setChatHistory(prev => [...prev, { sender: 'Sina', text }, { sender: 'Robot', text: data.response }]);
         } catch {
-            setChatHistory(prev => [...prev, { sender: 'Sina', text }, { sender: 'Bot', text: 'Flask viga' }]);
+            setChatHistory(prev => [...prev, { sender: 'Sina', text }, { sender: 'Robot', text: 'viga' }]);
         }
     };
 
