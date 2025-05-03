@@ -82,3 +82,19 @@
         transform: translateX(100%);
     }
 }
+.thinkingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.thinkingContainer p {
+  font-size: 16px;
+  color: #888;
+}
+
+.progress {
+  margin-top: 10px;
+}
