@@ -25,7 +25,7 @@ export default function OnlineChat() {
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
-    // Loeme sessiooni ID küpsisest
+
     useEffect(() => {
         const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
         if (match) {
@@ -33,7 +33,6 @@ export default function OnlineChat() {
         }
     }, []);
 
-    // Loome WebSocketi ainult siis, kui sessionId on olemas
     useEffect(() => {
         if (!sessionId) return;
 

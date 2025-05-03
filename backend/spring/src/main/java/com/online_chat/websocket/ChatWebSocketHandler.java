@@ -43,23 +43,26 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
 
         // Kontrollime, kas antud sessiooni ID on juba olemas
-        ClientSession existing = sessionManager.getSession(sessionId);
-        if (existing != null) {
-            existing.setWebSocketSession(session);
-            // Proovime taastada eelneva kasutajanime
+        ClientSession clientSession = sessionManager.getSession(sessionId);
+        if (clientSession != null) {
+            clientSession.setWebSocketSession(session);
+        } else {
+            clientSession = new ClientSession(sessionId);
+            clientSession.setWebSocketSession(session);
+
+            // Kui olemas, taastame varasema kasutajanime
             String previousUsername = sessionManager.getUsername(sessionId);
             if (previousUsername != null && !previousUsername.isBlank()) {
-                existing.setUsername(previousUsername);
-                messageProcessor.sendWelcomeMessage(existing);
+                clientSession.setUsername(previousUsername);
+                messageProcessor.sendWelcomeMessage(clientSession);
             }
-        } else {
-                ClientSession newSession = new ClientSession(sessionId);
-                newSession.setWebSocketSession(session);
-                sessionManager.registerSession(newSession);
-            }
-            // Lisame WebSocketi sessiooni aktiivsete sessioonide hulka
-            sessions.add(session);
+
+            sessionManager.registerSession(clientSession);
+        }
+
+        sessions.add(session);
     }
+
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {

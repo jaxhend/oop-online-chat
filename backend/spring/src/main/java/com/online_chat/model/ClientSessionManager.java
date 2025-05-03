@@ -11,6 +11,7 @@ public class ClientSessionManager {
 
     // Salvestame kõik aktiivsed sessioonid nende IDde järgi
     private final Map<String, ClientSession> sessions = new ConcurrentHashMap<>();
+    // salvestame kõik cookied ja nendega seotud kasutajanimed
     private final Map<String, String> cookieUsernamers = new ConcurrentHashMap<>();
     private final UsernameRegistry usernameRegistry;
 
