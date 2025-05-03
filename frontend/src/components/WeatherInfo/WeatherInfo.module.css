@@ -1,6 +1,8 @@
+
 .section {
     margin-top: 1rem;
 }
+
 
 .title {
     font-size: 1.25rem;
@@ -11,6 +13,7 @@
 .paragraph {
     margin: 0.25rem 0;
 }
+
 
 .icon {
     width: 40px;
