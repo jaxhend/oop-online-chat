@@ -136,31 +136,30 @@ export default function OnlineChat() {
                 <NewsTicker newsList={newsList} animate={!loading} />
 
                 <div className="container flex-1 p-5 gap-5 font-sans flex-row">
-                    {/* Päeva pakkumised ja ilm */}
                     <div className="fixed-flex-1 border p-3 overflow-y-auto flex flex-col">
                         <DailyDeals deals={dailyDeals} />
                         <WeatherInfo weather={weatherInfo} />
                     </div>
 
-                    {/* Chat + AI valiku nupud ja mõlemad paneelid */}
                     <div className="fixed-flex-2 flex flex-col gap-4">
-                        {/* --- Valikunupud --- */}
                         <div className="flex gap-4 mb-2">
                             <Button
                                 variant={activeTarget === "chat" ? "default" : "outline"}
                                 onClick={() => setActiveTarget("chat")}
+                                className={activeTarget === "chat" ? "ring-2 ring-primary" : ""}
                             >
                                 Vestlusplats
                             </Button>
                             <Button
                                 variant={activeTarget === "ai" ? "default" : "outline"}
                                 onClick={() => setActiveTarget("ai")}
+                                className={activeTarget === "ai" ? "ring-2 ring-primary" : ""}
                             >
                                 AI Juturobot
                             </Button>
                         </div>
 
-                        {/* --- Mõlemad paneelid on nähtavad --- */}
+
                         <ChatPanel
                             chatMessages={chatMessages}
                             onSend={(msg) => {
@@ -169,7 +168,7 @@ export default function OnlineChat() {
                                 }
                             }}
                             chatLogRef={chatLogRef}
-                            isActive={activeTarget === "chat"} // <-- saadame prop'i
+                            isActive={activeTarget === "chat"}
                         />
 
                         <AIChatPanel
@@ -181,7 +180,7 @@ export default function OnlineChat() {
                             onBotSend={() => {
                                 if (activeTarget === "ai") handleBotSend();
                             }}
-                            isActive={activeTarget === "ai"} // <-- saadame prop'i
+                            isActive={activeTarget === "ai"}
                         />
                     </div>
                 </div>
