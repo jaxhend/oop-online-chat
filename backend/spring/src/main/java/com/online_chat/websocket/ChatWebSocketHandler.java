@@ -34,21 +34,15 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     // Meetod, mis aktiveeritakse, kui kasutaja loob brauseris ühenduse.
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
+        // Sessiooni ID, mis lisati HandshakeInterceptori kaudu
         String sessionId = (String) session.getAttributes().get("sessionId");
-
-
-        if (sessionId == null || sessionId.isBlank()) {
-            sessionId = getSessionIdFromQuery(session);
-        }
 
         if (sessionId == null || sessionId.isBlank()) {
             session.close();
             return;
         }
 
-
-        // Kontrollime, kas sessioon on juba olemas
+        // Kontrollime, kas antud sessiooni ID on juba olemas
         ClientSession existing = sessionManager.getSession(sessionId);
         if (existing != null) {
             existing.setWebSocketSession(session);
@@ -58,8 +52,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             sessionManager.registerSession(newSession);
         }
 
+        // Lisame WebSocketi sessiooni aktiivsete sessioonide hulka
         sessions.add(session);
-
     }
 
     @Override
