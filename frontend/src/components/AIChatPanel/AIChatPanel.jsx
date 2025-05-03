@@ -10,20 +10,43 @@ export default function AIChatPanel({
 }) {
   const [thinkingTime, setThinkingTime] = useState(0);
   const [isThinking, setIsThinking] = useState(false);
+  const [response, setResponse] = useState("");
+  const [dots, setDots] = useState("");
 
   const handleBotSend = () => {
     setIsThinking(true);
     setThinkingTime(0);
+    setResponse("");
+    setDots("");
 
-    const timer = setInterval(() => {
-      setThinkingTime((prev) => prev + 1);
+    const dotTimer = setInterval(() => {
+      setDots((prev) => (prev.length < 3 ? prev + "." : prev));
     }, 1000);
 
+    sendToFlask(botInput);
+
     setTimeout(() => {
-      clearInterval(timer);
-      onBotSend();
+      clearInterval(dotTimer);
       setIsThinking(false);
     }, 10000);
+  };
+
+  const sendToFlask = async (text) => {
+    try {
+      const response = await fetch("http://api.utchat.ee/api/chat/flask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: "session_123",
+          prompt: text
+        }),
+      });
+
+      const data = await response.json();
+      setResponse(data.response || "Viga vastuse saamisel");
+    } catch (error) {
+      setResponse("Flask viga: " + error.message);
+    }
   };
 
   useEffect(() => {
@@ -62,8 +85,13 @@ export default function AIChatPanel({
 
       {isThinking && (
         <div className={styles.thinkingContainer}>
-          <p>AI mõtleb...</p>
-          <p>{thinkingTime} sekundi pärast...</p>
+          <p>AI mõtleb{dots}</p>
+        </div>
+      )}
+
+      {response && !isThinking && (
+        <div className={styles.responseContainer}>
+          <p>Bot: {response}</p>
         </div>
       )}
     </div>
