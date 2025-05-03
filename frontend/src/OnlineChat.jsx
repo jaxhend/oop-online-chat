@@ -35,13 +35,25 @@ export default function OnlineChat() {
         if (savedUsername) {
             setUsername(savedUsername);
             setUsernameAccepted(true);
+
+            if (socketRef.current?.readyState === WebSocket.OPEN) {
+                socketRef.current.send(savedUsername);
+            } else {
+                const interval = setInterval(() => {
+                    if (socketRef.current?.readyState === WebSocket.OPEN) {
+                        socketRef.current.send(savedUsername);
+                        clearInterval(interval);
+                    }
+                }, 100);
+            }
         }
 
-        const saved = localStorage.getItem("theme");
+        const savedTheme = localStorage.getItem("theme");
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const initialTheme = saved || (prefersDark ? "dark" : "light");
+        const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
         setTheme(initialTheme);
         document.documentElement.setAttribute("data-theme", initialTheme);
+
     }, [cookies]);
 
     const toggleTheme = () => {
@@ -56,7 +68,14 @@ export default function OnlineChat() {
         const socket = new WebSocket(`${protocol}api.utchat.ee/ws?sessionId=${sessionId.current}`);
         socketRef.current = socket;
 
-        socket.onopen = () => console.log("WebSocket connected");
+        socket.onopen = () => {
+            console.log("WebSocket connected");
+
+            const savedUsername = cookies.username;
+            if (savedUsername) {
+                socket.send(savedUsername);
+            }
+        };
 
         socket.onmessage = (e) => {
             if (e.data !== "pong") {
