@@ -74,19 +74,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 });
     }
 
-    // tagastab HTML-i poolt kaasa pakitud ühenduse ID
-    private String getSessionIdFromQuery(WebSocketSession session) {
-        String query = session.getUri().getQuery();
-        if (query != null && query.startsWith("sessionId=")) {
-            return query.substring("sessionId=".length());
-        }
-        return null;
-    }
-
     // Käivitatakse iga kord, kui klient saadab serverile WebSocketi kaudu sõnumi
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String sessionId = getSessionIdFromQuery(session);
+        String sessionId = (String) session.getAttributes().get("sessionId");
         if (sessionId == null || sessionId.isBlank()) return;
 
         ClientSession clientSession = sessionManager.getSession(sessionId);
