@@ -55,9 +55,20 @@ export default function OnlineChat() {
         const saved = cookies.username;
         const socket = socketRef.current;
 
-        if (saved && socket?.readyState === WebSocket.OPEN && !usernameAccepted) {
+        if (!saved || usernameAccepted) return;
+
+        if (socket?.readyState === WebSocket.OPEN) {
             socket.send(saved);
             setUsername(saved);
+        } else {
+            const interval = setInterval(() => {
+                if (socket?.readyState === WebSocket.OPEN) {
+                    socket.send(saved);
+                    setUsername(saved);
+                    clearInterval(interval);
+                }
+            }, 100);
+            return () => clearInterval(interval);
         }
     }, [cookies, usernameAccepted]);
 
