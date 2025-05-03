@@ -46,14 +46,19 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         ClientSession existing = sessionManager.getSession(sessionId);
         if (existing != null) {
             existing.setWebSocketSession(session);
+            // Proovime taastada eelneva kasutajanime
+            String previousUsername = sessionManager.getUsername(sessionId);
+            if (previousUsername != null && !previousUsername.isBlank()) {
+                existing.setUsername(previousUsername);
+                messageProcessor.sendWelcomeMessage(existing);
+            }
         } else {
-            ClientSession newSession = new ClientSession(sessionId);
-            newSession.setWebSocketSession(session);
-            sessionManager.registerSession(newSession);
-        }
-
-        // Lisame WebSocketi sessiooni aktiivsete sessioonide hulka
-        sessions.add(session);
+                ClientSession newSession = new ClientSession(sessionId);
+                newSession.setWebSocketSession(session);
+                sessionManager.registerSession(newSession);
+            }
+            // Lisame WebSocketi sessiooni aktiivsete sessioonide hulka
+            sessions.add(session);
     }
 
     @Override

@@ -27,47 +27,49 @@ public class MessageProcessor {
     }
 
     // Töötleb kasutaja saadetud sõnumi ning edastab selle
-    public String processAndBroadcast(ClientSession session, String message) {
+    public void processAndBroadcast(ClientSession session, String message) {
         if (session.getUsername() == null || session.getUsername().isBlank()) {
-            return handleUsernameAssignment(session, message);
+            handleUsernameAssignment(session, message);
+            return;
+
         } else if (message.startsWith("/")) {
             String response = commandHandler.handle(session, message);
             String color = message.startsWith("/join") ? "#9B59B6" : "#E74C3C";
             sendMessage(session, response, color);
-            return response;
+            return;
+
         } else if (session.getCurrentRoom() != null) {
             broadcastToRoom(session, message);
-            return message;
+            return;
+
         } else {
             String error = "Sa ei ole üheski toas. Kasuta /join <ruum>.";
             sendErrorMessage(session, error);
-            return error;
         }
     }
 
     // kasutajanime töötlemine ja sobivuse kontroll
-    private String handleUsernameAssignment(ClientSession session, String message) {
+    private void handleUsernameAssignment(ClientSession session, String message) {
         String username = message.trim();
 
         if (username.isBlank() || username.contains("/") || username.contains(" ")) {
             sendErrorMessage(session, "Kasutajanimi on keelatud või vales formaadis.");
-            return "Kasutajanimi ei sobi.";
+            return;
         }
 
         if (usernameRegistry.isTaken(username, session.getId())) {
             sendErrorMessage(session, "See kasutajanimi on juba kasutusel või reserveeritud.");
-            return "Kasutajanimi on reserveeritud.";
+            return;
         }
 
         if (!usernameRegistry.register(username, session.getId())) {
             sendErrorMessage(session, "Kasutajanime registreerimine ebaõnnestus.");
-            return "Registreerimine nurjus.";
+            return;
         }
 
         session.setUsername(username);
-        String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha käske.", username);
-        sendMessage(session, welcome, "#2ECC71");
-        return welcome;
+        sessionManager.setCookieUsername(session.getId(), username);
+        sendWelcomeMessage(session);
     }
 
     // Edastab sõnumi kõigile kasutajatele, kes on saatjaga samas ruumis
@@ -125,6 +127,11 @@ public class MessageProcessor {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendWelcomeMessage(ClientSession session) {
+        String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha käske.", session.getUsername());
+        sendMessage(session, welcome, "#2ECC71");
     }
 
     private String currentTime() {

@@ -11,6 +11,7 @@ public class ClientSessionManager {
 
     // Salvestame kõik aktiivsed sessioonid nende IDde järgi
     private final Map<String, ClientSession> sessions = new ConcurrentHashMap<>();
+    private final Map<String, String> cookieUsernamers = new ConcurrentHashMap<>();
     private final UsernameRegistry usernameRegistry;
 
     public ClientSessionManager(UsernameRegistry usernameRegistry) {
@@ -52,6 +53,12 @@ public class ClientSessionManager {
                 username.contains(" ") ||
                 isUserOnline(username) ||
                 usernameRegistry.isTaken(username, sessionId);
+    }
+    public void setCookieUsername(String sessionId, String username) {
+        cookieUsernamers.put(sessionId,username);
+    }
+    public String getUsername(String sessionId) {
+        return cookieUsernamers.get(sessionId);
     }
 
     public void removeSession(String id) {

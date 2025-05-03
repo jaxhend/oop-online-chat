@@ -46,5 +46,6 @@ public class UsernameRegistry {
         return true;
     }
 
+
     private record RegistryEntry(String sessionId, Instant timestamp) {}
 }
