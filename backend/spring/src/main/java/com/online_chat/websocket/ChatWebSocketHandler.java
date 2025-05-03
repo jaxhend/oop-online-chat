@@ -39,17 +39,25 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
 
         if (sessionId == null || sessionId.isBlank()) {
+            sessionId = getSessionIdFromQuery(session);
+        }
+
+        if (sessionId == null || sessionId.isBlank()) {
             session.close();
             return;
         }
-        // Loob uue Clientsessioni
-        ClientSession clientSession = new ClientSession(sessionId);
-        sessionManager.registerSession(clientSession);
 
-        // Seob WebsocketSessioni ClientiSessioniga
-        clientSession.setWebSocketSession(session);
 
-        // lisab WebSocketSessioni aktiivsete seasioonide hulka
+        // Kontrollime, kas sessioon on juba olemas
+        ClientSession existing = sessionManager.getSession(sessionId);
+        if (existing != null) {
+            existing.setWebSocketSession(session);
+        } else {
+            ClientSession newSession = new ClientSession(sessionId);
+            newSession.setWebSocketSession(session);
+            sessionManager.registerSession(newSession);
+        }
+
         sessions.add(session);
 
     }
