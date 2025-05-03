@@ -20,12 +20,7 @@ export default function OnlineChat() {
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
 
-    const sessionId = useRef(
-        (() => {
-            const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
-            return match ? match[1] : null;
-        })()
-    );
+    const [sessionId, setSessionId] = useState(null);
     const chatLogRef = useRef(null);
 
     const [theme, toggleTheme] = useTheme();
@@ -35,49 +30,54 @@ export default function OnlineChat() {
     const socketRef = useRef(null);
 
     useEffect(() => {
-        if (!sessionId.current) return;
+        const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
+        if (match) {
+            setSessionId(match[1]);
+        }
+    }, []);
 
-        socketRef.current = useWebSocket(sessionId.current, (e) => {
-            if (e.data === "pong") return;
-            try {
-                const msg = JSON.parse(e.data);
+    const socketRef = useWebSocket(sessionId, (e) => {
+        if (e.data === "pong") return;
 
-                if (msg.text?.includes("Tere tulemast")) {
-                    const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
-                    const extractedName = match?.[1]?.trim();
-                    if (extractedName) {
-                        setUsername(extractedName);
-                        setUsernameAccepted(true);
-                    }
-                    setUsernameError("");
+        try {
+            const msg = JSON.parse(e.data);
+
+            if (msg.text?.includes("Tere tulemast")) {
+                const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
+                const extractedName = match?.[1]?.trim();
+                if (extractedName) {
+                    setUsername(extractedName);
+                    setUsernameAccepted(true);
                 }
-
-                if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
-                    setUsernameError(msg.text);
-                    setUsernameAccepted(false);
-                }
-
-                setChatMessages((prev) => [...prev, msg]);
-            } catch {
-                setChatMessages((prev) => [...prev, { text: e.data }]);
+                setUsernameError("");
             }
-        });
-    }, [sessionId.current]);
+
+            if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
+                setUsernameError(msg.text);
+                setUsernameAccepted(false);
+            }
+
+            setChatMessages((prev) => [...prev, msg]);
+        } catch {
+            setChatMessages((prev) => [...prev, { text: e.data }]);
+        }
+    });
 
 
     useEffect(() => {
+        if (!sessionId || !socketRef.current) return;
+
         const socket = socketRef.current;
-        if (!socket || !sessionId.current) return;
 
         const interval = setInterval(() => {
             if (socket.readyState === WebSocket.OPEN) {
-                socket.send(sessionId.current);
+                socket.send(sessionId);
                 clearInterval(interval);
             }
         }, 100);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [sessionId]);
 
     const handleUsernameSubmit = () => {
         if (!username) {
