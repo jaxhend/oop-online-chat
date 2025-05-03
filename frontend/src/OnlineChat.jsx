@@ -139,9 +139,11 @@ export default function OnlineChat() {
                     </div>
                     <ChatPanel
                         chatMessages={chatMessages}
-                        chatInput={chatInput}
-                        onSend={sendChatMessage}
-                        onInputChange={(e) => setChatInput(e.target.value)}
+                        onSend={(cmd) => {
+                            if (socketRef.current?.readyState === WebSocket.OPEN) {
+                                socketRef.current.send(cmd);
+                            }
+                        }}
                         chatLogRef={chatLogRef}
                     />
                     <AIChatPanel
