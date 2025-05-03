@@ -94,6 +94,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             return;
         }
 
+
         messageProcessor.processAndBroadcast(clientSession, payload);
     }
 }

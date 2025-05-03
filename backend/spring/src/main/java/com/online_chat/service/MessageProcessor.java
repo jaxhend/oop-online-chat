@@ -3,6 +3,7 @@ package com.online_chat.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.ClientSessionManager;
+import com.online_chat.model.UsernameRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -16,11 +17,13 @@ public class MessageProcessor {
     private final CommandHandler commandHandler;
     private final ClientSessionManager sessionManager;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final UsernameRegistry usernameRegistry;
 
     @Autowired
-    public MessageProcessor(CommandHandler commandHandler, ClientSessionManager sessionManager) {
+    public MessageProcessor(CommandHandler commandHandler, ClientSessionManager sessionManager, UsernameRegistry usernameRegistry) {
         this.commandHandler = commandHandler;
         this.sessionManager = sessionManager;
+        this.usernameRegistry = usernameRegistry;
     }
 
     // Töötleb kasutaja saadetud sõnumi ning edastab selle
@@ -44,16 +47,30 @@ public class MessageProcessor {
 
     // kasutajanime töötlemine ja sobivuse kontroll
     private String handleUsernameAssignment(ClientSession session, String message) {
-        if (sessionManager.inValidUserName(message)) {
-            String error = "Kasutajanimi on keelatud või juba kasutusel. Proovi uuesti.";
-            sendErrorMessage(session, error);
-            return error;
-        } else {
-            session.setUsername(message);
-            String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha käske.", message);
-            sendMessage(session, welcome, "#2ECC71");
-            return welcome;
+        String username = message.trim();
+
+        if (username.isBlank() || username.contains("/") || username.contains(" ")) {
+            sendErrorMessage(session, "Kasutajanimi on keelatud või vales formaadis.");
+            return "Kasutajanimi ei sobi.";
         }
+
+
+        if (sessionManager.isUserOnline(username)) {
+            sendErrorMessage(session, "Kasutajanimi on juba kasutuses.");
+            return "Kasutajanimi juba kasutuses.";
+        }
+
+        if (usernameRegistry.isTaken(username)) {
+            sendErrorMessage(session, "See kasutajanimi on reserveeritud ja ei ole veel vaba.");
+            return "Kasutajanimi lukus.";
+        }
+
+        usernameRegistry.register(username);
+
+        session.setUsername(username);
+        String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha käske.", username);
+        sendMessage(session, welcome, "#2ECC71");
+        return welcome;
     }
 
     // Edastab sõnumi kõigile kasutajatele, kes on saatjaga samas ruumis
