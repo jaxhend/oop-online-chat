@@ -21,15 +21,13 @@ export default function OnlineChat() {
     const [chatHistory, setChatHistory] = useState([]);
     const [initializing, setInitializing] = useState(true);
 
-    const sessionId = useRef(null);
-    if (sessionId.current === null) {
-        let saved = localStorage.getItem("sessionId");
-        if (!saved) {
-            saved = crypto.randomUUID();
-            localStorage.setItem("sessionId", saved);
-        }
-        sessionId.current = saved;
-    }
+    const sessionId = useRef(
+        localStorage.getItem("sessionId") || (() => {
+            const newId = crypto.randomUUID();
+            localStorage.setItem("sessionId", newId);
+            return newId;
+        })()
+    );
 
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
