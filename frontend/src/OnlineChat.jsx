@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useCookies } from "react-cookie";
 import NewsTicker from "./components/NewsTicker/NewsTicker";
 import DailyDeals from "./components/DailyDeals/DailyDeals";
 import WeatherInfo from "./components/WeatherInfo/WeatherInfo";
@@ -20,6 +19,8 @@ export default function OnlineChat() {
     const [chatInput, setChatInput] = useState("");
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
+    const [initializing, setInitializing] = useState(true);
+
     const sessionId = useRef(null);
     if (sessionId.current === null) {
         let saved = localStorage.getItem("sessionId");
@@ -29,9 +30,8 @@ export default function OnlineChat() {
         }
         sessionId.current = saved;
     }
-    const [initializing, setInitializing] = useState(true);
+
     const chatLogRef = useRef(null);
-    const [cookies, setCookie] = useCookies(["username"]);
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
@@ -47,11 +47,15 @@ export default function OnlineChat() {
                     const extractedName = match?.[1]?.trim();
 
                     if (extractedName) {
-                        setUsernameAccepted(true);
                         setUsername(extractedName);
-                        setCookie("username", extractedName, { maxAge: 7 * 24 * 60 * 60 });
+                        setUsernameAccepted(true);
                     }
                     setUsernameError("");
+                }
+
+                if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
+                    setUsernameError(msg.text);
+                    setUsernameAccepted(false);
                 }
 
                 setChatMessages((prev) => [...prev, msg]);
@@ -60,35 +64,33 @@ export default function OnlineChat() {
             }
         }
     );
+
     useEffect(() => {
-        const saved = cookies.username;
         const socket = socketRef.current;
 
-        if (!saved || usernameAccepted) {
+        if (usernameAccepted) {
             setInitializing(false);
             return;
         }
 
-        const trySendUsername = () => {
+        const trySessionLogin = () => {
             if (socket?.readyState === WebSocket.OPEN) {
-                socket.send(saved);
-                setUsername(saved);
-                setTimeout(() => setInitializing(false), 1000); // oota 1 sekund
+                socket.send(sessionId.current);
+                setTimeout(() => setInitializing(false), 500);
             } else {
                 const interval = setInterval(() => {
                     if (socket?.readyState === WebSocket.OPEN) {
-                        socket.send(saved);
-                        setUsername(saved);
+                        socket.send(sessionId.current);
                         clearInterval(interval);
-                        setTimeout(() => setInitializing(false), 1000);
+                        setTimeout(() => setInitializing(false), 500);
                     }
                 }, 100);
                 return () => clearInterval(interval);
             }
         };
 
-        trySendUsername();
-    }, [cookies, usernameAccepted]);
+        trySessionLogin();
+    }, [usernameAccepted]);
 
     const handleUsernameSubmit = () => {
         if (!username) {
