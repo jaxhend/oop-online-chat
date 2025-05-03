@@ -20,16 +20,15 @@ export default function AIChatPanel({
         setDots("");
 
         const dotTimer = setInterval(() => {
-            setDots((prev) => (prev.length < 5 ? prev + "." : prev));
+            setDots((prev) => (prev.length < 3 ? prev + "." : prev)); // Max 3 dots
         }, 1000);
 
         sendToFlask(botInput);
 
-
         setTimeout(() => {
-            clearInterval(dotTimer);
+            clearInterval(dotTimer); // Stop the timer
             setIsThinking(false);
-        }, 10000);
+        }, 10000); // Stop after 10 seconds
     };
 
     const sendToFlask = async (text) => {
@@ -55,13 +54,27 @@ export default function AIChatPanel({
     return (
         <div className={styles.container}>
             <h3 className={styles.title}>AI Juturobot</h3>
+
             <div className={styles.chatLog}>
                 {chatHistory.map((entry, i) => (
                     <div key={i} className={styles.message}>
                         <strong>{entry.sender}:</strong> {entry.text}
                     </div>
                 ))}
+
+                {isThinking && (
+                    <div className={styles.thinkingContainer}>
+                        <p>AI mõtleb{dots}</p>
+                    </div>
+                )}
+
+                {response && !isThinking && (
+                    <div className={styles.responseContainer}>
+                        <p>Bot: {response}</p>
+                    </div>
+                )}
             </div>
+
             <div className={styles.inputGroup}>
                 <Textarea
                     value={botInput}
@@ -79,18 +92,6 @@ export default function AIChatPanel({
                     Saada botile
                 </button>
             </div>
-
-            {isThinking && (
-                <div className={styles.thinkingContainer}>
-                    <p>AI mõtleb{dots}</p>
-                </div>
-            )}
-
-            {response && !isThinking && (
-                <div className={styles.responseContainer}>
-                    <p>Bot: {response}</p>
-                </div>
-            )}
         </div>
     );
 }
