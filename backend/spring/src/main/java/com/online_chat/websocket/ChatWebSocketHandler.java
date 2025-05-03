@@ -35,8 +35,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
-        String sessionId = getSessionIdFromQuery(session);
+        String sessionId = (String) session.getAttributes().get("sessionId");
 
+
+        if (sessionId == null || sessionId.isBlank()) {
+            session.close();
+            return;
+        }
         // Loob uue Clientsessioni
         ClientSession clientSession = new ClientSession(sessionId);
         sessionManager.registerSession(clientSession);

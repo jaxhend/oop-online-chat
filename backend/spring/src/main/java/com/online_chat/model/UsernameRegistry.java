@@ -28,7 +28,20 @@ public class UsernameRegistry {
 
     // uue kasutajanime registreerimine
     public synchronized boolean register(String username, String sessionId) {
-        if (isTaken(username, sessionId)) return false;
+        if (username == null || username.isBlank()) return false;
+
+        RegistryEntry existing = registeredNames.get(username);
+
+        if (existing != null) {
+            if (existing.sessionId().equals(sessionId)) {
+                return true;
+            }
+
+            if (existing.timestamp().plus(LOCK_DAYS, ChronoUnit.DAYS).isAfter(Instant.now())) {
+                return false;
+            }
+        }
+
         registeredNames.put(username, new RegistryEntry(sessionId, Instant.now()));
         return true;
     }

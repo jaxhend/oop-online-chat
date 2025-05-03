@@ -54,10 +54,9 @@ public class MessageProcessor {
             return "Kasutajanimi ei sobi.";
         }
 
-
-        if (sessionManager.isUserOnline(username)) {
-            sendErrorMessage(session, "Kasutajanimi on juba kasutuses.");
-            return "Kasutajanimi juba kasutuses.";
+        if (usernameRegistry.isTaken(username, session.getId())) {
+            sendErrorMessage(session, "See kasutajanimi on juba kasutusel või reserveeritud.");
+            return "Kasutajanimi on reserveeritud.";
         }
 
         if (!usernameRegistry.register(username, session.getId())) {

@@ -20,9 +20,16 @@ export default function OnlineChat() {
     const [chatInput, setChatInput] = useState("");
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
-    const sessionId = useRef(crypto.randomUUID());
+    const sessionId = useRef(
+        cookies.sessionId || (() => {
+            const newId = crypto.randomUUID();
+            setCookie("sessionId", newId, { maxAge: 7 * 24 * 60 * 60 });
+            return newId;
+        })()
+    );
+    const [initializing, setInitializing] = useState(true);
     const chatLogRef = useRef(null);
-    const [cookies, setCookie] = useCookies(["username"]);
+    const [cookies, setCookie] = useCookies(["sessionId"]);
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
@@ -55,21 +62,30 @@ export default function OnlineChat() {
         const saved = cookies.username;
         const socket = socketRef.current;
 
-        if (!saved || usernameAccepted) return;
-
-        if (socket?.readyState === WebSocket.OPEN) {
-            socket.send(saved);
-            setUsername(saved);
-        } else {
-            const interval = setInterval(() => {
-                if (socket?.readyState === WebSocket.OPEN) {
-                    socket.send(saved);
-                    setUsername(saved);
-                    clearInterval(interval);
-                }
-            }, 100);
-            return () => clearInterval(interval);
+        if (!saved || usernameAccepted) {
+            setInitializing(false);
+            return;
         }
+
+        const trySendUsername = () => {
+            if (socket?.readyState === WebSocket.OPEN) {
+                socket.send(saved);
+                setUsername(saved);
+                setTimeout(() => setInitializing(false), 1000);
+            } else {
+                const interval = setInterval(() => {
+                    if (socket?.readyState === WebSocket.OPEN) {
+                        socket.send(saved);
+                        setUsername(saved);
+                        clearInterval(interval);
+                        setTimeout(() => setInitializing(false), 1000);
+                    }
+                }, 100);
+                return () => clearInterval(interval);
+            }
+        };
+
+        trySendUsername();
     }, [cookies, usernameAccepted]);
 
     const handleUsernameSubmit = () => {
@@ -119,7 +135,7 @@ export default function OnlineChat() {
 
     return (
         <>
-            {!loading && (
+            {!loading && !initializing && (
                 <>
                     {!usernameAccepted && (
                         <UsernameDialog
