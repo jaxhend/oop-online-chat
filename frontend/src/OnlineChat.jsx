@@ -32,33 +32,37 @@ export default function OnlineChat() {
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
 
-    const socketRef = useWebSocket(sessionId.current, (e) => {
-        if (e.data === "pong") return;
+    const socketRef = useRef(null);
 
-        try {
-            const msg = JSON.parse(e.data);
+    useEffect(() => {
+        if (!sessionId.current) return;
 
-            if (msg.text?.includes("Tere tulemast")) {
-                const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
-                const extractedName = match?.[1]?.trim();
+        socketRef.current = useWebSocket(sessionId.current, (e) => {
+            if (e.data === "pong") return;
+            try {
+                const msg = JSON.parse(e.data);
 
-                if (extractedName) {
-                    setUsername(extractedName);
-                    setUsernameAccepted(true);
+                if (msg.text?.includes("Tere tulemast")) {
+                    const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
+                    const extractedName = match?.[1]?.trim();
+                    if (extractedName) {
+                        setUsername(extractedName);
+                        setUsernameAccepted(true);
+                    }
+                    setUsernameError("");
                 }
-                setUsernameError("");
-            }
 
-            if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
-                setUsernameError(msg.text);
-                setUsernameAccepted(false);
-            }
+                if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
+                    setUsernameError(msg.text);
+                    setUsernameAccepted(false);
+                }
 
-            setChatMessages((prev) => [...prev, msg]);
-        } catch {
-            setChatMessages((prev) => [...prev, { text: e.data }]);
-        }
-    });
+                setChatMessages((prev) => [...prev, msg]);
+            } catch {
+                setChatMessages((prev) => [...prev, { text: e.data }]);
+            }
+        });
+    }, [sessionId.current]);
 
 
     useEffect(() => {
