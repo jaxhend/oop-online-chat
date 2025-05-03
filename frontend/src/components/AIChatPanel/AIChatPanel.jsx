@@ -13,23 +13,24 @@ export default function AIChatPanel({
   const [isThinking, setIsThinking] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const handleBotSend = () => {
-    setIsThinking(true);
-    setProgress(0);
-    setThinkingTime(0);
+    const handleBotSend = () => {
+        setIsThinking(true);
+        setProgress(0);
+        setThinkingTime(0);
 
-    const timer = setInterval(() => {
-      setThinkingTime((prev) => prev + 1);
-      setProgress((prev) => Math.min(prev + 10, 100));
-    }, 1000);
+        const timer = setInterval(() => {
+            setThinkingTime((prev) => prev + 1);
+            setProgress((prev) => Math.min(prev + 10, 100));
+        }, 1000);
 
-    setTimeout(() => {
-      clearInterval(timer);
-      setIsThinking(false);
-      setProgress(100);
-      onBotSend();
-    }, 10000);
-  };
+        setTimeout(() => {
+            clearInterval(timer);
+            onBotSend();
+
+            setIsThinking(false);
+            setProgress(100);
+        }, 10000);
+    };
 
   useEffect(() => {
     if (!isThinking) {
