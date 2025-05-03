@@ -7,7 +7,6 @@ import ChatPanel from "./components/ChatPanel/ChatPanel";
 import AIChatPanel from "./components/AIChatPanel/AIChatPanel";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import useTheme from "./hooks/useTheme";
-import useWebSocket from "./hooks/useWebSocket";
 import useInitialData from "./hooks/useInitialData";
 import "./index.css";
 
@@ -19,16 +18,14 @@ export default function OnlineChat() {
     const [chatInput, setChatInput] = useState("");
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
-
     const [sessionId, setSessionId] = useState(null);
-    const chatLogRef = useRef(null);
 
+    const socketRef = useRef(null);
+    const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
-
-    const socketRef = useRef(null);
-
+    // Loeme sessiooni ID küpsisest
     useEffect(() => {
         const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
         if (match) {
@@ -36,47 +33,41 @@ export default function OnlineChat() {
         }
     }, []);
 
-    const socketRef = useWebSocket(sessionId, (e) => {
-        if (e.data === "pong") return;
-
-        try {
-            const msg = JSON.parse(e.data);
-
-            if (msg.text?.includes("Tere tulemast")) {
-                const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
-                const extractedName = match?.[1]?.trim();
-                if (extractedName) {
-                    setUsername(extractedName);
-                    setUsernameAccepted(true);
-                }
-                setUsernameError("");
-            }
-
-            if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
-                setUsernameError(msg.text);
-                setUsernameAccepted(false);
-            }
-
-            setChatMessages((prev) => [...prev, msg]);
-        } catch {
-            setChatMessages((prev) => [...prev, { text: e.data }]);
-        }
-    });
-
-
+    // Loome WebSocketi ainult siis, kui sessionId on olemas
     useEffect(() => {
-        if (!sessionId || !socketRef.current) return;
+        if (!sessionId) return;
 
-        const socket = socketRef.current;
+        const ws = new WebSocket(`wss://api.utchat.ee/ws?sessionId=${sessionId}`);
+        socketRef.current = ws;
 
-        const interval = setInterval(() => {
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.send(sessionId);
-                clearInterval(interval);
+        ws.onmessage = (e) => {
+            if (e.data === "pong") return;
+
+            try {
+                const msg = JSON.parse(e.data);
+
+                if (msg.text?.includes("Tere tulemast")) {
+                    const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
+                    const extractedName = match?.[1]?.trim();
+                    if (extractedName) {
+                        setUsername(extractedName);
+                        setUsernameAccepted(true);
+                    }
+                    setUsernameError("");
+                }
+
+                if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
+                    setUsernameError(msg.text);
+                    setUsernameAccepted(false);
+                }
+
+                setChatMessages((prev) => [...prev, msg]);
+            } catch {
+                setChatMessages((prev) => [...prev, { text: e.data }]);
             }
-        }, 100);
+        };
 
-        return () => clearInterval(interval);
+        return () => ws.close();
     }, [sessionId]);
 
     const handleUsernameSubmit = () => {
