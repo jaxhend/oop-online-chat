@@ -21,15 +21,15 @@ export default function OnlineChat() {
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const sessionId = useRef(
-        cookies.sessionId || (() => {
+        localStorage.getItem("sessionId") || (() => {
             const newId = crypto.randomUUID();
-            setCookie("sessionId", newId, { maxAge: 7 * 24 * 60 * 60 });
+            localStorage.setItem("sessionId", newId);
             return newId;
         })()
     );
     const [initializing, setInitializing] = useState(true);
     const chatLogRef = useRef(null);
-    const [cookies, setCookie] = useCookies(["sessionId"]);
+    const [cookies, setCookie] = useCookies(["username"]);
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
@@ -71,7 +71,7 @@ export default function OnlineChat() {
             if (socket?.readyState === WebSocket.OPEN) {
                 socket.send(saved);
                 setUsername(saved);
-                setTimeout(() => setInitializing(false), 1000);
+                setTimeout(() => setInitializing(false), 1000); // oota 1 sekund
             } else {
                 const interval = setInterval(() => {
                     if (socket?.readyState === WebSocket.OPEN) {
