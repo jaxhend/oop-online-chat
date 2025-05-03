@@ -1,0 +1,22 @@
+.section {
+    margin-bottom: 1.5rem;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+}
+
+.itemList {
+    list-style: none;
+    padding-left: 0;
+}
+
+.item {
+    margin-bottom: 0.5rem;
+}
+
+.restaurant {
+    font-weight: bold;
+}

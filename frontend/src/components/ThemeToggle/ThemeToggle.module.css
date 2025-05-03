@@ -1,0 +1,21 @@
+.container {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    z-index: 1500;
+}
+
+.button {
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover {
+    font-weight: bold;
+}
