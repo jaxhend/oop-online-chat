@@ -27,6 +27,7 @@ export default function OnlineChat() {
             return newId;
         })()
     );
+    const [initializing, setInitializing] = useState(true);
     const chatLogRef = useRef(null);
     const [cookies, setCookie] = useCookies(["username"]);
     const [theme, toggleTheme] = useTheme();
@@ -61,21 +62,30 @@ export default function OnlineChat() {
         const saved = cookies.username;
         const socket = socketRef.current;
 
-        if (!saved || usernameAccepted) return;
-
-        if (socket?.readyState === WebSocket.OPEN) {
-            socket.send(saved);
-            setUsername(saved);
-        } else {
-            const interval = setInterval(() => {
-                if (socket?.readyState === WebSocket.OPEN) {
-                    socket.send(saved);
-                    setUsername(saved);
-                    clearInterval(interval);
-                }
-            }, 100);
-            return () => clearInterval(interval);
+        if (!saved || usernameAccepted) {
+            setInitializing(false);
+            return;
         }
+
+        const trySendUsername = () => {
+            if (socket?.readyState === WebSocket.OPEN) {
+                socket.send(saved);
+                setUsername(saved);
+                setTimeout(() => setInitializing(false), 1000); // oota 1 sekund
+            } else {
+                const interval = setInterval(() => {
+                    if (socket?.readyState === WebSocket.OPEN) {
+                        socket.send(saved);
+                        setUsername(saved);
+                        clearInterval(interval);
+                        setTimeout(() => setInitializing(false), 1000);
+                    }
+                }, 100);
+                return () => clearInterval(interval);
+            }
+        };
+
+        trySendUsername();
     }, [cookies, usernameAccepted]);
 
     const handleUsernameSubmit = () => {
@@ -125,7 +135,7 @@ export default function OnlineChat() {
 
     return (
         <>
-            {!loading && (
+            {!loading && !initializing && (
                 <>
                     {!usernameAccepted && (
                         <UsernameDialog
