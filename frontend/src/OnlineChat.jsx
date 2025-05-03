@@ -8,6 +8,7 @@ import AIChatPanel from "./components/AIChatPanel/AIChatPanel";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import useTheme from "./hooks/useTheme";
 import useInitialData from "./hooks/useInitialData";
+import {Button} from "@/components/ui/Button";
 import "./index.css";
 
 export default function OnlineChat() {
@@ -19,6 +20,7 @@ export default function OnlineChat() {
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const [sessionId, setSessionId] = useState(null);
+    const [activeTarget, setActiveTarget] = useState("chat");
 
     const socketRef = useRef(null);
     const chatLogRef = useRef(null);
@@ -132,24 +134,56 @@ export default function OnlineChat() {
 
             <div className="flex flex-col h-screen">
                 <NewsTicker newsList={newsList} animate={!loading} />
+
                 <div className="container flex-1 p-5 gap-5 font-sans flex-row">
+                    {/* Päeva pakkumised ja ilm */}
                     <div className="fixed-flex-1 border p-3 overflow-y-auto flex flex-col">
                         <DailyDeals deals={dailyDeals} />
                         <WeatherInfo weather={weatherInfo} />
                     </div>
-                    <ChatPanel
-                        chatMessages={chatMessages}
-                        chatInput={chatInput}
-                        onSend={sendChatMessage}
-                        onInputChange={(e) => setChatInput(e.target.value)}
-                        chatLogRef={chatLogRef}
-                    />
-                    <AIChatPanel
-                        chatHistory={chatHistory}
-                        botInput={botInput}
-                        onBotInputChange={(e) => setBotInput(e.target.value)}
-                        onBotSend={handleBotSend}
-                    />
+
+                    {/* Chat + AI valiku nupud ja mõlemad paneelid */}
+                    <div className="fixed-flex-2 flex flex-col gap-4">
+                        {/* --- Valikunupud --- */}
+                        <div className="flex gap-4 mb-2">
+                            <Button
+                                variant={activeTarget === "chat" ? "default" : "outline"}
+                                onClick={() => setActiveTarget("chat")}
+                            >
+                                Vestlusplats
+                            </Button>
+                            <Button
+                                variant={activeTarget === "ai" ? "default" : "outline"}
+                                onClick={() => setActiveTarget("ai")}
+                            >
+                                AI Juturobot
+                            </Button>
+                        </div>
+
+                        {/* --- Mõlemad paneelid on nähtavad --- */}
+                        <ChatPanel
+                            chatMessages={chatMessages}
+                            onSend={(msg) => {
+                                if (activeTarget === "chat" && socketRef.current?.readyState === WebSocket.OPEN) {
+                                    socketRef.current.send(msg);
+                                }
+                            }}
+                            chatLogRef={chatLogRef}
+                            isActive={activeTarget === "chat"} // <-- saadame prop'i
+                        />
+
+                        <AIChatPanel
+                            chatHistory={chatHistory}
+                            botInput={botInput}
+                            onBotInputChange={(e) => {
+                                if (activeTarget === "ai") setBotInput(e.target.value);
+                            }}
+                            onBotSend={() => {
+                                if (activeTarget === "ai") handleBotSend();
+                            }}
+                            isActive={activeTarget === "ai"} // <-- saadame prop'i
+                        />
+                    </div>
                 </div>
             </div>
         </>

@@ -9,21 +9,19 @@ export default function TerminalInput({ onSubmit }) {
     }, []);
 
     const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            const trimmed = command.trim();
-            if (trimmed) onSubmit(trimmed);
-            setCommand("");
-        } else if (e.key === "Backspace") {
-            setCommand(command.slice(0, -1));
-        } else if (e.key.length === 1) {
-            setCommand(command + e.key);
+            const text = inputRef.current.innerText.trim();
+            if (text) {
+                onSubmit(text);
+                inputRef.current.innerText = "";
+            }
         }
     };
 
     return (
         <div className="flex items-center mt-2 text-white">
-            <span className="text-green-400 mr-2">$</span>
+            <span className="text-green-400 mr-2"></span>
             <div
                 ref={inputRef}
                 contentEditable
