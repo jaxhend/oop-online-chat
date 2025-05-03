@@ -20,7 +20,13 @@ export default function OnlineChat() {
     const [chatInput, setChatInput] = useState("");
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
-    const sessionId = useRef(crypto.randomUUID());
+    const sessionId = useRef(
+        localStorage.getItem("sessionId") || (() => {
+            const newId = crypto.randomUUID();
+            localStorage.setItem("sessionId", newId);
+            return newId;
+        })()
+    );
     const chatLogRef = useRef(null);
     const [cookies, setCookie] = useCookies(["username"]);
     const [theme, toggleTheme] = useTheme();
