@@ -9,6 +9,7 @@ import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import useTheme from "./hooks/useTheme";
 import useWebSocket from "./hooks/useWebSocket";
 import useInitialData from "./hooks/useInitialData";
+import { useCookies } from "react-cookie";
 import "./index.css";
 
 export default function OnlineChat() {
@@ -20,6 +21,7 @@ export default function OnlineChat() {
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const [initializing, setInitializing] = useState(true);
+    const [cookies, setCookie] = useCookies(["sessionId"]);
 
     const sessionId = useRef(
         localStorage.getItem("sessionId") || (() => {
@@ -28,6 +30,12 @@ export default function OnlineChat() {
             return newId;
         })()
     );
+    
+    useEffect(() => {
+        if (!cookies.sessionId) {
+            setCookie("sessionId", sessionId.current, { path: "/", maxAge: 7 * 24 * 60 * 60 });
+        }
+    }, [cookies, setCookie]);
 
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
