@@ -7,6 +7,7 @@ export default function AIChatPanel({
                                         onBotInputChange,
                                         onBotSend,
                                         chatHistory,
+                                        isActive,
                                     }) {
     const [thinkingTime, setThinkingTime] = useState(0);
     const [isThinking, setIsThinking] = useState(false);
@@ -14,7 +15,7 @@ export default function AIChatPanel({
     const [dots, setDots] = useState("");
 
     const handleBotSend = () => {
-        if (botInput.trim() === "") return;
+        if (!isActive || botInput.trim() === "") return;
 
         setIsThinking(true);
         setThinkingTime(0);
@@ -22,7 +23,7 @@ export default function AIChatPanel({
         setDots("");
 
         const dotTimer = setInterval(() => {
-            setDots((prev) => (prev.length < 3 ? prev + "." : prev));
+            setDots((prev) => (prev.length < 3 ? prev + "." : ""));
         }, 1000);
 
         sendToFlask(botInput);
@@ -81,17 +82,24 @@ export default function AIChatPanel({
             <div className={styles.inputGroup}>
                 <Textarea
                     value={botInput}
-                    onChange={onBotInputChange}
+                    onChange={(e) => {
+                        if (isActive) onBotInputChange(e);
+                    }}
                     onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
+                        if (e.key === "Enter" && !e.shiftKey && isActive) {
                             e.preventDefault();
                             handleBotSend();
                         }
                     }}
                     className={styles.textarea}
                     placeholder="Sisesta küsimus..."
+                    readOnly={!isActive}
                 />
-                <button onClick={handleBotSend} className={styles.button}>
+                <button
+                    onClick={handleBotSend}
+                    className={styles.button}
+                    disabled={!isActive}
+                >
                     Saada botile
                 </button>
             </div>
