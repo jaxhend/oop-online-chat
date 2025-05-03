@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useCookies } from "./hooks/useCookies";
 import NewsTicker from "./components/NewsTicker/NewsTicker";
 import DailyDeals from "./components/DailyDeals/DailyDeals";
 import WeatherInfo from "./components/WeatherInfo/WeatherInfo";
@@ -29,12 +30,18 @@ export default function OnlineChat() {
     const API_URL = "https://api.utchat.ee";
 
     useEffect(() => {
+        const savedUsername = cookies.username;
+        if (savedUsername) {
+            setUsername(savedUsername);
+            setUsernameAccepted(true);
+        }
+
         const saved = localStorage.getItem("theme");
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         const initialTheme = saved || (prefersDark ? "dark" : "light");
         setTheme(initialTheme);
         document.documentElement.setAttribute("data-theme", initialTheme);
-    }, []);
+    }, [cookies]);
 
     const toggleTheme = () => {
         const newTheme = theme === "dark" ? "light" : "dark";
