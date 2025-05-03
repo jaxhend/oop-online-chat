@@ -60,12 +60,10 @@ public class MessageProcessor {
             return "Kasutajanimi juba kasutuses.";
         }
 
-        if (usernameRegistry.isTaken(username)) {
-            sendErrorMessage(session, "See kasutajanimi on reserveeritud ja ei ole veel vaba.");
-            return "Kasutajanimi lukus.";
+        if (!usernameRegistry.register(username, session.getId())) {
+            sendErrorMessage(session, "Kasutajanime registreerimine ebaõnnestus.");
+            return "Registreerimine nurjus.";
         }
-
-        usernameRegistry.register(username);
 
         session.setUsername(username);
         String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha käske.", username);

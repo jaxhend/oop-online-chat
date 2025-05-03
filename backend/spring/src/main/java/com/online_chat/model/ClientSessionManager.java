@@ -45,13 +45,13 @@ public class ClientSessionManager {
     }
 
     // Kontrollime kasutajanime sobivust
-    public boolean inValidUserName(String username) {
+    public boolean inValidUserName(String username, String sessionId) {
         return username == null ||
                 username.isBlank() ||
                 username.contains("/") ||
                 username.contains(" ") ||
                 isUserOnline(username) ||
-                usernameRegistry.isTaken(username);
+                usernameRegistry.isTaken(username, sessionId);
     }
 
     public void removeSession(String id) {

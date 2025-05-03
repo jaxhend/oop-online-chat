@@ -17,7 +17,7 @@ public class UsernameCommand implements Command {
         if (!validCommand(args)) return "Kasutus: /username <kasutajanimi>";
 
         String newUsername = args[1];
-        if (sessionManager.inValidUserName(newUsername)) {
+        if (sessionManager.inValidUserName(newUsername,session.getId())) {
             return "Kasutajanimi on keelatud või juba kasutusel.";
         }
 
