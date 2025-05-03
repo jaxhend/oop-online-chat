@@ -9,7 +9,6 @@ import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import useTheme from "./hooks/useTheme";
 import useWebSocket from "./hooks/useWebSocket";
 import useInitialData from "./hooks/useInitialData";
-import { useCookies } from "react-cookie";
 import "./index.css";
 
 export default function OnlineChat() {
@@ -20,83 +19,62 @@ export default function OnlineChat() {
     const [chatInput, setChatInput] = useState("");
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
-    const [initializing, setInitializing] = useState(true);
-    const [cookies, setCookie] = useCookies(["sessionId"]);
 
-    const sessionId = useRef(
-        localStorage.getItem("sessionId") || (() => {
-            const newId = crypto.randomUUID();
-            localStorage.setItem("sessionId", newId);
-            return newId;
-        })()
-    );
-
-    useEffect(() => {
-        if (!cookies.sessionId) {
-            setCookie("sessionId", sessionId.current, { path: "/", maxAge: 7 * 24 * 60 * 60 });
-        }
-    }, [cookies, setCookie]);
-
+    const sessionId = useRef(null);
     const chatLogRef = useRef(null);
+
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
-
-    const socketRef = useWebSocket(
-        sessionId.current,
-        (e) => {
-            if (e.data === "pong") return;
-            try {
-                const msg = JSON.parse(e.data);
-
-                if (msg.text?.includes("Tere tulemast")) {
-                    const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
-                    const extractedName = match?.[1]?.trim();
-
-                    if (extractedName) {
-                        setUsername(extractedName);
-                        setUsernameAccepted(true);
-                    }
-                    setUsernameError("");
-                }
-
-                if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
-                    setUsernameError(msg.text);
-                    setUsernameAccepted(false);
-                }
-
-                setChatMessages((prev) => [...prev, msg]);
-            } catch {
-                setChatMessages((prev) => [...prev, { text: e.data }]);
-            }
+    
+    useEffect(() => {
+        const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
+        if (match) {
+            sessionId.current = match[1];
         }
-    );
+    }, []);
 
+    const socketRef = useWebSocket(sessionId.current, (e) => {
+        if (e.data === "pong") return;
+
+        try {
+            const msg = JSON.parse(e.data);
+
+            if (msg.text?.includes("Tere tulemast")) {
+                const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
+                const extractedName = match?.[1]?.trim();
+
+                if (extractedName) {
+                    setUsername(extractedName);
+                    setUsernameAccepted(true);
+                }
+                setUsernameError("");
+            }
+
+            if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
+                setUsernameError(msg.text);
+                setUsernameAccepted(false);
+            }
+
+            setChatMessages((prev) => [...prev, msg]);
+        } catch {
+            setChatMessages((prev) => [...prev, { text: e.data }]);
+        }
+    });
+
+  
     useEffect(() => {
         const socket = socketRef.current;
+        if (!socket || !sessionId.current) return;
 
-        if (usernameAccepted) {
-            setInitializing(false);
-            return;
-        }
-
-        const trySessionLogin = () => {
-            if (socket?.readyState === WebSocket.OPEN) {
+        const interval = setInterval(() => {
+            if (socket.readyState === WebSocket.OPEN) {
                 socket.send(sessionId.current);
-                setTimeout(() => setInitializing(false), 500);
-            } else {
-                const interval = setInterval(() => {
-                    if (socket?.readyState === WebSocket.OPEN) {
-                        socket.send(sessionId.current);
-                        clearInterval(interval);
-                        setTimeout(() => setInitializing(false), 500);
-                    }
-                }, 100);
-                return () => clearInterval(interval);
+                clearInterval(interval);
             }
-        };
+        }, 100);
 
-        trySessionLogin();
-    }, [usernameAccepted]);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleUsernameSubmit = () => {
         if (!username) {
@@ -145,7 +123,7 @@ export default function OnlineChat() {
 
     return (
         <>
-            {!loading && !initializing && (
+            {!loading && (
                 <>
                     {!usernameAccepted && (
                         <UsernameDialog
