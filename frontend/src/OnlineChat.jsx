@@ -32,33 +32,43 @@ export default function OnlineChat() {
             if (e.data === "pong") return;
             try {
                 const msg = JSON.parse(e.data);
-                if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
-                    setUsernameError(msg.text);
-                    setUsernameAccepted(false);
-                    return;
-                }
+
                 if (msg.text?.includes("Tere tulemast")) {
-                    setUsernameAccepted(true);
+                    const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
+                    const extractedName = match?.[1]?.trim();
+
+                    if (extractedName) {
+                        setUsernameAccepted(true);
+                        setUsername(extractedName);
+                        setCookie("username", extractedName, { maxAge: 7 * 24 * 60 * 60 });
+                    }
                     setUsernameError("");
-                    setCookie("username", username, { maxAge: 7 * 24 * 60 * 60 });
                 }
+
                 setChatMessages((prev) => [...prev, msg]);
             } catch {
                 setChatMessages((prev) => [...prev, { text: e.data }]);
             }
-        },
-        (socket) => {
-            const saved = cookies.username;
-            if (saved) socket.send(saved);
         }
     );
     useEffect(() => {
         const saved = cookies.username;
         const socket = socketRef.current;
 
-        if (saved && socket?.readyState === WebSocket.OPEN && !usernameAccepted) {
+        if (!saved || usernameAccepted) return;
+
+        if (socket?.readyState === WebSocket.OPEN) {
             socket.send(saved);
             setUsername(saved);
+        } else {
+            const interval = setInterval(() => {
+                if (socket?.readyState === WebSocket.OPEN) {
+                    socket.send(saved);
+                    setUsername(saved);
+                    clearInterval(interval);
+                }
+            }, 100);
+            return () => clearInterval(interval);
         }
     }, [cookies, usernameAccepted]);
 
