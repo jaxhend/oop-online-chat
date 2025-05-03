@@ -1,14 +1,8 @@
 import React from "react";
 import styles from "./ChatPanel.module.css";
-import { Textarea } from "@/components/ui/chat/textarea";
+import TerminalInput from "../TerminalInput/TerminalInput";
 
-export default function ChatPanel({
-                                      chatMessages,
-                                      chatInput,
-                                      onSend,
-                                      onInputChange,
-                                      chatLogRef,
-                                  }) {
+export default function ChatPanel({ chatMessages, onSend, chatLogRef }) {
     return (
         <div className={`${styles.container} fixed-flex-2 flex flex-col border p-3`}>
             <h2 className={styles.title}>Vestlusplats</h2>
@@ -19,23 +13,7 @@ export default function ChatPanel({
                     </div>
                 ))}
             </div>
-            <div className={styles.inputGroup}>
-                <Textarea
-                    value={chatInput}
-                    onChange={onInputChange}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
-                            onSend();
-                        }
-                    }}
-                    className={styles.textarea}
-                    placeholder="Sisesta sõnum..."
-                />
-                <button onClick={onSend} className={styles.button}>
-                    Saada
-                </button>
-            </div>
+            <TerminalInput onSubmit={onSend} />
         </div>
     );
 }
