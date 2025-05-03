@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import NewsTicker from "./components/NewsTicker/NewsTicker";
 import DailyDeals from "./components/DailyDeals/DailyDeals";
@@ -52,6 +52,15 @@ export default function OnlineChat() {
             if (saved) socket.send(saved);
         }
     );
+    useEffect(() => {
+        const saved = cookies.username;
+        const socket = socketRef.current;
+
+        if (saved && socket?.readyState === WebSocket.OPEN && !usernameAccepted) {
+            socket.send(saved);
+            setUsername(saved);
+        }
+    }, [cookies, usernameAccepted]);
 
     const handleUsernameSubmit = () => {
         if (!username) {
