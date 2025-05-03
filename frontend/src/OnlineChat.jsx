@@ -20,18 +20,17 @@ export default function OnlineChat() {
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
 
-    const sessionId = useRef(null);
+    const sessionId = useRef(
+        (() => {
+            const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
+            return match ? match[1] : null;
+        })()
+    );
     const chatLogRef = useRef(null);
 
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
-    
-    useEffect(() => {
-        const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
-        if (match) {
-            sessionId.current = match[1];
-        }
-    }, []);
+
 
     const socketRef = useWebSocket(sessionId.current, (e) => {
         if (e.data === "pong") return;
@@ -61,7 +60,7 @@ export default function OnlineChat() {
         }
     });
 
-  
+
     useEffect(() => {
         const socket = socketRef.current;
         if (!socket || !sessionId.current) return;
