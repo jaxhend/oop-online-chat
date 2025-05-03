@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./ChatPanel.module.css";
+import { Textarea } from "@/components/ui/chat/textarea";
 
 export default function ChatPanel({
                                       chatMessages,
@@ -19,19 +20,18 @@ export default function ChatPanel({
                 ))}
             </div>
             <div className={styles.inputGroup}>
-        <textarea
-            rows={1}
-            value={chatInput}
-            onChange={onInputChange}
-            onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    onSend();
-                }
-            }}
-            className={styles.textarea}
-            placeholder="Sisesta sõnum..."
-        />
+                <Textarea
+                    value={chatInput}
+                    onChange={onInputChange}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            onSend();
+                        }
+                    }}
+                    className={styles.textarea}
+                    placeholder="Sisesta sõnum..."
+                />
                 <button onClick={onSend} className={styles.button}>
                     Saada
                 </button>
