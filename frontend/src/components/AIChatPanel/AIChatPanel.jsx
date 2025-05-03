@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { ProgressBar } from "@/components/ui/ProgressBar";
-import { Textarea } from "@/components/ui/textarea";
+import { ProgressBar } from "@/components/ui/chat/progressBar";
+import { Textarea } from "@/components/ui/chat/textarea";
 import styles from "./AIChatPanel.module.css";
 
 export default function AIChatPanel({
