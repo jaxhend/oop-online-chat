@@ -12,16 +12,18 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 public class WebSocketConfig implements WebSocketConfigurer {
 
     private final ChatWebSocketHandler chatHandler;
+    private final HttpsHandshakeInterceptor httpsHandshakeInterceptor;
 
-    public WebSocketConfig(ChatWebSocketHandler chatHandler) {
+    public WebSocketConfig(ChatWebSocketHandler chatHandler, HttpsHandshakeInterceptor httpsHandshakeInterceptor) {
         this.chatHandler = chatHandler;
+        this.httpsHandshakeInterceptor = httpsHandshakeInterceptor;
     }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
                 .addHandler(chatHandler, "/ws")
-                .addInterceptors(new HttpSessionHandshakeInterceptor()) // WebSocketi ühendused aadressil /ws käsitletakse ChatwebsocketHandleri kaudu
-                .setAllowedOrigins("https://www.utchat.ee"); // lubab ühenduda kõikjalt
+                .addInterceptors(httpsHandshakeInterceptor) // WebSocketi ühendused aadressil /ws käsitletakse ChatwebsocketHandleri kaudu
+                .setAllowedOrigins("https://www.utchat.ee");
     }
 }
