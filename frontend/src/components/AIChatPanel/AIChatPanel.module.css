@@ -66,3 +66,19 @@
 .button:hover {
     background-color: var(--card-bg);
 }
+
+.progress-indicator {
+    animation: move 2s infinite;
+}
+
+@keyframes move {
+    0% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
