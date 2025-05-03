@@ -10,30 +10,25 @@ export default function AIChatPanel({
 }) {
   const [thinkingTime, setThinkingTime] = useState(0);
   const [isThinking, setIsThinking] = useState(false);
-  const [progress, setProgress] = useState(0);
 
-    const handleBotSend = () => {
-        setIsThinking(true);
-        setProgress(0);
-        setThinkingTime(0);
+  const handleBotSend = () => {
+    setIsThinking(true);
+    setThinkingTime(0);
 
-        const timer = setInterval(() => {
-            setThinkingTime((prev) => prev + 1);
-            setProgress((prev) => Math.min(prev + 10, 100));
-        }, 1000);
+    const timer = setInterval(() => {
+      setThinkingTime((prev) => prev + 1);
+    }, 1000);
 
-        setTimeout(() => {
-            clearInterval(timer);
-            onBotSend();
-
-            setIsThinking(false);
-            setProgress(100);
-        }, 10000);
-    };
+    setTimeout(() => {
+      clearInterval(timer);
+      onBotSend();
+      setIsThinking(false);
+    }, 10000);
+  };
 
   useEffect(() => {
     if (!isThinking) {
-      setProgress(0);
+      setThinkingTime(0);
     }
   }, [isThinking]);
 
@@ -65,13 +60,12 @@ export default function AIChatPanel({
         </button>
       </div>
 
-        {isThinking && (
-            <div className={styles.thinkingContainer}>
-                <p>AI mõtleb...</p>
-                <ProgressBar progress={progress} />
-                <p>{thinkingTime} sekundi pärast...</p>
-            </div>
-        )}
+      {isThinking && (
+        <div className={styles.thinkingContainer}>
+          <p>AI mõtleb...</p>
+          <p>{thinkingTime} sekundi pärast...</p>
+        </div>
+      )}
     </div>
   );
 }
