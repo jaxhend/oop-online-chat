@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Progress } from "@/components/ui/progress";
+import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Textarea } from "@/components/ui/textarea";
 import styles from "./AIChatPanel.module.css";
 
@@ -66,13 +66,13 @@ export default function AIChatPanel({
         </button>
       </div>
 
-      {isThinking && (
-        <div className={styles.thinkingContainer}>
-          <p>AI mõtleb...</p>
-          <Progress value={progress} className="w-full" />
-          <p>{thinkingTime} sekundi pärast...</p>
-        </div>
-      )}
+        {isThinking && (
+            <div className={styles.thinkingContainer}>
+                <p>AI mõtleb...</p>
+                <ProgressBar progress={progress} />
+                <p>{thinkingTime} sekundi pärast...</p>
+            </div>
+        )}
     </div>
   );
 }
