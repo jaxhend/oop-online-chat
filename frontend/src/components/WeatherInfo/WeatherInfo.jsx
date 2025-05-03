@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styles from "./WeatherInfo.module.css";
 
+const fetchFlaskContent = async (endpoint, setter) => {
+    try {
+        const response = await fetch(`https://api.utchat.ee/${endpoint}`);
+        const data = await response.json();
+        setter(data);
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+};
+
 export default function WeatherInfo() {
     const [weather, setWeather] = useState({});
 
@@ -9,17 +19,17 @@ export default function WeatherInfo() {
     }, []);
 
     return (
-        <div className="section">
-            <h4 className="title">Ilm</h4>
+        <div className={styles.section}>
+            <h4 className={styles.title}>Ilm</h4>
             {weather.temperature ? (
                 <>
-                    <p className="paragraph">Temperatuur: {weather.temperature}°C</p>
-                    {weather.feelsLike && <p className="paragraph">Tundub nagu: {weather.feelsLike}°C</p>}
-                    {weather.precipitation && <p className="paragraph">Sademed: {weather.precipitation}mm</p>}
-                    {weather.iconUrl && <img src={weather.iconUrl} alt="Ilma ikoon" className="icon" />}
+                    <p className={styles.paragraph}>Temperatuur: {weather.temperature}°C</p>
+                    {weather.feelsLike && <p className={styles.paragraph}>Tundub nagu: {weather.feelsLike}°C</p>}
+                    {weather.precipitation && <p className={styles.paragraph}>Sademed: {weather.precipitation}mm</p>}
+                    {weather.iconUrl && <img src={weather.iconUrl} alt="Ilma ikoon" className={styles.icon} />}
                 </>
             ) : (
-                <p className="paragraph">Ilma andmeid ei ole saadaval</p>
+                <p className={styles.paragraph}>Ilma andmeid ei ole saadaval</p>
             )}
         </div>
     );
