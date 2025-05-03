@@ -14,17 +14,18 @@ export default function AIChatPanel({
     const [dots, setDots] = useState("");
 
     const handleBotSend = () => {
+        if (botInput.trim() === "") return;
+
         setIsThinking(true);
         setThinkingTime(0);
         setResponse("");
         setDots("");
 
         const dotTimer = setInterval(() => {
-            setDots((prev) => (prev.length < 5 ? prev + "." : prev));
+            setDots((prev) => (prev.length < 3 ? prev + "." : prev));
         }, 1000);
 
         sendToFlask(botInput);
-
 
         setTimeout(() => {
             clearInterval(dotTimer);
@@ -39,9 +40,10 @@ export default function AIChatPanel({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ query: text }),
             });
+
             const data = await response.json();
             setResponse(data.response || "Viga vastuse saamisel");
-        } catch {
+        } catch (error) {
             setResponse("Flask viga: Serveriga ühenduse loomisel tekkis viga.");
         }
     };
@@ -55,13 +57,27 @@ export default function AIChatPanel({
     return (
         <div className={styles.container}>
             <h3 className={styles.title}>AI Juturobot</h3>
+
             <div className={styles.chatLog}>
                 {chatHistory.map((entry, i) => (
                     <div key={i} className={styles.message}>
                         <strong>{entry.sender}:</strong> {entry.text}
                     </div>
                 ))}
+
+                {isThinking && (
+                    <div className={styles.thinkingContainer}>
+                        <p>AI mõtleb{dots}</p>
+                    </div>
+                )}
+
+                {response && !isThinking && (
+                    <div className={styles.responseContainer}>
+                        <p>Bot: {response}</p>
+                    </div>
+                )}
             </div>
+
             <div className={styles.inputGroup}>
                 <Textarea
                     value={botInput}
@@ -79,18 +95,6 @@ export default function AIChatPanel({
                     Saada botile
                 </button>
             </div>
-
-            {isThinking && (
-                <div className={styles.thinkingContainer}>
-                    <p>AI mõtleb{dots}</p>
-                </div>
-            )}
-
-            {response && !isThinking && (
-                <div className={styles.responseContainer}>
-                    <p>Bot: {response}</p>
-                </div>
-            )}
         </div>
     );
 }
