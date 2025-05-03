@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useCookies } from "./hooks/useCookies";
+import { useCookies } from "react-cookie";
 import NewsTicker from "./components/NewsTicker/NewsTicker";
 import DailyDeals from "./components/DailyDeals/DailyDeals";
 import WeatherInfo from "./components/WeatherInfo/WeatherInfo";
@@ -28,6 +28,7 @@ export default function OnlineChat() {
     const sessionId = useRef(crypto.randomUUID());
 
     const API_URL = "https://api.utchat.ee";
+    const [cookies, setCookie] = useCookies(["username"]);
 
     useEffect(() => {
         const savedUsername = cookies.username;
@@ -140,6 +141,18 @@ export default function OnlineChat() {
         setBotInput("");
     };
 
+    const handleUsernameSubmit = () => {
+        if (!username) {
+            setUsernameError("Kasutajanimi ei saa olla tühi.");
+            return;
+        }
+
+
+        setCookie("username", username, { maxAge: 3 * 60 * 60 });
+        setUsernameAccepted(true);
+        setUsernameError("");
+    };
+
     return (
         <>
             {!loading && (
@@ -148,13 +161,13 @@ export default function OnlineChat() {
                         <UsernameDialog
                             username={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            onSubmit={() => socketRef.current?.send(username)}
+                            onSubmit={handleUsernameSubmit}
                             error={usernameError}
                         />
                     )}
                     <ThemeToggle theme={theme} onToggle={toggleTheme} />
                 </>
-                )}
+            )}
 
             <div className="flex flex-col h-screen">
                 <NewsTicker newsList={newsList} animate={!loading} />
