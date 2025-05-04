@@ -1,11 +1,16 @@
-import styles from './ThemeToggle.module.css';
+import { Sun, Moon } from "lucide-react";
+import useTheme from "@/hooks/useTheme";
 
-export default function ThemeToggle({ theme, onToggle }) {
+export default function ThemeToggle() {
+    const [theme, toggleTheme] = useTheme();
+
     return (
-        <div className={styles.container}>
-            <button onClick={onToggle} className={styles.button}>
-                {theme === "dark" ? "Light Mode" : "Dark Mode"}
-            </button>
-        </div>
+        <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg border"
+            title="Toggle teema"
+        >
+            {theme === "dark" ? <Sun /> : <Moon />}
+        </button>
     );
 }

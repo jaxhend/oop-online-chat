@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Textarea } from "@/components/ui/chat/textarea";
 import styles from "./AIChatPanel.module.css";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 export default function AIChatPanel({
                                         botInput,
@@ -9,51 +10,8 @@ export default function AIChatPanel({
                                         chatHistory,
                                         isActive,
                                     }) {
-    const [thinkingTime, setThinkingTime] = useState(0);
     const [isThinking, setIsThinking] = useState(false);
     const [response, setResponse] = useState("");
-    const [dots, setDots] = useState("");
-
-    const handleBotSend = () => {
-        if (!isActive || botInput.trim() === "") return;
-
-        setIsThinking(true);
-        setThinkingTime(0);
-        setResponse("");
-        setDots("");
-
-        const dotTimer = setInterval(() => {
-            setDots((prev) => (prev.length < 3 ? prev + "." : ""));
-        }, 1000);
-
-        sendToFlask(botInput);
-
-        setTimeout(() => {
-            clearInterval(dotTimer);
-            setIsThinking(false);
-        }, 10000);
-    };
-
-    const sendToFlask = async (text) => {
-        try {
-            const response = await fetch("https://llm.utchat.ee/chatbot", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query: text }),
-            });
-
-            const data = await response.json();
-            setResponse(data.response || "Viga vastuse saamisel");
-        } catch (error) {
-            setResponse("Flask viga: Serveriga ühenduse loomisel tekkis viga.");
-        }
-    };
-
-    useEffect(() => {
-        if (!isThinking) {
-            setThinkingTime(0);
-        }
-    }, [isThinking]);
 
     return (
         <div className={styles.container}>
@@ -67,8 +25,11 @@ export default function AIChatPanel({
                 ))}
 
                 {isThinking && (
-                    <div className={styles.thinkingContainer}>
-                        <p>AI mõtleb{dots}</p>
+                    <div className="flex flex-col gap-2 mt-2">
+                        <span className="text-muted-foreground text-sm">AI mõtleb...</span>
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-4 w-2/3" />
+                        <Skeleton className="h-4 w-1/2" />
                     </div>
                 )}
 
@@ -88,7 +49,7 @@ export default function AIChatPanel({
                     onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey && isActive) {
                             e.preventDefault();
-                            handleBotSend();
+                            onBotSend(setIsThinking, setResponse);
                         }
                     }}
                     className={styles.textarea}
@@ -96,7 +57,7 @@ export default function AIChatPanel({
                     readOnly={!isActive}
                 />
                 <button
-                    onClick={handleBotSend}
+                    onClick={() => onBotSend(setIsThinking, setResponse)}
                     className={styles.button}
                     disabled={!isActive}
                 >
