@@ -26,6 +26,7 @@ export default function OnlineChat() {
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
+    // Loome sessionId, kui küpsis puudub
     useEffect(() => {
         const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
         if (match) {
@@ -37,6 +38,7 @@ export default function OnlineChat() {
         }
     }, []);
 
+    // WebSocket ühendus
     useEffect(() => {
         if (!sessionId) return;
 
@@ -143,7 +145,6 @@ export default function OnlineChat() {
 
                         {activeTarget === "ai" && usernameAccepted && (
                             <AIChatPanel
-                                sessionId={sessionId}
                                 chatHistory={chatHistory}
                                 botInput={botInput}
                                 onBotInputChange={(e) => setBotInput(e.target.value)}
@@ -154,7 +155,7 @@ export default function OnlineChat() {
                                     setResponse("");
 
                                     try {
-                                        const res = await fetch("https://api.utchat.ee/chatbot", {
+                                        const res = await fetch("https://llm.utchat.ee/chatbot", {
                                             method: "POST",
                                             headers: { "Content-Type": "application/json" },
                                             body: JSON.stringify({
@@ -176,7 +177,7 @@ export default function OnlineChat() {
                                         setChatHistory((prev) => [
                                             ...prev,
                                             { sender: "Sina", text: botInput },
-                                            { sender: "Robot", text: "Viga serveriga." },
+                                            { sender: "Robot", text: "Flask viga: Serveriga ühenduse loomisel tekkis viga." },
                                         ]);
                                         setResponse("Flask viga: Serveriga ühenduse loomisel tekkis viga.");
                                     } finally {
