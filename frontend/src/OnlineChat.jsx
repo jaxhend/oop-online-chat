@@ -149,7 +149,7 @@ export default function OnlineChat() {
                                     setResponse("");
 
                                     try {
-                                        const res = await fetch("https://api.utchat.ee/chatbot", {
+                                        const response = await fetch("https://api.utchat.ee/chatbot", {
                                             method: "POST",
                                             headers: { "Content-Type": "application/json" },
                                             body: JSON.stringify({
@@ -157,13 +157,26 @@ export default function OnlineChat() {
                                                 prompt: botInput,
                                             }),
                                         });
-                                        const data = await res.json();
+
+                                        const data = await response.json();
+
+                                        setChatHistory((prev) => [
+                                            ...prev,
+                                            { sender: "Sina", text: botInput },
+                                            { sender: "Robot", text: data.response || "..." },
+                                        ]);
 
                                         setResponse(data.response || "Viga vastuse saamisel");
                                     } catch (err) {
-                                        console.error("AI BOT viga:", err);
+                                        console.error("Bot fetch error:", err);
+                                        setChatHistory((prev) => [
+                                            ...prev,
+                                            { sender: "Sina", text: botInput },
+                                            { sender: "Robot", text: "Viga serveriga." },
+                                        ]);
                                         setResponse("Flask viga: Serveriga ühenduse loomisel tekkis viga.");
                                     } finally {
+                                        setBotInput("");
                                         setIsThinking(false);
                                     }
                                 }}
