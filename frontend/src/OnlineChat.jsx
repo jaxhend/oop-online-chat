@@ -105,18 +105,20 @@ export default function OnlineChat() {
                     <div className="fixed-flex-2 flex flex-col gap-4">
                         {usernameAccepted && (
                             <div className="flex gap-4 mb-2">
-                                <button
+                                <Button
+                                    variant={activeTarget === "chat" ? "default" : "outline"}
                                     onClick={() => setActiveTarget("chat")}
-                                    className={`px-4 py-2 rounded ${activeTarget === "chat" ? "bg-blue-500 text-white ring-2 ring-primary" : "bg-white border"}`}
+                                    className={activeTarget === "chat" ? "ring-2 ring-primary" : ""}
                                 >
                                     Vestlusplats
-                                </button>
-                                <button
+                                </Button>
+                                <Button
+                                    variant={activeTarget === "ai" ? "default" : "outline"}
                                     onClick={() => setActiveTarget("ai")}
-                                    className={`px-4 py-2 rounded ${activeTarget === "ai" ? "bg-blue-500 text-white ring-2 ring-primary" : "bg-white border"}`}
+                                    className={activeTarget === "ai" ? "ring-2 ring-primary" : ""}
                                 >
                                     AI Juturobot
-                                </button>
+                                </Button>
                             </div>
                         )}
 
