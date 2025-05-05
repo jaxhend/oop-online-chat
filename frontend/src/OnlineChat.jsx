@@ -8,7 +8,7 @@ import AIChatPanel from "./components/AIChatPanel/AIChatPanel";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import useTheme from "./hooks/useTheme";
 import useInitialData from "./hooks/useInitialData";
-import { Button } from "./components/ui/Button";
+import {Button} from "@/components/ui/Button";
 import "./index.css";
 
 export default function OnlineChat() {
