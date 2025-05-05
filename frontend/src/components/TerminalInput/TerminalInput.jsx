@@ -4,7 +4,7 @@ import data from "@emoji-mart/data"
 
 
 
-export default function TerminalInput({ onSubmit, isActive }) {
+export default function TerminalInput({ onSubmit, isActive, showEmojiButton=false }) {
     const inputRef = useRef(null);
     const [showpicker, setShowpicker] = useState(false);
 
@@ -54,18 +54,22 @@ export default function TerminalInput({ onSubmit, isActive }) {
                 className={`outline-none whitespace-pre break-all flex-1 ${!isActive ? "opacity-50 pointer-events-none" : ""}`}
                 onBlur={() => isActive && inputRef.current?.focus()}
             />
-            <button type="button"
-                    onClick={() => setShowpicker((prev) => !prev)}
-                    className="ml-2"
-                    title="Lisa emoji"
-            >
-                😁
-            </button>
+            {showEmojiButton && (
+                <>
+                    <button type="button"
+                            onClick={() => setShowpicker((prev) => !prev)}
+                            className="ml-2"
+                            title="Lisa emoji"
+                    >
+                        😁
+                    </button>
 
-            {showpicker && (
-                <div className="absolute bottom-full right-0 z-10">
-                    <Picker data={data} onEmojiSelect={handleEmojiSelect} />
-                </div>
+                    {showpicker && (
+                        <div className="absolute bottom-full right-0 mb-2 z-50 shadow-lgabsolute bottom-full right-0 mb-2 z-50 shadow-lg">
+                            <Picker data={data} onEmojiSelect={handleEmojiSelect} theme={"dark"} />
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );

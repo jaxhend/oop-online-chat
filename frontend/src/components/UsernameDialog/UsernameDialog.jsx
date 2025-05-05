@@ -11,6 +11,7 @@ export default function UsernameDialog({ onSubmit, error }) {
                 <TerminalInput
                     isActive={true}
                     onSubmit={onSubmit}
+                    showEmojiButton={false}
                 />
 
                 {error && <p className="text-red-500 text-sm mt-2 text-center">{error}</p>}

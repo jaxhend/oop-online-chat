@@ -13,7 +13,7 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
                     </div>
                 ))}
             </div>
-            <TerminalInput onSubmit={onSend} isActive={isActive} />
+            <TerminalInput onSubmit={onSend} isActive={isActive} showEmojiButton={true} />
         </div>
     );
 }
