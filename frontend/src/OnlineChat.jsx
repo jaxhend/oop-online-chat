@@ -149,10 +149,10 @@ export default function OnlineChat() {
                                     setResponse("");
 
                                     try {
-                                        const res = await fetch("https://llm.utchat.ee/chatbot", {
+                                        const res = await fetch("https://api.utchat.ee/chatbot", {
                                             method: "POST",
                                             headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify({ query: botInput }),
+                                            body: JSON.stringify({ user_id: sessionId, prompt: botInput }),
                                         });
                                         const data = await res.json();
 
