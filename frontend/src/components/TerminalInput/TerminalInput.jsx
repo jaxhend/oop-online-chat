@@ -1,9 +1,7 @@
 import { useRef, useEffect } from "react";
 import EmojiPicker from "@/components/ui/EmojiPicker";
 
-
-
-export default function TerminalInput({ onSubmit, isActive, showEmojiButton=false }) {
+export default function TerminalInput({ onSubmit, isActive, showEmojiButton = false }) {
     const inputRef = useRef(null);
 
     useEffect(() => {
@@ -22,11 +20,8 @@ export default function TerminalInput({ onSubmit, isActive, showEmojiButton=fals
         range.collapse(false);
         selection.removeAllRanges();
         selection.addRange(range);
-    }
+    };
 
-    const handleEmojiSelect = (emoji) => {
-        insertEmojiAtCaret(emoji.native);
-    }
     const handleKeyDown = (e) => {
         if (!isActive) return;
 
@@ -41,18 +36,15 @@ export default function TerminalInput({ onSubmit, isActive, showEmojiButton=fals
     };
 
     return (
-        <div className="relative flex items-center mt-2 text-white font-mono bg-black p-2 rounded">
+        <div className="relative flex items-center mt-2 text-white font-mono bg-black p-2 rounded z-50">
             <div
                 ref={inputRef}
                 contentEditable={isActive}
                 suppressContentEditableWarning
                 onKeyDown={handleKeyDown}
-                className={`outline-none whitespace-pre break-all flex-1 ${!isActive ? "opacity-50 pointer-events-none" : ""}`}
-                onBlur={() => isActive && inputRef.current?.focus()}
+                className={`outline-none whitespace-pre break-all flex-1 min-h-[40px] ${!isActive ? "opacity-50 pointer-events-none" : ""}`}
             />
-            {showEmojiButton && (
-                <EmojiPicker onSelect={handleEmojiSelect} />
-            )}
+            {showEmojiButton && <EmojiPicker onSelect={(emoji) => insertEmojiAtCaret(emoji.native)} />}
         </div>
     );
 }
