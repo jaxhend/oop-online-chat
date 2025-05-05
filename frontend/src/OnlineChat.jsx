@@ -8,7 +8,6 @@ import AIChatPanel from "./components/AIChatPanel/AIChatPanel";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import useTheme from "./hooks/useTheme";
 import useInitialData from "./hooks/useInitialData";
-import { Button } from "./components/ui/button";
 import "./index.css";
 
 export default function OnlineChat() {
@@ -105,20 +104,18 @@ export default function OnlineChat() {
                     <div className="fixed-flex-2 flex flex-col gap-4">
                         {usernameAccepted && (
                             <div className="flex gap-4 mb-2">
-                                <Button
-                                    variant={activeTarget === "chat" ? "default" : "outline"}
+                                <button
                                     onClick={() => setActiveTarget("chat")}
-                                    className={activeTarget === "chat" ? "ring-2 ring-primary" : ""}
+                                    className={`px-4 py-2 rounded ${activeTarget === "chat" ? "bg-blue-500 text-white ring-2 ring-primary" : "bg-white border"}`}
                                 >
                                     Vestlusplats
-                                </Button>
-                                <Button
-                                    variant={activeTarget === "ai" ? "default" : "outline"}
+                                </button>
+                                <button
                                     onClick={() => setActiveTarget("ai")}
-                                    className={activeTarget === "ai" ? "ring-2 ring-primary" : ""}
+                                    className={`px-4 py-2 rounded ${activeTarget === "ai" ? "bg-blue-500 text-white ring-2 ring-primary" : "bg-white border"}`}
                                 >
                                     AI Juturobot
-                                </Button>
+                                </button>
                             </div>
                         )}
 
