@@ -23,9 +23,9 @@ export default function WeatherInfo() {
             <h4 className={styles.title}>Ilm</h4>
             {weather.temperature ? (
                 <>
-                    <p className={styles.paragraph}>Temperatuur: {weather.temperature}°C</p>
-                    {weather.feelsLike && <p className={styles.paragraph}>Tundub nagu: {weather.feelsLike}°C</p>}
-                    {weather.precipitation && <p className={styles.paragraph}>Sademed: {weather.precipitation}mm</p>}
+                    <p className={styles.paragraph}>Temperatuur: {weather.temperature}</p>
+                    {weather.feelsLike && <p className={styles.paragraph}>Tundub nagu: {weather.feelsLike}</p>}
+                    {weather.precipitation && <p className={styles.paragraph}>Sademed: {weather.precipitation}</p>}
                     {weather.iconUrl && <img src={weather.iconUrl} alt="Ilma ikoon" className={styles.icon} />}
                 </>
             ) : (
