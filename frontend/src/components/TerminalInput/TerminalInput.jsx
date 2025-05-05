@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import Picker from "@emoji-mart/react";
+import data from "@emoji-mart/data"
+
 
 
 export default function TerminalInput({ onSubmit, isActive }) {
@@ -16,7 +18,7 @@ export default function TerminalInput({ onSubmit, isActive }) {
         const el = inputRef.current;
         el.focus();
         const selection = window.getSelection();
-        const range = selection.createRangeAt(0);
+        const range = selection.getRangeAt(0);
         range.deleteContents();
         range.insertNode(document.createTextNode(emoji));
         range.collapse(false);
@@ -54,7 +56,7 @@ export default function TerminalInput({ onSubmit, isActive }) {
             />
             <button type="button"
                     onClick={() => setShowpicker((prev) => !prev)}
-                    classname="ml-2"
+                    className="ml-2"
                     title="Lisa emoji"
             >
                 😁
@@ -63,8 +65,6 @@ export default function TerminalInput({ onSubmit, isActive }) {
             {showpicker && (
                 <div className="absolute bottom-full right-0 z-10">
                     <Picker data={data} onEmojiSelect={handleEmojiSelect} />
-
-
                 </div>
             )}
         </div>
