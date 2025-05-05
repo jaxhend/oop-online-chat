@@ -26,7 +26,6 @@ export default function OnlineChat() {
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
-    // Loome sessionId, kui küpsis puudub
     useEffect(() => {
         const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
         if (match) {
@@ -38,7 +37,6 @@ export default function OnlineChat() {
         }
     }, []);
 
-    // WebSocket ühendus
     useEffect(() => {
         if (!sessionId) return;
 
@@ -84,6 +82,39 @@ export default function OnlineChat() {
             socketRef.current.send(value);
         } else {
             setUsernameError("WebSocket ei ole veel ühendatud.");
+        }
+    };
+
+
+    const sendToBot = async () => {
+        const trimmed = botInput.trim();
+        if (!trimmed) return;
+
+        try {
+            const res = await fetch("https://llm.utchat.ee/chatbot", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_id: sessionId,
+                    prompt: trimmed,
+                }),
+            });
+            const data = await res.json();
+
+            setChatHistory((prev) => [
+                ...prev,
+                { sender: "Sina", text: trimmed },
+                { sender: "Robot", text: data.response || "..." },
+            ]);
+        } catch (err) {
+            console.error("Bot fetch error:", err);
+            setChatHistory((prev) => [
+                ...prev,
+                { sender: "Sina", text: trimmed },
+                { sender: "Robot", text: "Flask viga: Serveriga ühenduse loomisel tekkis viga." },
+            ]);
+        } finally {
+            setBotInput("");
         }
     };
 
@@ -148,43 +179,7 @@ export default function OnlineChat() {
                                 chatHistory={chatHistory}
                                 botInput={botInput}
                                 onBotInputChange={(e) => setBotInput(e.target.value)}
-                                onBotSend={async (setIsThinking, setResponse) => {
-                                    if (!botInput.trim()) return;
-
-                                    setIsThinking(true);
-                                    setResponse("");
-
-                                    try {
-                                        const res = await fetch("https://llm.utchat.ee/chatbot", {
-                                            method: "POST",
-                                            headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify({
-                                                user_id: sessionId,
-                                                prompt: botInput,
-                                            }),
-                                        });
-                                        const data = await res.json();
-
-                                        setChatHistory((prev) => [
-                                            ...prev,
-                                            { sender: "Sina", text: botInput },
-                                            { sender: "Robot", text: data.response || "..." },
-                                        ]);
-
-                                        setResponse(data.response || "Viga vastuse saamisel");
-                                    } catch (err) {
-                                        console.error("Bot fetch error:", err);
-                                        setChatHistory((prev) => [
-                                            ...prev,
-                                            { sender: "Sina", text: botInput },
-                                            { sender: "Robot", text: "Flask viga: Serveriga ühenduse loomisel tekkis viga." },
-                                        ]);
-                                        setResponse("Flask viga: Serveriga ühenduse loomisel tekkis viga.");
-                                    } finally {
-                                        setBotInput("");
-                                        setIsThinking(false);
-                                    }
-                                }}
+                                onBotSend={sendToBot}
                                 isActive={true}
                             />
                         )}
