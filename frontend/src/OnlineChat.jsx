@@ -152,26 +152,18 @@ export default function OnlineChat() {
                                         const res = await fetch("https://api.utchat.ee/chatbot", {
                                             method: "POST",
                                             headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify({ user_id: sessionId, prompt: botInput }),
+                                            body: JSON.stringify({
+                                                user_id: sessionId,     
+                                                prompt: botInput,
+                                            }),
                                         });
                                         const data = await res.json();
 
-                                        setChatHistory((prev) => [
-                                            ...prev,
-                                            { sender: "Sina", text: botInput },
-                                            { sender: "Robot", text: data.response || "..." },
-                                        ]);
-
                                         setResponse(data.response || "Viga vastuse saamisel");
-                                    } catch {
-                                        setChatHistory((prev) => [
-                                            ...prev,
-                                            { sender: "Sina", text: botInput },
-                                            { sender: "Robot", text: "Viga serveriga." },
-                                        ]);
+                                    } catch (err) {
+                                        console.error("AI BOT viga:", err);
                                         setResponse("Flask viga: Serveriga ühenduse loomisel tekkis viga.");
                                     } finally {
-                                        setBotInput("");
                                         setIsThinking(false);
                                     }
                                 }}
