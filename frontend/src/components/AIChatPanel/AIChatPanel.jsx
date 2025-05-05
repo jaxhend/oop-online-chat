@@ -9,6 +9,7 @@ export default function AIChatPanel({
                                         onBotSend,
                                         chatHistory,
                                         isActive,
+                                        sessionId,
                                     }) {
     const [isThinking, setIsThinking] = useState(false);
     const [response, setResponse] = useState("");
