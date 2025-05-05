@@ -1,11 +1,10 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import EmojiPicker from "@/components/ui/EmojiPicker";
 
 
 
 export default function TerminalInput({ onSubmit, isActive, showEmojiButton=false }) {
     const inputRef = useRef(null);
-    const [showpicker, setShowpicker] = useState(false);
 
     useEffect(() => {
         if (isActive) {
@@ -27,7 +26,6 @@ export default function TerminalInput({ onSubmit, isActive, showEmojiButton=fals
 
     const handleEmojiSelect = (emoji) => {
         insertEmojiAtCaret(emoji.native);
-        setShowpicker(false);
     }
     const handleKeyDown = (e) => {
         if (!isActive) return;
@@ -44,7 +42,6 @@ export default function TerminalInput({ onSubmit, isActive, showEmojiButton=fals
 
     return (
         <div className="relative flex items-center mt-2 text-white font-mono bg-black p-2 rounded">
-            <span className="text-green-400 mr-2">$</span>
             <div
                 ref={inputRef}
                 contentEditable={isActive}
