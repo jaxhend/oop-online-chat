@@ -1,137 +1,178 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import NewsTicker from "./components/NewsTicker/NewsTicker";
+import DailyDeals from "./components/DailyDeals/DailyDeals";
+import WeatherInfo from "./components/WeatherInfo/WeatherInfo";
+import UsernameDialog from "./components/UsernameDialog/UsernameDialog";
+import ChatPanel from "./components/ChatPanel/ChatPanel";
+import AIChatPanel from "./components/AIChatPanel/AIChatPanel";
+import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
+import useTheme from "./hooks/useTheme";
+import useInitialData from "./hooks/useInitialData";
+import {Button} from "@/components/ui/Button";
+import "./index.css";
 
 export default function OnlineChat() {
-    const [log, setLog] = useState([]);
-    const [msg, setMsg] = useState("");
-    const [chatbotInput, setChatbotInput] = useState("");
-    const [chatbotOutput, setChatbotOutput] = useState("");
-    const [deals, setDeals] = useState("");
-    const [weather, setWeather] = useState("");
+    const [username, setUsername] = useState("");
+    const [usernameAccepted, setUsernameAccepted] = useState(false);
+    const [usernameError, setUsernameError] = useState("");
+    const [chatMessages, setChatMessages] = useState([]);
+    const [botInput, setBotInput] = useState("");
+    const [chatHistory, setChatHistory] = useState([]);
+    const [sessionId, setSessionId] = useState(null);
+    const [activeTarget, setActiveTarget] = useState("chat");
 
-    const logRef = useRef(null);
     const socketRef = useRef(null);
-    const sessionId = useRef(crypto.randomUUID());
+    const chatLogRef = useRef(null);
+    const [theme, toggleTheme] = useTheme();
+    const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
     useEffect(() => {
-        const protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
-        const url = protocol + 'api.utchat.ee/ws?sessionId=' + sessionId.current;
-        socketRef.current = new WebSocket(url);
-
-        socketRef.current.onopen = () => addLog('Ühendus loodud');
-        socketRef.current.onmessage = e => addLog(e.data);
-        socketRef.current.onerror = e => addLog('Viga: ' + e.message);
-        socketRef.current.onclose = e => addLog('Ühendus suleti: kood ' + e.code);
-
-        fetchFlaskContent("päevapakkumised", setDeals);
-        fetchFlaskContent("ilm", setWeather);
-
-        return () => socketRef.current?.close();
+        const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
+        if (match) {
+            setSessionId(match[1]);
+        }
     }, []);
 
-    const addLog = (message) => {
-        setLog(prev => [...prev, message]);
-        setTimeout(() => {
-            if (logRef.current) {
-                logRef.current.scrollTop = logRef.current.scrollHeight;
+    useEffect(() => {
+        if (!sessionId) return;
+
+        const ws = new WebSocket(`wss://api.utchat.ee/ws?sessionId=${sessionId}`);
+        socketRef.current = ws;
+
+        ws.onmessage = (e) => {
+            if (e.data === "pong") return;
+
+            try {
+                const msg = JSON.parse(e.data);
+
+                if (msg.text?.includes("Tere tulemast")) {
+                    const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
+                    const extractedName = match?.[1]?.trim();
+                    if (extractedName) {
+                        setUsername(extractedName);
+                        setUsernameAccepted(true);
+                    }
+                    setUsernameError("");
+                }
+
+                if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
+                    setUsernameError(msg.text);
+                    setUsernameAccepted(false);
+                }
+
+                setChatMessages((prev) => [...prev, msg]);
+            } catch {
+                setChatMessages((prev) => [...prev, { text: e.data }]);
             }
-        }, 100);
-    };
+        };
 
-    const send = () => {
-        const trimmed = msg.trim();
-        if (!trimmed) return;
+        return () => ws.close();
+    }, [sessionId]);
+
+    const handleUsernameSubmit = (value) => {
+        if (!value) {
+            setUsernameError("Kasutajanimi ei saa olla tühi.");
+            return;
+        }
         if (socketRef.current?.readyState === WebSocket.OPEN) {
-            socketRef.current.send(trimmed);
-            setMsg("");
+            socketRef.current.send(value);
         } else {
-            addLog("WebSocket pole ühendatud");
+            setUsernameError("WebSocket ei ole veel ühendatud.");
         }
-    };
-
-    const sendToFlask = async (text) => {
-        try {
-            const response = await fetch("http://api.utchat.ee/api/chat/flask", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    user_id: sessionId.current,
-                    prompt: text
-                })
-            });
-            const data = await response.json();
-            setChatbotOutput("Bot: " + data.response);
-        } catch (error) {
-            setChatbotOutput("Flask viga: " + error.message);
-        }
-    };
-
-    const fetchFlaskContent = async (prompt, setResult) => {
-        try {
-            const response = await fetch("http://api.utchat.ee/api/chat/flask", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    userId: "info_" + prompt,
-                    prompt: prompt
-                })
-            });
-            const data = await response.json();
-            setResult(data.response || "Viga vastuse saamisel");
-        } catch (err) {
-            setResult("Viga: " + err.message);
-        }
-    };
-
-    const sendToChatbot = () => {
-        const trimmed = chatbotInput.trim();
-        if (!trimmed) return;
-        sendToFlask(trimmed);
     };
 
     return (
-        <div className="flex h-screen p-5 gap-5 font-sans">
-            <div className="flex flex-col flex-1 border p-3 overflow-y-auto">
-                <div className="flex-1 border-b mb-2">
-                    <h4 className="font-bold mb-1">Päevapakkumised</h4>
-                    <div>{deals}</div>
-                </div>
-                <div className="flex-1">
-                    <h4 className="font-bold mb-1">Ilm</h4>
-                    <div>{weather}</div>
-                </div>
-            </div>
+        <>
+            {!loading && !usernameAccepted && (
+                <UsernameDialog onSubmit={handleUsernameSubmit} error={usernameError} />
+            )}
 
-            <div className="flex flex-col flex-[2]">
-                <h2 className="text-xl font-semibold mb-2">Online-chat</h2>
-                <div
-                    ref={logRef}
-                    className="flex-1 border p-2 overflow-y-auto whitespace-pre-wrap mb-2"
-                >
-                    {log.map((line, i) => <div key={i}>{line}</div>)}
+            {!loading && usernameAccepted && (
+                <div className="absolute top-4 right-4">
+                    <ThemeToggle theme={theme} onToggle={toggleTheme} />
                 </div>
-                <div className="flex gap-2">
-                    <input
-                        value={msg}
-                        onChange={e => setMsg(e.target.value)}
-                        className="flex-1 border px-2 py-1"
-                        placeholder="Sisesta sõnum..."
-                    />
-                    <button onClick={send} className="border px-3 py-1">Saada</button>
-                </div>
-            </div>
+            )}
 
-            <div className="flex flex-col flex-1 border p-3">
-                <h3 className="font-semibold">Chatbot</h3>
-                <textarea
-                    rows={6}
-                    value={chatbotInput}
-                    onChange={e => setChatbotInput(e.target.value)}
-                    className="border p-2 mb-2 resize-none"
-                    placeholder="Sisesta küsimus..."
-                />
-                <button onClick={sendToChatbot} className="border px-3 py-1 mb-2">Saada botile</button>
-                <div>{chatbotOutput}</div>
+            <div className="flex flex-col h-screen">
+                <NewsTicker newsList={newsList} animate={!loading} />
+
+                <div className="container flex-1 p-5 gap-5 font-sans flex-row">
+                    <div className="fixed-flex-1 border p-3 overflow-y-auto flex flex-col">
+                        <DailyDeals deals={dailyDeals} />
+                        <WeatherInfo weather={weatherInfo} />
+                    </div>
+
+                    <div className="fixed-flex-2 flex flex-col gap-4">
+                        {usernameAccepted && (
+                            <div className="flex gap-4 mb-2">
+                                <Button
+                                    variant={activeTarget === "chat" ? "default" : "outline"}
+                                    onClick={() => setActiveTarget("chat")}
+                                    className={activeTarget === "chat" ? "ring-2 ring-primary" : ""}
+                                >
+                                    Vestlusplats
+                                </Button>
+                                <Button
+                                    variant={activeTarget === "ai" ? "default" : "outline"}
+                                    onClick={() => setActiveTarget("ai")}
+                                    className={activeTarget === "ai" ? "ring-2 ring-primary" : ""}
+                                >
+                                    AI Juturobot
+                                </Button>
+                            </div>
+                        )}
+
+                        {activeTarget === "chat" && usernameAccepted && (
+                            <ChatPanel
+                                chatMessages={chatMessages}
+                                onSend={(msg) => {
+                                    if (
+                                        socketRef.current?.readyState === WebSocket.OPEN
+                                    ) {
+                                        socketRef.current.send(msg);
+                                    }
+                                }}
+                                chatLogRef={chatLogRef}
+                                isActive={true}
+                            />
+                        )}
+
+                        {activeTarget === "ai" && usernameAccepted && (
+                            <AIChatPanel
+                                chatHistory={chatHistory}
+                                botInput={botInput}
+                                onBotInputChange={(e) => setBotInput(e.target.value)}
+                                onBotSend={async (setIsThinking, setResponse) => {
+                                    if (!botInput.trim()) return;
+
+                                    setIsThinking(true);
+                                    setResponse("");
+
+                                    try {
+                                        const res = await fetch("https://api.utchat.ee/chatbot", {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({
+                                                user_id: sessionId,
+                                                prompt: botInput,
+                                            }),
+                                        });
+                                        const data = await res.json();
+
+                                        setResponse(data.response || "Viga vastuse saamisel");
+                                    } catch (err) {
+                                        console.error("AI BOT viga:", err);
+                                        setResponse("Flask viga: Serveriga ühenduse loomisel tekkis viga.");
+                                    } finally {
+                                        setIsThinking(false);
+                                    }
+                                }}
+                                isActive={true}
+                            />
+                        )}
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
