@@ -8,7 +8,7 @@ import AIChatPanel from "./components/AIChatPanel/AIChatPanel";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import useTheme from "./hooks/useTheme";
 import useInitialData from "./hooks/useInitialData";
-import {Button} from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import "./index.css";
 
 export default function OnlineChat() {
@@ -30,6 +30,10 @@ export default function OnlineChat() {
         const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
         if (match) {
             setSessionId(match[1]);
+        } else {
+            const newId = crypto.randomUUID();
+            document.cookie = `sessionId=${newId}; path=/`;
+            setSessionId(newId);
         }
     }, []);
 
@@ -122,62 +126,67 @@ export default function OnlineChat() {
                             </div>
                         )}
 
-                        <ChatPanel
-                            chatMessages={chatMessages}
-                            onSend={(msg) => {
-                                if (
-                                    activeTarget === "chat" &&
-                                    usernameAccepted &&
-                                    socketRef.current?.readyState === WebSocket.OPEN
-                                ) {
-                                    socketRef.current.send(msg);
-                                }
-                            }}
-                            chatLogRef={chatLogRef}
-                            isActive={activeTarget === "chat" && usernameAccepted}
-                        />
+                        {activeTarget === "chat" && usernameAccepted && (
+                            <ChatPanel
+                                chatMessages={chatMessages}
+                                onSend={(msg) => {
+                                    if (
+                                        socketRef.current?.readyState === WebSocket.OPEN
+                                    ) {
+                                        socketRef.current.send(msg);
+                                    }
+                                }}
+                                chatLogRef={chatLogRef}
+                                isActive={true}
+                            />
+                        )}
 
-                        <AIChatPanel
-                            chatHistory={chatHistory}
-                            botInput={botInput}
-                            onBotInputChange={(e) => {
-                                if (activeTarget === "ai" && usernameAccepted) setBotInput(e.target.value);
-                            }}
-                            onBotSend={async (setIsThinking, setResponse) => {
-                                if (activeTarget !== "ai" || !usernameAccepted || !botInput.trim()) return;
+                        {activeTarget === "ai" && usernameAccepted && (
+                            <AIChatPanel
+                                sessionId={sessionId}
+                                chatHistory={chatHistory}
+                                botInput={botInput}
+                                onBotInputChange={(e) => setBotInput(e.target.value)}
+                                onBotSend={async (setIsThinking, setResponse) => {
+                                    if (!botInput.trim()) return;
 
-                                setIsThinking(true);
-                                setResponse("");
+                                    setIsThinking(true);
+                                    setResponse("");
 
-                                try {
-                                    const res = await fetch("https://llm.utchat.ee/chatbot", {
-                                        method: "POST",
-                                        headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify({ query: botInput }),
-                                    });
-                                    const data = await res.json();
+                                    try {
+                                        const res = await fetch("https://api.utchat.ee/chatbot", {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({
+                                                user_id: sessionId,
+                                                prompt: botInput,
+                                            }),
+                                        });
+                                        const data = await res.json();
 
-                                    setChatHistory((prev) => [
-                                        ...prev,
-                                        { sender: "Sina", text: botInput },
-                                        { sender: "Robot", text: data.response || "..." },
-                                    ]);
+                                        setChatHistory((prev) => [
+                                            ...prev,
+                                            { sender: "Sina", text: botInput },
+                                            { sender: "Robot", text: data.response || "..." },
+                                        ]);
 
-                                    setResponse(data.response || "Viga vastuse saamisel");
-                                } catch {
-                                    setChatHistory((prev) => [
-                                        ...prev,
-                                        { sender: "Sina", text: botInput },
-                                        { sender: "Robot", text: "Viga serveriga." },
-                                    ]);
-                                    setResponse("Flask viga: Serveriga ühenduse loomisel tekkis viga.");
-                                } finally {
-                                    setBotInput("");
-                                    setIsThinking(false);
-                                }
-                            }}
-                            isActive={activeTarget === "ai" && usernameAccepted}
-                        />
+                                        setResponse(data.response || "Viga vastuse saamisel");
+                                    } catch (err) {
+                                        console.error("Bot fetch error:", err);
+                                        setChatHistory((prev) => [
+                                            ...prev,
+                                            { sender: "Sina", text: botInput },
+                                            { sender: "Robot", text: "Viga serveriga." },
+                                        ]);
+                                        setResponse("Flask viga: Serveriga ühenduse loomisel tekkis viga.");
+                                    } finally {
+                                        setBotInput("");
+                                        setIsThinking(false);
+                                    }
+                                }}
+                                isActive={true}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
