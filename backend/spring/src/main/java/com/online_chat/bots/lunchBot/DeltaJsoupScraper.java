@@ -54,7 +54,7 @@ public class DeltaJsoupScraper {
                     String description = offer.ownText();
                     String price = offer.select("strong").text();
                     if (!description.isEmpty()) {
-                        offersList.add(new DailyOffer(description, description + " - " + price));
+                        offersList.add(new DailyOffer(dinerName, description + " - " + price));
                     }
                 }
             }
