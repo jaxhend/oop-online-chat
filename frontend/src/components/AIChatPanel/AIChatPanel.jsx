@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/chat/textarea";
 import styles from "./AIChatPanel.module.css";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -12,6 +12,26 @@ export default function AIChatPanel({
                                     }) {
     const [isThinking, setIsThinking] = useState(false);
     const [response, setResponse] = useState("");
+
+    const handleSend = async () => {
+        if (!botInput.trim()) return;
+
+        setIsThinking(true);
+        setResponse("");
+
+        await onBotSend();
+
+
+        setTimeout(() => {
+            setIsThinking(false);
+        }, 500);
+    };
+
+    useEffect(() => {
+        if (!isThinking) {
+            setResponse("");
+        }
+    }, [isThinking]);
 
     return (
         <div className={styles.container}>
@@ -32,12 +52,6 @@ export default function AIChatPanel({
                         <Skeleton className="h-4 w-1/2" />
                     </div>
                 )}
-
-                {response && !isThinking && (
-                    <div className={styles.responseContainer}>
-                        <p>Bot: {response}</p>
-                    </div>
-                )}
             </div>
 
             <div className={styles.inputGroup}>
@@ -49,7 +63,7 @@ export default function AIChatPanel({
                     onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey && isActive) {
                             e.preventDefault();
-                            onBotSend(setIsThinking, setResponse);
+                            handleSend();
                         }
                     }}
                     className={styles.textarea}
@@ -57,7 +71,7 @@ export default function AIChatPanel({
                     readOnly={!isActive}
                 />
                 <button
-                    onClick={() => onBotSend(setIsThinking, setResponse)}
+                    onClick={handleSend}
                     className={styles.button}
                     disabled={!isActive}
                 >
