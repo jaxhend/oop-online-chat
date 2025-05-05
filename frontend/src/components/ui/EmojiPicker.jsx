@@ -9,7 +9,7 @@ export default function EmojiPicker ({onSelect}) {
             <PopoverTrigger asChild>
                 <button
                 type="button"
-                className="text-xl ml-2 px-2 hover:scale-110 transition"
+                className="ml-2 p-2 rounded hover:bg-muted/40 transition"
                 title="Lisa emoji"
                 >
                     😁

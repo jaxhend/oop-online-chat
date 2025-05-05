@@ -43,7 +43,7 @@ export default function TerminalInput({ onSubmit, isActive, showEmojiButton=fals
     };
 
     return (
-        <div className="flex items-center mt-2 text-white font-mono bg-black p-2 rounded">
+        <div className="relative flex items-center mt-2 text-white font-mono bg-black p-2 rounded">
             <span className="text-green-400 mr-2">$</span>
             <div
                 ref={inputRef}
