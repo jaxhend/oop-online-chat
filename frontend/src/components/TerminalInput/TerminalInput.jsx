@@ -1,7 +1,10 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import Picker from "@emoji-mart/react";
+
 
 export default function TerminalInput({ onSubmit, isActive }) {
     const inputRef = useRef(null);
+    const [showpicker, setShowpicker] = useState(false);
 
     useEffect(() => {
         if (isActive) {
@@ -9,6 +12,22 @@ export default function TerminalInput({ onSubmit, isActive }) {
         }
     }, [isActive]);
 
+    const insertEmojiAtCaret = (emoji) => {
+        const el = inputRef.current;
+        el.focus();
+        const selection = window.getSelection();
+        const range = selection.createRangeAt(0);
+        range.deleteContents();
+        range.insertNode(document.createTextNode(emoji));
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    const handleEmojiSelect = (emoji) => {
+        insertEmojiAtCaret(emoji.native);
+        setShowpicker(false);
+    }
     const handleKeyDown = (e) => {
         if (!isActive) return;
 
@@ -33,6 +52,21 @@ export default function TerminalInput({ onSubmit, isActive }) {
                 className={`outline-none whitespace-pre break-all flex-1 ${!isActive ? "opacity-50 pointer-events-none" : ""}`}
                 onBlur={() => isActive && inputRef.current?.focus()}
             />
+            <button type="button"
+                    onClick={() => setShowpicker((prev) => !prev)}
+                    classname="ml-2"
+                    title="Lisa emoji"
+            >
+                😁
+            </button>
+
+            {showpicker && (
+                <div className="absolute bottom-full right-0 z-10">
+                    <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+
+
+                </div>
+            )}
         </div>
     );
 }
