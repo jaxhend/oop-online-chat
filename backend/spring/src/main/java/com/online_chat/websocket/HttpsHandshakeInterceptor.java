@@ -14,6 +14,8 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.online_chat.model.UsernameRegistry.LOCK_DAYS;
+
 @Component
 public class HttpsHandshakeInterceptor implements HandshakeInterceptor {
 
@@ -29,7 +31,7 @@ public class HttpsHandshakeInterceptor implements HandshakeInterceptor {
 
             String sessionId = null;
 
-            // kontrollime, kas cookie on juba olemas
+            // Kontrollime, kas cookie on juba olemas
             if (req.getCookies() != null) {
                 for (Cookie cookie : req.getCookies()) {
                     if ("sessionId".equals(cookie.getName())) {
@@ -39,7 +41,7 @@ public class HttpsHandshakeInterceptor implements HandshakeInterceptor {
                 }
             }
 
-            // kui cookiet ei ole siis genereerime uue
+            // Kui cookiet ei ole, siis genereerime uue
             if (sessionId == null || sessionId.isBlank()) {
                 sessionId = UUID.randomUUID().toString();
 
@@ -47,7 +49,7 @@ public class HttpsHandshakeInterceptor implements HandshakeInterceptor {
                 cookie.setHttpOnly(true); // ainult server pääseb ligi
                 cookie.setSecure(true); // edastatakse ainult HTTPS kaudu
                 cookie.setPath("/"); // kehtib meie domeenis
-                cookie.setMaxAge(7 * 24 * 60 * 60); // kehtib 7 päeva
+                cookie.setMaxAge(LOCK_DAYS * 24 * 60 * 60); // kehtib 30 päeva
 
                 // lisame cookie HTTP vastusesse
                 res.addCookie(cookie);
@@ -63,6 +65,6 @@ public class HttpsHandshakeInterceptor implements HandshakeInterceptor {
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                WebSocketHandler wsHandler, Exception exception) {
-        // meil pole vaja praegu siia midagi lisada
+        // Jääb hetkel tühjaks.
     }
 }

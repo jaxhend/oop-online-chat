@@ -3,6 +3,7 @@ package com.online_chat.commands;
 
 import com.online_chat.model.ChatRoomManager;
 import com.online_chat.model.ClientSession;
+import com.online_chat.service.ColoredMessage;
 
 public class JoinRoomCommand implements Command {
 
@@ -13,19 +14,17 @@ public class JoinRoomCommand implements Command {
     }
 
     @Override
-    public String execute(ClientSession session, String[] args) {
-        if (!validCommand(args)) return "Kasutus: /join <ruumi_nimi>";
+    public ColoredMessage execute(ClientSession session, String[] args) {
+        if (validCommand(args))
+            return new ColoredMessage("Kasutus: /join <ruumi_nimi>", ColoredMessage.ERRORS);
 
         String roomName = args[1].toLowerCase();
 
         if (roomName.contains("-")) {
-            return "Sul ei ole õigust liituda selle privaatse ruumiga!";
-        }
-        if (roomName.contains(session.getUsername().toLowerCase()) && roomName.contains("-")) {
-            return "See on privaatvestlus, mille osa sa oled. Liitumiseks kasuta: /private <teise_kasutaja_nimi>";
+            return new ColoredMessage("Privaatvestluse alustamiseks või sellega liitumiseks kasuta käsku /private <kasutajanimi>", ColoredMessage.ERRORS);
         }
         if (session.getCurrentRoom() != null && roomName.equals(session.getCurrentRoom().getName())) {
-            return "Oled juba ruumis '" + roomName + "'.";
+            return new ColoredMessage("Oled juba ruumis '" + roomName + "'.", ColoredMessage.ERRORS);
         }
 
         // vajadusel loome uue ruumi ning eemaldame kliendi vanast ruumist ning lisame uude ruumi
@@ -33,11 +32,11 @@ public class JoinRoomCommand implements Command {
         chatRoomManager.removeClientFromCurrentRoom(session);
         chatRoomManager.addClientToRoom(session, roomName); // Lisab ruumi ja saadab sõnumi.
 
-        return "Liitusid ruumiga: " + roomName;
+        return new ColoredMessage("Liitusid ruumiga '" + roomName + "'", ColoredMessage.GREEN);
     }
 
     @Override
     public boolean validCommand(String[] args) {
-        return args.length == 2;
+        return args.length != 2;
     }
 }

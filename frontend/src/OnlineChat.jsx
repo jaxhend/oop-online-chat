@@ -4,11 +4,9 @@ import DailyDeals from "./components/DailyDeals/DailyDeals";
 import WeatherInfo from "./components/WeatherInfo/WeatherInfo";
 import UsernameDialog from "./components/UsernameDialog/UsernameDialog";
 import ChatPanel from "./components/ChatPanel/ChatPanel";
-import AIChatPanel from "./components/AIChatPanel/AIChatPanel";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import useTheme from "./hooks/useTheme";
 import useInitialData from "./hooks/useInitialData";
-import { Button } from "@/components/ui/Button";
 import "./index.css";
 import AIChatPopover from "@/components/AIChatPanel/AIChatPopover";
 
@@ -46,8 +44,14 @@ export default function OnlineChat() {
         //const ws = new WebSocket(`ws://localhost:8080/ws?sessionId=${sessionId}`);
         socketRef.current = ws;
 
+        const pingInterval = setInterval(() => {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send("__heartbeat_ping__");
+            }
+        }, 30000); // 30 sekundit
+
         ws.onmessage = (e) => {
-            if (e.data === "pong") return;
+            if (e.data === "__heartbeat_pong__") return;
 
             try {
                 const msg = JSON.parse(e.data);
@@ -73,7 +77,22 @@ export default function OnlineChat() {
             }
         };
 
-        return () => ws.close();
+        ws.onclose = () => {
+            console.log("WebSocket closed, reconnecting");
+            setTimeout(() => {
+                const newWS = new WebSocket(`ws://localhost:8080/ws?sessionId=${sessionId}`);
+                socketRef.current = newWS;
+
+                newWS.onmessage = ws.onmessage;
+                newWS.onclose = ws.onclose;
+                newWS.onerror = ws.onerror;
+            }, 5000); // Proovib uuesti ühendada 5 sekundi pärast
+        };
+
+        return () => {
+            clearInterval(pingInterval);
+            ws.close();
+        };
     }, [sessionId]);
 
     const handleUsernameSubmit = (value) => {

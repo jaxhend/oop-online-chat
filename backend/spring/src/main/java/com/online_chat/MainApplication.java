@@ -7,8 +7,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication()
 @EnableScheduling
 public class MainApplication {
-    // käivitab Spring Booti rakenduse
+
     public static void main(String[] args) {
-        SpringApplication.run(MainApplication.class, args);
+        SpringApplication.run(MainApplication.class, args); // käivitab Spring Booti rakenduse
     }
 }

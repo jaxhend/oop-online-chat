@@ -1,10 +1,13 @@
 package com.online_chat.commands;
 
 
+import com.online_chat.model.ChatRoom;
 import com.online_chat.model.ChatRoomManager;
 import com.online_chat.model.ClientSession;
+import com.online_chat.model.PrivateChatRoom;
+import com.online_chat.service.ColoredMessage;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,23 +22,29 @@ public class SeeChatroomsCommand implements Command {
     }
 
     @Override
-    public String execute(ClientSession session, String[] args) {
-        Set<String> roomNames = chatRoomManager.getRoomNames();
+    public ColoredMessage execute(ClientSession session, String[] args) {
+        Map<String, ChatRoom> roomInfo = chatRoomManager.getRoomInfo();
 
-        String result = Stream.concat(
-                defaultRooms.stream()
-                        .filter(roomNames::contains)
-                        .map(name -> name + " (" + chatRoomManager.getRoom(name).getClientsCount() + ")"),
+        String result = Stream.of(
+                        defaultRooms.stream()
+                                .map(name -> name + " (" + chatRoomManager.getRoom(name).getClientsCount() + ")"),
 
-                roomNames.stream()
-                    .filter(name -> !defaultRooms.contains(name) && !name.toLowerCase().contains(":"))
-                    .map(name -> name + " (" + chatRoomManager.getRoom(name).getClientsCount() + ")")
-        ).collect(Collectors.joining(", "));
-        return "Saadaval vestlusruumid: " + result;
+                        roomInfo.entrySet().stream()
+                                .filter(entry -> !defaultRooms.contains(entry.getKey()) && entry.getValue().isPublicChatRoom()) // välista default ruumid
+                                .map(entry -> entry.getKey() + " (" + entry.getValue().getClientsCount() + ")"),
+
+                        roomInfo.entrySet().stream()
+                                .filter(entry -> entry.getValue().canJoin(session) && entry.getValue() instanceof PrivateChatRoom)
+                                .map(entry -> entry.getKey() + " (" + entry.getValue().getClientsCount() + ")")
+                )
+                .flatMap(s -> s)  // Teeme üheks streamiks
+                .collect(Collectors.joining(", "));
+
+        return new ColoredMessage("Saadaval vestlusruumid: " + result, ColoredMessage.COMMANDS);
     }
 
     @Override
     public boolean validCommand(String[] args) {
-        return true;
+        return false;
     }
 }

@@ -2,9 +2,10 @@ package com.online_chat.commands;
 
 
 import com.online_chat.model.ClientSession;
+import com.online_chat.service.ColoredMessage;
 
 public interface Command {
-    String execute(ClientSession session, String[] args);
+    ColoredMessage execute(ClientSession session, String[] args);
 
     boolean validCommand(String[] args);
 
@@ -12,18 +13,4 @@ public interface Command {
         return session.getCurrentRoom() != null;
     }
 
-    default boolean hasMessageContent(String[] args) {
-        return args.length >= 2;
-    }
-
-    default String extractMessage(String[] args) {
-        return String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length));
-    }
-
-
-    default String getJoinOrPrivateMessage() {
-        return "Sa ei ole üheski vestlusruumis.\n" +
-                "Kasuta käsku /join <chatruumi_nimi>, et liituda grupiga.\n" +
-                "Või kasuta /private <kasutaja_nimi>, et alustada privaatsõnumit.";
-    }
 }

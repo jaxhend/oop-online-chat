@@ -10,23 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class UsernameRegistry {
 
+    public static final int LOCK_DAYS = 30;
     private final Map<String, RegistryEntry> registeredNames = new ConcurrentHashMap<>();
-    private static final int LOCK_DAYS = 7;
 
-    // kontrollime, kas antud kasutajanimi on juba registreeritud ja veel lukus.
-    public synchronized boolean isTaken(String username, String sessionId) {
-        RegistryEntry entry = registeredNames.get(username);
-        if (entry == null) return false;
-
-        if (entry.timestamp().plus(LOCK_DAYS, ChronoUnit.DAYS).isBefore(Instant.now())) {
-            registeredNames.remove(username);
-            return false;
-        }
-
-        return !entry.sessionId().equals(sessionId);
-    }
-
-    // uue kasutajanime registreerimine
+    // Kontrollime, kas antud kasutajanimi on juba registreeritud. Kui ei ole, siis registreerime selle.
+    // Üks lõim korraga.
     public synchronized boolean register(String username, String sessionId) {
         if (username == null || username.isBlank()) return false;
 
@@ -47,5 +35,6 @@ public class UsernameRegistry {
     }
 
 
-    private record RegistryEntry(String sessionId, Instant timestamp) {}
+    private record RegistryEntry(String sessionId, Instant timestamp) {
+    }
 }

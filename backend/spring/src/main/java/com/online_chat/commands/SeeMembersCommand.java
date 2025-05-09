@@ -3,6 +3,7 @@ package com.online_chat.commands;
 import com.online_chat.model.ChatRoom;
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.ClientSessionManager;
+import com.online_chat.service.ColoredMessage;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ public class SeeMembersCommand implements Command {
     }
 
     @Override
-    public String execute(ClientSession session, String[] args) {
+    public ColoredMessage execute(ClientSession session, String[] args) {
         ChatRoom room = session.getCurrentRoom();
         List<String> usernames;
         if (room == null) {
@@ -27,14 +28,14 @@ public class SeeMembersCommand implements Command {
                     .collect(Collectors.toList());
         }
 
-        return "Aktiivsed kasutajad: " + usernames.stream()
+        return new ColoredMessage("Aktiivsed kasutajad: " + usernames.stream()
                 .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(", ")), ColoredMessage.COMMANDS);
 
     }
 
     @Override
     public boolean validCommand(String[] args) {
-        return true;
+        return false;
     }
 }

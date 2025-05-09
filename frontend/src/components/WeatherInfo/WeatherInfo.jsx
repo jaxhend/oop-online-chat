@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./WeatherInfo.module.css";
 
-const fetchFlaskContent = async (endpoint, setter) => {
+const fetchContent = async (endpoint, setter) => {
     try {
         const response = await fetch(`https://api.utchat.ee/${endpoint}`);
         const data = await response.json();
@@ -15,7 +15,7 @@ export default function WeatherInfo() {
     const [weather, setWeather] = useState({});
 
     useEffect(() => {
-        fetchFlaskContent("ilm", setWeather);
+        fetchContent("ilm", setWeather);
     }, []);
 
     return (

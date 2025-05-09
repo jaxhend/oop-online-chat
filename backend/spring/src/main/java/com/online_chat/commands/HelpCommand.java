@@ -2,22 +2,25 @@ package com.online_chat.commands;
 
 
 import com.online_chat.model.ClientSession;
+import com.online_chat.service.ColoredMessage;
 
 public class HelpCommand implements Command {
 
     @Override
-    public String execute(ClientSession session, String[] args) {
-        return "Saadaolevad käsud:\n\n"
-                + "/join <ruum> – liitub või loob uue vestlusruumi\n\n"
-                + "/leave – lahkub aktiivsest vestlusruumist\n\n"
-                + "/chatrooms – kuvab avalikud ruumid ja aktiivsete liikmete arvu\n\n"
-                + "/members – kuvab hetkel aktiivsed kasutajad\n\n"
-                + "/private <kasutajanimi> – alustab privaatvestlust\n\n"
-                + "/msg <sõnum> – saadab sõnumi aktiivsesse ruumi\n\n";
+    public ColoredMessage execute(ClientSession session, String[] args) {
+        String text = """
+                Saadaval käsud:
+                /join <ruum> – liitu või loo uus vestlusruum
+                /private <kasutajanimi> – alusta või liitu privaatvestlusega
+                /leave – lahku aktiivsest vestlusest
+                /chatrooms – kuva avalikud vestlusruumid
+                /members – kuva hetkel aktiivsed kasutajad
+                """;
+        return new ColoredMessage(text, ColoredMessage.COMMANDS);
     }
 
     @Override
     public boolean validCommand(String[] args) {
-        return args.length == 1;
+        return false;
     }
 }

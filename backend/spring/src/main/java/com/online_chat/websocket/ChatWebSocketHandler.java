@@ -3,13 +3,17 @@ package com.online_chat.websocket;
 import com.online_chat.model.ChatRoomManager;
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.ClientSessionManager;
+import com.online_chat.service.ColoredMessage;
 import com.online_chat.service.MessageProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,11 +22,13 @@ import java.util.Set;
 // extends TextWebSocketHandlerit, et töödelda tekstipõhiseid sõnumeid Websocketi kaudu
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChatWebSocketHandler.class);
     // Hoiab kõiki WebSocketi sessioone, mis on aktiivsed.
     private final Set<WebSocketSession> sessions = Collections.synchronizedSet(new HashSet<>());
     private final ClientSessionManager sessionManager;
     private final MessageProcessor messageProcessor;
     private final ChatRoomManager chatRoomManager;
+    private final int MAX_MESSAGE_LENGTH = 500;
 
 
     public ChatWebSocketHandler(ClientSessionManager sessionManager, MessageProcessor messageProcessor, ChatRoomManager chatRoomManager) {
@@ -33,39 +39,41 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     // Meetod, mis aktiveeritakse, kui kasutaja loob brauseris ühenduse.
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(WebSocketSession session) {
         // Sessiooni ID, mis lisati HandshakeInterceptori kaudu
         String sessionId = (String) session.getAttributes().get("sessionId");
 
-        if (sessionId == null || sessionId.isBlank()) {
-            session.close();
-            return;
-        }
-
-        // Kontrollime, kas antud sessiooni ID on juba olemas
-        ClientSession clientSession = sessionManager.getSession(sessionId);
-        if (clientSession != null) {
-            clientSession.setWebSocketSession(session);
-        } else {
-            clientSession = new ClientSession(sessionId);
-            clientSession.setWebSocketSession(session);
-
-            // Kui olemas, taastame varasema kasutajanime
-            String previousUsername = sessionManager.getUsername(sessionId);
-            if (previousUsername != null && !previousUsername.isBlank()) {
-                clientSession.setUsername(previousUsername);
-                messageProcessor.sendWelcomeMessage(clientSession);
+        try {
+            if (sessionId == null || sessionId.isBlank()) {
+                session.close();
             }
 
-            sessionManager.registerSession(clientSession);
-        }
+            // Kontrollime, kas antud sessiooni ID on juba olemas
+            ClientSession clientSession = sessionManager.getSession(sessionId);
+            if (clientSession != null) {
+                clientSession.setWebSocketSession(session);
+            } else {
+                clientSession = new ClientSession(sessionId);
+                clientSession.setWebSocketSession(session);
 
-        sessions.add(session);
+                // Kui olemas, taastame varasema kasutajanime
+                String previousUsername = sessionManager.getUsername(sessionId);
+                if (previousUsername != null && !previousUsername.isBlank()) {
+                    clientSession.setUsername(previousUsername);
+                    String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha erinevaid käske.", previousUsername);
+                    messageProcessor.sendMessage(clientSession, new ColoredMessage(welcome, ColoredMessage.GREEN));
+                }
+                sessionManager.registerSession(clientSession);
+            }
+            sessions.add(session);
+        } catch (IOException e) {
+            logger.error("Sessiooni sulgemisel viskas errori", e);
+        }
     }
 
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         // eemaldame WebSocketSessioni aktiivsete sessioonide hulgast
         sessions.remove(session);
 
@@ -91,15 +99,19 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         ClientSession clientSession = sessionManager.getSession(sessionId);
         if (clientSession == null) return;
 
-        String payload = message.getPayload();
-        // Websocket ping pong, et ühendus ei kaoks
-        if ("ping".equalsIgnoreCase(payload)) {
-            if (session.isOpen()) {
-                session.sendMessage(new TextMessage("pong"));
-            }
+        String payload = message.getPayload().trim();
+        if (payload.length() > MAX_MESSAGE_LENGTH) {
+            messageProcessor.sendMessage(clientSession, new ColoredMessage("Sõnum on liiga pikk. Proovi uuesti!", ColoredMessage.ERRORS));
             return;
         }
 
+        // Websocket ping pong, et ühendus ei kaoks
+        if ("__heartbeat_ping__".equalsIgnoreCase(payload)) {
+            if (session.isOpen()) {
+                session.sendMessage(new TextMessage("__heartbeat_pong__"));
+            }
+            return;
+        }
 
         messageProcessor.processAndBroadcast(clientSession, payload);
     }

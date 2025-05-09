@@ -8,7 +8,10 @@ import com.online_chat.bots.newsBot.RssScraper;
 import com.online_chat.bots.weatherBot.WeatherAPI;
 import com.online_chat.bots.weatherBot.WeatherInfo;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,14 +29,16 @@ public class ChatRestController {
         this.deltaJsoupScraper = deltaJsoupScraper;
     }
 
-    @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
+    //@CrossOrigin(origins = "https://www.utchat.ee")
+    @CrossOrigin(origins = "*")
     @GetMapping("/paevapakkumised")
-    public ResponseEntity<List<DailyOffer>> getDeals() throws IOException {
+    public ResponseEntity<List<DailyOffer>> getDeals() {
         List<DailyOffer> deals = deltaJsoupScraper.getLatestLunchOffers();
         return ResponseEntity.ok(deals);
     }
 
-    @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
+    //@CrossOrigin(origins = "https://www.utchat.ee")
+    @CrossOrigin(origins = "*")
     @GetMapping("/ilm")
     public ResponseEntity<WeatherInfo> getWeather() {
         WeatherInfo weatherData = weatherAPI.getLatestWeather();
@@ -41,9 +46,10 @@ public class ChatRestController {
 
     }
 
-    @CrossOrigin(origins = {"https://utchat.ee", "https://www.utchat.ee"})
+    //@CrossOrigin(origins = "https://www.utchat.ee")
+    @CrossOrigin(origins = "*")
     @GetMapping("/uudised")
-    public ResponseEntity<List<NewsItem>> getNews(@RequestParam(defaultValue = "1") String topic) throws IOException {
+    public ResponseEntity<List<NewsItem>> getNews(@RequestParam(defaultValue = "1") String topic) {
         List<NewsItem> newsItems = rssScraper.getLatestNews(topic);
         return ResponseEntity.ok(newsItems);
     }
