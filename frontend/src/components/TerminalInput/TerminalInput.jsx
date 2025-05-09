@@ -31,6 +31,8 @@ export default function TerminalInput({ onSubmit, isActive, showEmojiButton = fa
         range.collapse(false);
         selection.removeAllRanges();
         selection.addRange(range);
+
+        setIsEmpty(el.innerText.trim() === "");
     };
 
     const handleKeyDown = (e) => {
