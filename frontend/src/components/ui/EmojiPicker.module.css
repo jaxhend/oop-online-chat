@@ -4,6 +4,7 @@
 }
 
 .emoji-trigger {
+    margin-left: 0.5rem;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -31,4 +32,10 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 640px) {
+    .emoji-trigger{
+        display: none;
+    }
 }

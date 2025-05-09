@@ -34,10 +34,10 @@ export default function EmojiPicker({ onSelect }) {
                 {open && (
                     <motion.div
                         className={styles["emoji-picker"]}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.2 }}
+                        initial={{ opacity: 0, scale: 0.3, y: 20, originX: 1, originY: 1 }}
+                        animate={{ opacity: 1, scale: 1,  y: 0 }}
+                        exit={{ opacity: 0, scale:0.3, y: 8 }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
                     >
                         <Picker data={data} onEmojiSelect={(e) => {
                             onSelect(e);
