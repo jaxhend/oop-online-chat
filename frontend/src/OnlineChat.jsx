@@ -80,7 +80,7 @@ export default function OnlineChat() {
         ws.onclose = () => {
             console.log("WebSocket closed, reconnecting");
             setTimeout(() => {
-                const newWS = new WebSocket(`ws://localhost:8080/ws?sessionId=${sessionId}`);
+                const newWS = new WebSocket(`wss://api.utchat.ee/ws?sessionId=${sessionId}`);
                 socketRef.current = newWS;
 
                 newWS.onmessage = ws.onmessage;
