@@ -28,10 +28,18 @@
     border-radius: 8px;
     margin-bottom: 1rem;
     white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+
 }
 
 .message {
     margin-bottom: 0.5rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    word-break: break-word;
 }
 
 .inputGroup {
@@ -47,8 +55,9 @@
     height: 2.5rem;
     background-color: var(--input-bg);
     color: var(--text-color);
-    font-size: 1rem;
+    font-size: 1.25rem;
     border-radius: 4px;
+    font-family: inherit;
 }
 
 .button {

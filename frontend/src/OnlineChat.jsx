@@ -21,11 +21,12 @@ export default function OnlineChat() {
     const [chatHistory, setChatHistory] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const [activeTarget, setActiveTarget] = useState("chat");
+    const [isThinking, setIsThinking] = useState(false);
 
     const socketRef = useRef(null);
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
-    const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
+    const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("http://localhost:8080");
 
     useEffect(() => {
         const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
@@ -41,8 +42,8 @@ export default function OnlineChat() {
     useEffect(() => {
         if (!sessionId) return;
 
-        const ws = new WebSocket(`wss://api.utchat.ee/ws?sessionId=${sessionId}`);
-        //const ws = new WebSocket(`ws://localhost:8080/ws?sessionId=${sessionId}`);
+       // const ws = new WebSocket(`wss://api.utchat.ee/ws?sessionId=${sessionId}`);
+        const ws = new WebSocket(`ws://localhost:8080/ws?sessionId=${sessionId}`);
         socketRef.current = ws;
 
         ws.onmessage = (e) => {
@@ -88,9 +89,16 @@ export default function OnlineChat() {
     };
 
 
+
     const sendToBot = async () => {
         const trimmed = botInput.trim();
         if (!trimmed) return;
+        setChatHistory((prev) => [
+            ...prev,
+            {sender: "Sina", text: trimmed},
+        ]);
+        setBotInput("");
+        setIsThinking(true);
 
         try {
             const res = await fetch("https://llm.utchat.ee/chatbot", {
@@ -102,18 +110,17 @@ export default function OnlineChat() {
 
             setChatHistory((prev) => [
                 ...prev,
-                { sender: "Sina", text: trimmed },
                 { sender: "Robot", text: data.response || "..." },
             ]);
         } catch (err) {
             console.error("Bot fetch error:", err);
             setChatHistory((prev) => [
                 ...prev,
-                { sender: "Sina", text: trimmed },
                 { sender: "Robot", text: "Flask viga: Serveriga ühenduse loomisel tekkis viga." },
             ]);
         } finally {
             setBotInput("");
+            setIsThinking(false);
         }
     };
 
@@ -162,6 +169,7 @@ export default function OnlineChat() {
 
                 { /*activeTarget === "ai" &&*/ usernameAccepted && (
                     <AIChatPopover
+                        isThinking={isThinking}
                         chatHistory={chatHistory}
                         botInput={botInput}
                         onBotInputChange={(e) => setBotInput(e.target.value)}

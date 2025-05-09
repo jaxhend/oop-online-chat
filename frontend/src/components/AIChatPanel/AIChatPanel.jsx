@@ -16,10 +16,11 @@ export default function AIChatPanel({
     const handleSend = async () => {
         if (!botInput.trim()) return;
 
+
         setIsThinking(true);
         setResponse("");
 
-        await onBotSend();
+        await onBotSend(botInput);
 
         setTimeout(() => {
             setIsThinking(false);

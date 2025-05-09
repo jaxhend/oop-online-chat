@@ -1,22 +1,24 @@
 import React, {useState, useEffect, useRef, use} from "react";
 import AIChatPanel from "@/components/AIChatPanel/AIChatPanel";
 import styles from "./AIChatPopover.module.css";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AIChatPopover({
                                           chatHistory,
                                           botInput,
                                           onBotInputChange,
+                                          isThinking,
                                           onBotSend,
                                       }) {
     const [visible, setVisible] = useState(false);
     const popoverRef = useRef();
-    const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+
 
     useEffect(() => {
         const handleClickOutside = (e) => {
             setTimeout(() => {
                 if (popoverRef.current && !popoverRef.current.contains(e.target)) {
-                    handleClose();
+                    setVisible(false);
                 }
             }, 0);
         };
@@ -24,46 +26,51 @@ export default function AIChatPopover({
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleClose = () => {
-        setIsAnimatingOut(true);
-        setVisible(false);
-    }
 
     const togglePopover = () => {
-        if (visible) {
-            handleClose();
-        } else {
-            setVisible(true);
-        }
+        setVisible((prev => !prev));
     }
     return (
         <div className={styles.wrapper}>
-            <button
-                className={styles.button}
-                onClick={togglePopover}
-                title="Ava AI Juturobot"
-            >
-                🤖
-            </button>
+            <AnimatePresence>
+                {!visible && (
+                <motion.button
+                    className={styles["bot-button"]}
+                    onClick={togglePopover}
+                    title="Ava AI Juturobot"
+                    initial={{opacity: 0, y:20}}
+                    animate={{opacity:1, y:0}}
+                    exit={{opacity: 0, y:20}}
+                    transition={{duration:0.6, ease:"easeOut"}}
+                    whileHover={{scale:1.1}}
 
-            {(visible || isAnimatingOut) && (
-                <div
-                    className={`${styles["ai-chat-popover"]} ${
-                        visible ? styles["fade-in"] : styles["fade-out"]
-                    }`}
-                    ref={popoverRef}
-                    onAnimationEnd={() => {
-                        if (!visible) setIsAnimatingOut(false);
-                    }}>
-                    <AIChatPanel
-                        isActive={visible}
-                        chatHistory={chatHistory}
-                        botInput={botInput}
-                        onBotInputChange={onBotInputChange}
-                        onBotSend={onBotSend}
-                    />
-                </div>
-            )}
+                >
+                    🤖
+                </motion.button>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {visible && (
+                    <motion.div
+                        className={styles["ai-chat-popover"]}
+                        ref={popoverRef}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <AIChatPanel
+                            isThinking={isThinking}
+                            isActive={visible}
+                            chatHistory={chatHistory}
+                            botInput={botInput}
+                            onBotInputChange={onBotInputChange}
+                            onBotSend={onBotSend}
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
