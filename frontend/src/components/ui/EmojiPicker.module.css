@@ -1,0 +1,25 @@
+.trigger {
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 9999px;
+    font-size: 18px;
+    padding: 0.4rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.trigger:hover {
+    background-color: #e5e7eb;
+    border-color: #9ca3af;
+}
+
+.picker {
+    z-index: 1000;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    overflow: hidden;
+}

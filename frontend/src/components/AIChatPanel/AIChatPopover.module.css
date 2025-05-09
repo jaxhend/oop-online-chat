@@ -1,0 +1,60 @@
+.button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.popover {
+    position: absolute;
+    bottom: 3rem;
+    right: 0;
+    width: 360px;
+    max-height: 500px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+}
+
+.fade-in {
+    animation: fadeInUp 0.6s ease forwards;
+}
+.fade-out {
+    animation: fadeOutDown 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+.wrapper {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 1000;
+}

@@ -10,6 +10,7 @@ import useTheme from "./hooks/useTheme";
 import useInitialData from "./hooks/useInitialData";
 import { Button } from "@/components/ui/Button";
 import "./index.css";
+import AIChatPopover from "@/components/AIChatPanel/AIChatPopover";
 
 export default function OnlineChat() {
     const [username, setUsername] = useState("");
@@ -40,7 +41,8 @@ export default function OnlineChat() {
     useEffect(() => {
         if (!sessionId) return;
 
-        const ws = new WebSocket(`wss://api.utchat.ee/ws?sessionId=${sessionId}`);
+        const ws = new WebSocket(`ws://api.utchat.ee/ws?sessionId=${sessionId}`);
+        //const ws = new WebSocket(`ws://localhost:8080/ws?sessionId=${sessionId}`);
         socketRef.current = ws;
 
         ws.onmessage = (e) => {
@@ -136,25 +138,9 @@ export default function OnlineChat() {
                         <WeatherInfo weather={weatherInfo} />
                     </div>
 
+
                     <div className="fixed-flex-2 flex flex-col gap-4">
-                        {usernameAccepted && (
-                            <div className="flex gap-4 mb-2">
-                                <Button
-                                    variant={activeTarget === "chat" ? "default" : "outline"}
-                                    onClick={() => setActiveTarget("chat")}
-                                    className={activeTarget === "chat" ? "ring-2 ring-primary" : ""}
-                                >
-                                    Vestlusplats
-                                </Button>
-                                <Button
-                                    variant={activeTarget === "ai" ? "default" : "outline"}
-                                    onClick={() => setActiveTarget("ai")}
-                                    className={activeTarget === "ai" ? "ring-2 ring-primary" : ""}
-                                >
-                                    AI Juturobot
-                                </Button>
-                            </div>
-                        )}
+
 
                         {activeTarget === "chat" && usernameAccepted && (
                             <ChatPanel
@@ -171,17 +157,18 @@ export default function OnlineChat() {
                             />
                         )}
 
-                        {activeTarget === "ai" && usernameAccepted && (
-                            <AIChatPanel
-                                chatHistory={chatHistory}
-                                botInput={botInput}
-                                onBotInputChange={(e) => setBotInput(e.target.value)}
-                                onBotSend={sendToBot}
-                                isActive={true}
-                            />
-                        )}
                     </div>
                 </div>
+
+                { /*activeTarget === "ai" &&*/ usernameAccepted && (
+                    <AIChatPopover
+                        chatHistory={chatHistory}
+                        botInput={botInput}
+                        onBotInputChange={(e) => setBotInput(e.target.value)}
+                        onBotSend={sendToBot}
+                        isActive={true}
+                    />
+                )}
             </div>
         </>
     );

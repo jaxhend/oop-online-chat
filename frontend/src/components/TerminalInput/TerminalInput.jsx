@@ -1,13 +1,24 @@
-import { useRef, useEffect } from "react";
+import {useRef, useEffect, useState} from "react";
+import styles from "./TerminalInput.module.css"
 import EmojiPicker from "@/components/ui/EmojiPicker";
 
-export default function TerminalInput({ onSubmit, isActive, showEmojiButton = false }) {
+export default function TerminalInput({ onSubmit, isActive, showEmojiButton = false, placeholder = "Sisesta sõnum..." }) {
     const inputRef = useRef(null);
+    const [isEmpty, setIsEmpty] = useState(true);
 
     useEffect(() => {
-        if (isActive) {
-            inputRef.current?.focus();
-        }
+        const handleClick = (e) => {
+            const isInsideEmoji = e.target.closest('.emoji-trigger') || e.target.closest('.emoji-picker');
+            const isInsideAIChat = e.target.closest('textarea');
+            if (isActive && inputRef.current && !isInsideEmoji && !isInsideAIChat) {
+                inputRef.current.focus();
+            }
+        };
+        document.addEventListener("click", handleClick);
+        return () => {
+            document.removeEventListener("click", handleClick);
+        };
+
     }, [isActive]);
 
     const insertEmojiAtCaret = (emoji) => {
@@ -31,18 +42,21 @@ export default function TerminalInput({ onSubmit, isActive, showEmojiButton = fa
             if (text) {
                 onSubmit(text);
                 inputRef.current.innerText = "";
+                setIsEmpty(true);
             }
         }
     };
 
     return (
-        <div className="relative flex items-center mt-2 text-white font-mono bg-black p-2 rounded z-50">
+        <div className={styles.wrapper}>
             <div
                 ref={inputRef}
                 contentEditable={isActive}
                 suppressContentEditableWarning
                 onKeyDown={handleKeyDown}
-                className={`outline-none whitespace-pre break-all flex-1 min-h-[40px] ${!isActive ? "opacity-50 pointer-events-none" : ""}`}
+                onInput={() => setIsEmpty(inputRef.current.innerText.trim() === "")}
+                className={`${styles.input} ${isEmpty ? styles.empty : ''}`}
+                data-placeholder={placeholder}
             />
             {showEmojiButton && <EmojiPicker onSelect={(emoji) => insertEmojiAtCaret(emoji.native)} />}
         </div>

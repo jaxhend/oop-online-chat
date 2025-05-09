@@ -21,7 +21,6 @@ export default function AIChatPanel({
 
         await onBotSend();
 
-
         setTimeout(() => {
             setIsThinking(false);
         }, 500);
@@ -68,7 +67,6 @@ export default function AIChatPanel({
                     }}
                     className={styles.textarea}
                     placeholder="Sisesta küsimus..."
-                    readOnly={!isActive}
                 />
                 <button
                     onClick={handleSend}
