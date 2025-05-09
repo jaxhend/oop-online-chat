@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { Textarea } from "@/components/ui/chat/textarea";
 import styles from "./AIChatPanel.module.css";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -12,6 +12,7 @@ export default function AIChatPanel({
                                     }) {
     const [isThinking, setIsThinking] = useState(false);
     const [response, setResponse] = useState("");
+    const chatLogRef = useRef(null);
 
     const handleSend = async () => {
         if (!botInput.trim()) return;
@@ -33,11 +34,17 @@ export default function AIChatPanel({
         }
     }, [isThinking]);
 
+    useEffect(() => {
+        const el = chatLogRef.current;
+        if (!el) return;
+        el.scrollTop = el.scrollHeight;
+    }, [chatHistory, isThinking])
+
     return (
         <div className={styles.container}>
             <h3 className={styles.title}>AI Juturobot</h3>
 
-            <div className={styles.chatLog}>
+            <div className={styles.chatLog} ref={chatLogRef}>
                 {chatHistory.map((entry, i) => (
                     <div key={i} className={styles.message}>
                         <strong>{entry.sender}:</strong> {entry.text}
