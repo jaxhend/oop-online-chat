@@ -81,7 +81,7 @@ export default function AIChatPanel({
                     className={styles.button}
                     disabled={!isActive}
                 >
-                    Saada botile
+                    Saada
                 </button>
             </div>
         </div>

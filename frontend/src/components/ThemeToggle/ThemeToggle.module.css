@@ -6,8 +6,10 @@
 }
 
 .button {
+    position: fixed;
     perspective: 600px;
     margin-top: 5px;
+    margin-left: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -15,7 +17,7 @@
     height: 40px;
     padding: 0;
     border-radius: 50%;
-    background-color: var(--card-bg);
+    background-color: var(--bg-color);
     color: var(--text-color);
     border: 1px solid var(--border-color);
     cursor: pointer;

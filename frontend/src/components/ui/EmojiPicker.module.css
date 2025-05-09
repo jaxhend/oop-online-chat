@@ -9,7 +9,7 @@
     height: 40px;
     border-radius: 50%;
     background: transparent;
-    border: none;
+    border: 1px solid transparent;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -38,4 +38,8 @@
     .emoji-trigger{
         display: none;
     }
+}
+
+[data-theme="dark"] .emoji-trigger {
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }

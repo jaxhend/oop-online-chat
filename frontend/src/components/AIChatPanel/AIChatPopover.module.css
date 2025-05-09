@@ -59,3 +59,7 @@
     right: 1.5rem;
     z-index: 1000;
 }
+
+[data-theme="dark"] .bot-button {
+    border: 1px solid rgba(255,255,255, 0.2);
+}
