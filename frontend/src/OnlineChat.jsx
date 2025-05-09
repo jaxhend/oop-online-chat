@@ -41,7 +41,7 @@ export default function OnlineChat() {
     useEffect(() => {
         if (!sessionId) return;
 
-        const ws = new WebSocket(`ws://api.utchat.ee/ws?sessionId=${sessionId}`);
+        const ws = new WebSocket(`wss://api.utchat.ee/ws?sessionId=${sessionId}`);
         //const ws = new WebSocket(`ws://localhost:8080/ws?sessionId=${sessionId}`);
         socketRef.current = ws;
 
