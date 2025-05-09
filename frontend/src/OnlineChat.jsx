@@ -26,7 +26,7 @@ export default function OnlineChat() {
     const socketRef = useRef(null);
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
-    const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("http://localhost:8080");
+    const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
     useEffect(() => {
         const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
