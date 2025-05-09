@@ -9,4 +9,11 @@ public class DailyOffer {
         this.offer = offer;
     }
 
+    public String getOffer() {
+        return offer;
+    }
+
+    public String getRestaurant() {
+        return restaurant;
+    }
 }

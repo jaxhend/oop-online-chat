@@ -14,5 +14,20 @@ public class NewsItem {
         this.description = description;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public String getPublishDate() {
+        return publishDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }
 

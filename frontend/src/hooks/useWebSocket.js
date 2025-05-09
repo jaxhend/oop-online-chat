@@ -4,8 +4,7 @@ export default function useWebSocket(sessionId, onMessage, onOpen) {
     const socketRef = useRef(null);
 
     useEffect(() => {
-        const protocol = location.protocol === "https:" ? "wss://" : "ws://";
-        const socket = new WebSocket(`${protocol}api.utchat.ee/ws?sessionId=${sessionId}`);
+        const socket = new WebSocket(`wss://"api.utchat.ee/ws?sessionId=${sessionId}`);
         socketRef.current = socket;
 
         socket.onopen = () => {
