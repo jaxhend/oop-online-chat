@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import styles from "./ChatPanel.module.css";
 import TerminalInput from "../TerminalInput/TerminalInput";
+import useTheme from "@/hooks/useTheme";
 
 export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }) {
     const [userScrolledUp, setUserScrolledUp] = useState(false);
@@ -30,7 +31,11 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
             <h2 className={styles.title}>Vestlusplats</h2>
             <div ref={chatLogRef} className={styles.chatLog}>
                 {chatMessages.map((msg, i) => (
-                    <div key={i} className={styles.message} style={{ color: msg.color || "#000" }}>
+                    <div
+                        key={i} className={styles.message}
+                        style={{ color: msg.color || (theme === "dark" ? "#eaeaea" : "#000")
+                    }}
+                    >
                         {msg.text}
                     </div>
                 ))}
