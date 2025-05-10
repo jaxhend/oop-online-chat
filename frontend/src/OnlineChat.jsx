@@ -97,7 +97,7 @@ export default function OnlineChat() {
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(value);
         } else {
-            setUsernameError("Websocket ei ole veel ühendatud. Palun proovi uuesti!")
+            setUsernameError("Puudub serveriga ühendus. Proovi uuesti!");
         }
     };
 
