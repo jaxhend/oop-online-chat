@@ -59,3 +59,11 @@
     margin-bottom: 1rem;
     margin-left: 5rem;
 }
+
+.error-text {
+    color: #b91c1c;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    text-align: center;
+    font-weight: bold;
+}

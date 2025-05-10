@@ -1,6 +1,6 @@
 import React from "react";
 import TerminalInput from "../TerminalInput/TerminalInput";
-import styles from "./UsernameDialog.module.css";
+import styles from "../UsernameDialog/UsernameDialog.module.css";
 import utLogo from '../../assets/ut-logo.png';
 
 export default function UsernameDialog({ onSubmit, error }) {
@@ -22,7 +22,7 @@ export default function UsernameDialog({ onSubmit, error }) {
                     placeholder={"Sisesta kasutajanimi..."}
                 />
 
-                {error && <p className="text-red-500 text-sm mt-2 text-center">{error}</p>}
+                {error && <p className={styles["error-text"]}>{error}</p>}
             </div>
         </div>
     );
