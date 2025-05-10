@@ -22,7 +22,7 @@ export default function OnlineChat() {
     const [isLoadingSession, setIsLoadingSession] = useState(true);
     const [activeTarget, setActiveTarget] = useState("chat");
     const [isThinking, setIsThinking] = useState(false);
-
+    const socketRef = useRef(null);
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
