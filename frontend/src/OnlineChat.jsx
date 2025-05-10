@@ -19,13 +19,46 @@ export default function OnlineChat() {
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const [sessionId, setSessionId] = useState(null);
+    const [isLoadingSession, setIsLoadingSession] = useState(true);
     const [activeTarget, setActiveTarget] = useState("chat");
     const [isThinking, setIsThinking] = useState(false);
 
-    const socketRef = useRef(null);
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
+
+    // Küsime serverilt sessionId ning küpsise.
+    useEffect(() => {
+        const fetchSession = async () => {
+            setIsLoadingSession(true);
+            try {
+                const response = await fetch('https://api.utchat.ee/session/init', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Serveri sessionID saamise viga', response.status, errorText);
+                    setIsLoadingSession(false);
+                    return;
+                }
+
+                const data = await response.json();
+                if (data.sessionId)
+                    setSessionId(data.sessionId);
+                else
+                    console.error('SessionID ei leitud serveri vastusest.');
+            } catch (error) {
+                console.error('Error session ID saamisel:', error);
+            } finally {
+                setIsLoadingSession(false);
+            }
+        };
+
+        fetchSession();
+    }, []);
+
 
     const ws = useWebSocket(sessionId, (e) => {
         if (e.data === "__heartbeat_pong__") return;
@@ -53,27 +86,18 @@ export default function OnlineChat() {
             setChatMessages((prev) => [...prev, { text: e.data }]);
         }
     }, (socket) => {
-        console.log("WebSocket connected");
+        console.log("WebSocket ühendatud");
     });
-
-
-    useEffect(() => {
-        const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
-        if (match) {
-            setSessionId(match[1]);
-        }
-    }, []);
-
 
     const handleUsernameSubmit = (value) => {
         if (!value) {
             setUsernameError("Kasutajanimi ei saa olla tühi.");
             return;
         }
-        if (socketRef.current?.readyState === WebSocket.OPEN) {
-            socketRef.current.send(value);
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(value);
         } else {
-            setUsernameError("WebSocket ei ole veel ühendatud.");
+            setUsernameError("Websocket ei ole veel ühendatud. Palun proovi uuesti!")
         }
     };
 
@@ -101,7 +125,7 @@ export default function OnlineChat() {
                 { sender: "Robot", text: data.response || "..." },
             ]);
         } catch (err) {
-            console.error("Bot fetch error:", err);
+            console.error("LLM API error:", err);
             setChatHistory((prev) => [
                 ...prev,
                 { sender: "Robot", text: "Serveri viga. Proovi mõne aja pärast uuesti." },

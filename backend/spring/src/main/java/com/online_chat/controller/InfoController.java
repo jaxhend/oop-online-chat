@@ -13,17 +13,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 
 
 @RestController
-public class ChatRestController {
+public class InfoController {
     private final RssScraper rssScraper;
     private final WeatherAPI weatherAPI;
     private final DeltaJsoupScraper deltaJsoupScraper;
 
-    public ChatRestController(RssScraper rssScraper, WeatherAPI weatherAPI, DeltaJsoupScraper deltaJsoupScraper) {
+    public InfoController(RssScraper rssScraper, WeatherAPI weatherAPI, DeltaJsoupScraper deltaJsoupScraper) {
         this.rssScraper = rssScraper;
         this.weatherAPI = weatherAPI;
         this.deltaJsoupScraper = deltaJsoupScraper;

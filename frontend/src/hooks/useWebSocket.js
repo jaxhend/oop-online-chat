@@ -18,7 +18,7 @@ export default function useWebSocket(sessionId, onMessage, onOpen) {
         }, 30000); // 30 sekundit
 
         socket.onopen = () => {
-            console.log("WebSocket connected");
+            console.log("WebSocket ühendatud");
             onOpen?.(socket);
         };
 
@@ -29,7 +29,7 @@ export default function useWebSocket(sessionId, onMessage, onOpen) {
         };
 
         socket.onclose = () => {
-            console.warn("WebSocket closed, reconnecting");
+            console.warn("WebSocket suletud, ühendan uuest");
             setTimeout(() => {
                 const newSocket = new WebSocket(socketUrl);
                 socketRef.current = newSocket;

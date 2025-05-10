@@ -2,19 +2,16 @@ package com.online_chat.websocket;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import java.util.Map;
-import java.util.UUID;
 
-import static com.online_chat.model.UsernameRegistry.LOCK_DAYS;
+import static com.online_chat.controller.SessionController.cookieName;
 
 @Component
 public class HttpsHandshakeInterceptor implements HandshakeInterceptor {
@@ -23,42 +20,29 @@ public class HttpsHandshakeInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                    WebSocketHandler wsHandler, Map<String, Object> attributes) {
         // Kontrollime, kas tegemist on Servleti-põhise päringuga
-        if (request instanceof ServletServerHttpRequest servletRequest &&
-                response instanceof ServletServerHttpResponse servletResponse) {
+        if (request instanceof ServletServerHttpRequest servletRequest) {
 
             HttpServletRequest req = servletRequest.getServletRequest();
-            HttpServletResponse res = servletResponse.getServletResponse();
-
             String sessionId = null;
 
             // Kontrollime, kas cookie on juba olemas
             if (req.getCookies() != null) {
                 for (Cookie cookie : req.getCookies()) {
-                    if ("sessionId".equals(cookie.getName())) {
+                    if (cookieName.equals(cookie.getName())) {
                         sessionId = cookie.getValue();
                         break;
                     }
                 }
             }
 
-            // Kui cookiet ei ole, siis genereerime uue
-            if (sessionId == null || sessionId.isBlank()) {
-                sessionId = UUID.randomUUID().toString();
-
-                Cookie cookie = new Cookie("sessionId", sessionId);
-                cookie.setHttpOnly(true); // ainult server pääseb ligi
-                cookie.setSecure(true); // edastatakse ainult HTTPS kaudu
-                cookie.setPath("/"); // kehtib meie domeenis
-                cookie.setDomain("utchat.ee");
-                cookie.setMaxAge(LOCK_DAYS * 24 * 60 * 60); // kehtib 30 päeva
-
-                // lisame cookie HTTP vastusesse
-                res.addCookie(cookie);
+            if (sessionId != null && !sessionId.isBlank())
+                attributes.put("sessionId", sessionId);
+            else {
+                response.setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+                return false; // Paneme ühenduse kinni.
             }
 
-            attributes.put("sessionId", sessionId);
         }
-
         // Lubame WebSocketi ühenduse loomise
         return true;
     }
