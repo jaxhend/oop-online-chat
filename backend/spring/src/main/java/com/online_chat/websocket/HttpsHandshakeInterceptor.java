@@ -49,6 +49,7 @@ public class HttpsHandshakeInterceptor implements HandshakeInterceptor {
                 cookie.setHttpOnly(true); // ainult server pääseb ligi
                 cookie.setSecure(true); // edastatakse ainult HTTPS kaudu
                 cookie.setPath("/"); // kehtib meie domeenis
+                cookie.setDomain(".utchat.ee");
                 cookie.setMaxAge(LOCK_DAYS * 24 * 60 * 60); // kehtib 30 päeva
 
                 // lisame cookie HTTP vastusesse
