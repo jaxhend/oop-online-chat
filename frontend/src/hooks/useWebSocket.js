@@ -18,7 +18,6 @@ export default function useWebSocket(sessionId, onMessage, onOpen) {
         }, 30000); // 30 sekundit
 
         socket.onopen = () => {
-            console.log("WebSocket ühendatud");
             onOpen?.(socket);
         };
 

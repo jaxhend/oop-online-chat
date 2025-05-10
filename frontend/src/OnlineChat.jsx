@@ -22,7 +22,6 @@ export default function OnlineChat() {
     const [isLoadingSession, setIsLoadingSession] = useState(true);
     const [activeTarget, setActiveTarget] = useState("chat");
     const [isThinking, setIsThinking] = useState(false);
-    const socketRef = useRef(null);
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
@@ -165,10 +164,8 @@ export default function OnlineChat() {
                             <ChatPanel
                                 chatMessages={chatMessages}
                                 onSend={(msg) => {
-                                    if (
-                                        socketRef.current?.readyState === WebSocket.OPEN
-                                    ) {
-                                        socketRef.current.send(msg);
+                                    if (ws && ws.readyState === WebSocket.OPEN) {
+                                        ws.send(msg);
                                     }
                                 }}
                                 chatLogRef={chatLogRef}
