@@ -9,6 +9,7 @@ import useTheme from "./hooks/useTheme";
 import useInitialData from "./hooks/useInitialData";
 import "./index.css";
 import AIChatPopover from "@/components/AIChatPanel/AIChatPopover";
+import useWebSocket from "@/hooks/useWebSocket";
 
 export default function OnlineChat() {
     const [username, setUsername] = useState("");
@@ -26,74 +27,43 @@ export default function OnlineChat() {
     const [theme, toggleTheme] = useTheme();
     const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
 
+    const ws = useWebSocket(sessionId, (e) => {
+        if (e.data === "__heartbeat_pong__") return;
+
+        try {
+            const msg = JSON.parse(e.data);
+
+            if (msg.text?.includes("Tere tulemast")) {
+                const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
+                const extractedName = match?.[1]?.trim();
+                if (extractedName) {
+                    setUsername(extractedName);
+                    setUsernameAccepted(true);
+                }
+                setUsernameError("");
+            }
+
+            if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
+                setUsernameError(msg.text);
+                setUsernameAccepted(false);
+            }
+
+            setChatMessages((prev) => [...prev, msg]);
+        } catch {
+            setChatMessages((prev) => [...prev, { text: e.data }]);
+        }
+    }, (socket) => {
+        console.log("WebSocket connected");
+    });
+
+
     useEffect(() => {
         const match = document.cookie.match(/(?:^|;\s*)sessionId=([^;]+)/);
         if (match) {
             setSessionId(match[1]);
-        } else {
-            const newId = crypto.randomUUID();
-            document.cookie = `sessionId=${newId}; path=/`;
-            setSessionId(newId);
         }
     }, []);
 
-    useEffect(() => {
-        if (!sessionId) return;
-
-        const ws = new WebSocket(`wss://api.utchat.ee/ws?sessionId=${sessionId}`);
-        //const ws = new WebSocket(`ws://localhost:8080/ws?sessionId=${sessionId}`);
-        socketRef.current = ws;
-
-        const pingInterval = setInterval(() => {
-            if (ws.readyState === WebSocket.OPEN) {
-                ws.send("__heartbeat_ping__");
-            }
-        }, 30000); // 30 sekundit
-
-        ws.onmessage = (e) => {
-            if (e.data === "__heartbeat_pong__") return;
-
-            try {
-                const msg = JSON.parse(e.data);
-
-                if (msg.text?.includes("Tere tulemast")) {
-                    const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
-                    const extractedName = match?.[1]?.trim();
-                    if (extractedName) {
-                        setUsername(extractedName);
-                        setUsernameAccepted(true);
-                    }
-                    setUsernameError("");
-                }
-
-                if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
-                    setUsernameError(msg.text);
-                    setUsernameAccepted(false);
-                }
-
-                setChatMessages((prev) => [...prev, msg]);
-            } catch {
-                setChatMessages((prev) => [...prev, { text: e.data }]);
-            }
-        };
-
-        ws.onclose = () => {
-            console.log("WebSocket closed, reconnecting");
-            setTimeout(() => {
-                const newWS = new WebSocket(`wss://api.utchat.ee/ws?sessionId=${sessionId}`);
-                socketRef.current = newWS;
-
-                newWS.onmessage = ws.onmessage;
-                newWS.onclose = ws.onclose;
-                newWS.onerror = ws.onerror;
-            }, 5000); // Proovib uuesti ühendada 5 sekundi pärast
-        };
-
-        return () => {
-            clearInterval(pingInterval);
-            ws.close();
-        };
-    }, [sessionId]);
 
     const handleUsernameSubmit = (value) => {
         if (!value) {
@@ -106,7 +76,6 @@ export default function OnlineChat() {
             setUsernameError("WebSocket ei ole veel ühendatud.");
         }
     };
-
 
 
     const sendToBot = async () => {
@@ -135,7 +104,7 @@ export default function OnlineChat() {
             console.error("Bot fetch error:", err);
             setChatHistory((prev) => [
                 ...prev,
-                { sender: "Robot", text: "Flask viga: Serveriga ühenduse loomisel tekkis viga." },
+                { sender: "Robot", text: "Serveri viga. Proovi mõne aja pärast uuesti." },
             ]);
         } finally {
             setBotInput("");

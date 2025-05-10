@@ -12,7 +12,7 @@ export default function DailyDeals({ deals }) {
                     <li key={i} className={styles.item}>
                         {deal.offer}
                     </li>
-                )) : <li className={styles.item}>Ei ole saadaval lõunapakkumisi</li>}
+                )) : <li className={styles.item}>Hetkel päevapakkumised puuduvad.</li>}
             </ul>
         </div>
     );

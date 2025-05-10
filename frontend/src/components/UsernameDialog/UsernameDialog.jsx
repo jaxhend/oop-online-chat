@@ -1,6 +1,7 @@
 import React from "react";
 import TerminalInput from "../TerminalInput/TerminalInput";
 import styles from "./UsernameDialog.module.css";
+import utLogo from '../../assets/ut-logo.png';
 
 export default function UsernameDialog({ onSubmit, error }) {
     return (
@@ -9,7 +10,7 @@ export default function UsernameDialog({ onSubmit, error }) {
                 <h2 className={styles.utname}>UTCHAT</h2>
                 <img
                     className={styles.utlogo}
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Universit%C3%A4t_Tartu_Logo.svg/1200px-Universit%C3%A4t_Tartu_Logo.svg.png"
+                    src={utLogo}
                     alt="UT logo"
                 />
                 <h2 className="text-xl font-semibold mb-4 text-center">Sisesta kasutajanimi</h2>
