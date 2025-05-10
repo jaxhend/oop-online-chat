@@ -28,16 +28,12 @@ public class InfoController {
         this.deltaJsoupScraper = deltaJsoupScraper;
     }
 
-    //@CrossOrigin(origins = "https://www.utchat.ee")
-    @CrossOrigin(origins = "*")
     @GetMapping("/paevapakkumised")
     public ResponseEntity<List<DailyOffer>> getDeals() {
         List<DailyOffer> deals = deltaJsoupScraper.getLatestLunchOffers();
         return ResponseEntity.ok(deals);
     }
 
-    //@CrossOrigin(origins = "https://www.utchat.ee")
-    @CrossOrigin(origins = "*")
     @GetMapping("/ilm")
     public ResponseEntity<WeatherInfo> getWeather() {
         WeatherInfo weatherData = weatherAPI.getLatestWeather();
@@ -45,8 +41,6 @@ public class InfoController {
 
     }
 
-    //@CrossOrigin(origins = "https://www.utchat.ee")
-    @CrossOrigin(origins = "*")
     @GetMapping("/uudised")
     public ResponseEntity<List<NewsItem>> getNews(@RequestParam(defaultValue = "1") String topic) {
         List<NewsItem> newsItems = rssScraper.getLatestNews(topic);

@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // For your REST API including /api/session/init
-                .allowedOrigins("https://utchat.ee") // e.g., "https://mychat.vercel.app" or your custom domain on Vercel
+                .allowedOrigins("https://www.utchat.ee") // e.g., "https://mychat.vercel.app" or your custom domain on Vercel
                 .allowedMethods("GET")
                 .allowCredentials(true) // IMPORTANT for cookies
                 .maxAge(3600);
