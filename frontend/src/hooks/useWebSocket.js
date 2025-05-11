@@ -45,5 +45,5 @@ export default function useWebSocket(sessionId, onMessage, onOpen) {
         };
     }, [sessionId]);
 
-    return socketRef.current;
+    return socketRef;
 }

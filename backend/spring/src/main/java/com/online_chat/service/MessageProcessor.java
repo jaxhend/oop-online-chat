@@ -55,7 +55,7 @@ public class MessageProcessor {
     public void handleUsernameAssignment(ClientSession session, String message) {
         String username = message.trim();
 
-        if (username.isBlank() || username.contains("/") || username.contains(" ") || username.contains("-"))
+        if (username.isBlank() || username.contains("/") || username.contains(" ") || username.contains("-") || username.length() > 30)
             sendUsernameMessage(session, "Kasutajanimi on keelatud või vales formaadis.");
         else if (!usernameRegistry.register(username, session.getId()))
             sendUsernameMessage(session, "Kasutajanimi on juba võetud.");
