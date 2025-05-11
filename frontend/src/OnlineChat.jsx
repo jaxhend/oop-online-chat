@@ -144,11 +144,11 @@ export default function OnlineChat() {
                 <div className="container flex-1 p-5 gap-5 font-sans flex-row">
 
                     <div className="scraper-info">
-                        <div className={styles["wrapper"]}>
+                        <div className={"container"}>
                             <DailyDeals deals={dailyDeals} />
                         </div>
 
-                        <div className={styles["wrapper"]}>
+                        <div className={"container"}>
                             <WeatherInfo weather={weatherInfo} />
                         </div>
                     </div>
