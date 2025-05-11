@@ -3,7 +3,7 @@ import styles from './DailyDeals.module.css';
 
 export default function DailyDeals({ deals }) {
     return (
-        <div className={styles.dailyDeals}>
+        <div className={styles.section}>
             <h4 className={styles.title}>
                 {deals.length > 0 ? `${deals[0].restaurant} Päevapakkumised` : "Päevapakkumised"}
             </h4>
