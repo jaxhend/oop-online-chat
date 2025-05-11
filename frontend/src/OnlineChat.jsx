@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import NewsTicker from "./components/NewsTicker/NewsTicker";
 import DailyDeals from "./components/DailyDeals/DailyDeals";
 import WeatherInfo from "./components/WeatherInfo/WeatherInfo";
@@ -12,24 +12,20 @@ import AIChatPopover from "@/components/AIChatPanel/AIChatPopover";
 import useWebSocket from "@/hooks/useWebSocket";
 
 export default function OnlineChat() {
-    const [username, setUsername] = useState("");
     const [usernameAccepted, setUsernameAccepted] = useState(false);
     const [usernameError, setUsernameError] = useState("");
     const [chatMessages, setChatMessages] = useState([]);
     const [botInput, setBotInput] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const [sessionId, setSessionId] = useState(null);
-    const [isLoadingSession, setIsLoadingSession] = useState(true);
-    const [activeTarget, setActiveTarget] = useState("chat");
     const [isThinking, setIsThinking] = useState(false);
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
-    const { newsList, dailyDeals, weatherInfo, loading } = useInitialData("https://api.utchat.ee");
+    const {newsList, dailyDeals, weatherInfo, loading} = useInitialData("https://api.utchat.ee");
 
     // Küsime serverilt sessionId ning küpsise.
     useEffect(() => {
         const fetchSession = async () => {
-            setIsLoadingSession(true);
             try {
                 const response = await fetch('https://api.utchat.ee/session/init', {
                     method: 'GET',
@@ -39,7 +35,6 @@ export default function OnlineChat() {
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('Serveri sessionID saamise viga', response.status, errorText);
-                    setIsLoadingSession(false);
                     return;
                 }
 
@@ -50,8 +45,6 @@ export default function OnlineChat() {
                     console.error('SessionID ei leitud serveri vastusest.');
             } catch (error) {
                 console.error('Error session ID saamisel:', error);
-            } finally {
-                setIsLoadingSession(false);
             }
         };
 
@@ -60,41 +53,35 @@ export default function OnlineChat() {
 
 
     const ws = useWebSocket(sessionId, (e) => {
+        // Message handler
         if (e.data === "__heartbeat_pong__") return;
 
         try {
             const msg = JSON.parse(e.data);
 
             if (msg.text?.includes("Tere tulemast")) {
-                const match = msg.text.match(/Tere tulemast,\s*(.+?)!/);
-                const extractedName = match?.[1]?.trim();
-                if (extractedName) {
-                    setUsername(extractedName);
-                    setUsernameAccepted(true);
-                }
-                setUsernameError("");
+                setUsernameAccepted(true);
             }
+            setUsernameError("");
 
-            if (msg.text?.toLowerCase().includes("kasutajanimi on keelatud")) {
+            if (msg.text?.toLowerCase().includes("kasutajanimi on ")) {
                 setUsernameError(msg.text);
                 setUsernameAccepted(false);
+                return;
             }
 
             setChatMessages((prev) => [...prev, msg]);
         } catch {
-            setChatMessages((prev) => [...prev, { text: e.data }]);
+            setChatMessages((prev) => [...prev, {text: e.data}]);
         }
     }, (socket) => {
         console.log("WebSocket ühendatud");
     });
 
     const handleUsernameSubmit = (value) => {
-        if (!value) {
-            setUsernameError("Kasutajanimi ei saa olla tühi.");
-            return;
-        }
-        if (ws && ws.readyState === WebSocket.OPEN) {
-            ws.send(value);
+        const socket = ws.current;
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(value);
         } else {
             setUsernameError("Puudub serveriga ühendus. Proovi uuesti!");
         }
@@ -105,29 +92,28 @@ export default function OnlineChat() {
         const trimmed = botInput.trim();
         if (!trimmed) return;
         setChatHistory((prev) => [
-            ...prev,
-            {sender: "Sina", text: trimmed},
-        ]);
+            ...prev, {sender: "Sina", text: trimmed},]);
         setBotInput("");
         setIsThinking(true);
 
         try {
             const res = await fetch("https://llm.utchat.ee/chatbot", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query: trimmed }), 
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({query: trimmed}),
             });
             const data = await res.json();
+            setIsThinking(false);
 
             setChatHistory((prev) => [
                 ...prev,
-                { sender: "Robot", text: data.response || "..." },
+                {sender: "Robot", text: data.response || "..."},
             ]);
         } catch (err) {
             console.error("LLM API error:", err);
             setChatHistory((prev) => [
                 ...prev,
-                { sender: "Robot", text: "Serveri viga. Proovi mõne aja pärast uuesti." },
+                {sender: "Robot", text: "Serveri viga. Proovi mõne aja pärast uuesti."},
             ]);
         } finally {
             setBotInput("");
@@ -138,29 +124,28 @@ export default function OnlineChat() {
     return (
         <>
             {!loading && !usernameAccepted && (
-                <UsernameDialog onSubmit={handleUsernameSubmit} error={usernameError} />
+                <UsernameDialog onSubmit={handleUsernameSubmit} error={usernameError}/>
             )}
 
             {!loading && usernameAccepted && (
                 <div className="absolute top-4 right-4">
-                    <ThemeToggle theme={theme} onToggle={toggleTheme} />
+                    <ThemeToggle theme={theme} onToggle={toggleTheme}/>
                 </div>
             )}
 
             <div className="flex flex-col h-screen">
-                <NewsTicker newsList={newsList} animate={!loading} />
+                <NewsTicker newsList={newsList} animate={!loading}/>
 
                 <div className="container flex-1 p-5 gap-5 font-sans flex-row">
                     <div className="fixed-flex-1 border p-3 overflow-y-auto flex flex-col">
-                        <DailyDeals deals={dailyDeals} />
-                        <WeatherInfo weather={weatherInfo} />
+                        <DailyDeals deals={dailyDeals}/>
+                        <WeatherInfo weather={weatherInfo}/>
                     </div>
 
 
                     <div className="fixed-flex-2 flex flex-col gap-4">
 
-
-                        {activeTarget === "chat" && usernameAccepted && (
+                        {usernameAccepted && (
                             <ChatPanel
                                 chatMessages={chatMessages}
                                 onSend={(msg) => {
@@ -176,7 +161,7 @@ export default function OnlineChat() {
                     </div>
                 </div>
 
-                { /*activeTarget === "ai" &&*/ usernameAccepted && (
+                {usernameAccepted && (
                     <AIChatPopover
                         isThinking={isThinking}
                         chatHistory={chatHistory}
