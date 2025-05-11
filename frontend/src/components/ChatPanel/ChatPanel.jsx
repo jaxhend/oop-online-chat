@@ -5,6 +5,7 @@ import useTheme from "@/hooks/useTheme";
 
 export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }) {
     const [userScrolledUp, setUserScrolledUp] = useState(false);
+    const [theme] = useTheme();
 
     useEffect(() => { // Kontrollib, kas kasutaja on üles scrollinud
         const chatLog = chatLogRef.current;
