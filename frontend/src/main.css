@@ -7,5 +7,12 @@
     border:  1px solid #002f6c;
     border-radius: 1rem;
     background-color: var(--bg-color);
+}
 
+.scraper-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex: 1;
+    max-width: 400px;
 }
