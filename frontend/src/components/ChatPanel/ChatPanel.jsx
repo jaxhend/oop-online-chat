@@ -36,8 +36,8 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
 
         const normalized = msgColor.toLowerCase();
 
-        const tooLightInLightMode = ["#eaeaea", "#ffffff", "#f9fafb", "#f5f5f5"];
-        const tooDarkInDarkMode = ["#000000", "#111827", "#1f2937", "#222", "#34495e", "#43b581"];
+        const tooLightInLightMode = ["#eaeaea"];
+        const tooDarkInDarkMode = ["#34495e"];
 
         if (theme === "dark" && tooDarkInDarkMode.includes(normalized)) {
             return fallbackDark;
