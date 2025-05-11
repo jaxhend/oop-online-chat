@@ -27,6 +27,20 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
         chatLog.scrollTop = chatLog.scrollHeight;
     }, [chatMessages]);
 
+
+    const resolveColor = (msgColor) => {
+        const fallback = theme === "dark" ? "#eaeaea" : "#000";
+
+        if (!msgColor) return fallback;
+
+        const tooDarkColors = ["#1f2937", "#111827", "#000", "#222"];
+        if (theme === "dark" && tooDarkColors.includes(msgColor.toLowerCase())) {
+            return fallback;
+        }
+
+        return msgColor;
+    }
+
     return (
         <div className={`${styles.container} fixed-flex-2 flex flex-col border p-3`}>
             <h2 className={styles.title}>Vestlusplats</h2>
@@ -34,7 +48,7 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
                 {chatMessages.map((msg, i) => (
                     <div
                         key={i} className={styles.message}
-                        style={{ color: msg.color || (theme === "dark" ? "#eaeaea" : "#000")
+                        style={{ color: resolveColor(msg.color))
                     }}
                     >
                         {msg.text}
