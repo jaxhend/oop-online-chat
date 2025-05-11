@@ -10,7 +10,7 @@ export default function UsernameDialog({ onSubmit, error }) {
                 <div className={styles["branding"]}>
                     <h1 className={styles["branding-title"]}>UTCHAT</h1>
                     <img
-                        className={styles.utlogo}
+                        className={styles["branding-logo"]}
                         src={utLogo}
                         alt="UT logo"
                     />
