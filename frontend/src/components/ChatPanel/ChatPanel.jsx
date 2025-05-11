@@ -1,9 +1,11 @@
 import React, {useEffect, useRef, useState} from "react";
 import styles from "./ChatPanel.module.css";
 import TerminalInput from "../TerminalInput/TerminalInput";
+import useTheme from "@/hooks/useTheme";
 
 export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }) {
     const [userScrolledUp, setUserScrolledUp] = useState(false);
+    const [theme] = useTheme();
 
     useEffect(() => { // Kontrollib, kas kasutaja on üles scrollinud
         const chatLog = chatLogRef.current;
@@ -25,15 +27,46 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
         chatLog.scrollTop = chatLog.scrollHeight;
     }, [chatMessages]);
 
+
+    const resolveColor = (msgColor) => {
+        const fallbackDark = "#eaeaea";
+        const fallbackLight = "#1a1a1a"; // tumedam kui #000, pisut pehmem
+
+        if (!msgColor) return theme === "dark" ? fallbackDark : fallbackLight;
+
+        const normalized = msgColor.toLowerCase();
+
+        const tooLightInLightMode = ["#eaeaea"];
+        const tooDarkInDarkMode = ["#34495e"];
+
+        if (theme === "dark" && tooDarkInDarkMode.includes(normalized)) {
+            return fallbackDark;
+        }
+
+        if (theme === "light" && tooLightInLightMode.includes(normalized)) {
+            return fallbackLight;
+        }
+
+        return msgColor;
+    };
+
+
     return (
         <div className={`${styles.container} fixed-flex-2 flex flex-col border p-3`}>
             <h2 className={styles.title}>Vestlusplats</h2>
             <div ref={chatLogRef} className={styles.chatLog}>
-                {chatMessages.map((msg, i) => (
-                    <div key={i} className={styles.message} style={{ color: msg.color || "#000" }}>
+                {chatMessages.map((msg, i) => {
+                    console.log("msg.color:", msg.color);
+                    return(
+                    <div
+                        key={i} className={styles.message}
+                        style={{ color: resolveColor(msg.color)
+                    }}
+                    >
                         {msg.text}
                     </div>
-                ))}
+                    );
+                })}
             </div>
             <TerminalInput
                 onSubmit={onSend}
