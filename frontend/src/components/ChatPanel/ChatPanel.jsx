@@ -29,17 +29,26 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
 
 
     const resolveColor = (msgColor) => {
-        const fallback = theme === "dark" ? "#eaeaea" : "#000";
+        const fallbackDark = "#eaeaea";
+        const fallbackLight = "#1a1a1a"; // tumedam kui #000, pisut pehmem
 
-        if (!msgColor) return fallback;
+        if (!msgColor) return theme === "dark" ? fallbackDark : fallbackLight;
 
-        const tooDarkColors = ["#34495e"];
-        if (theme === "dark" && tooDarkColors.includes(msgColor.toLowerCase())) {
-            return fallback;
+        const normalized = msgColor.toLowerCase();
+
+        const tooLightInLightMode = ["#eaeaea", "#ffffff", "#f9fafb", "#f5f5f5"];
+        const tooDarkInDarkMode = ["#000000", "#111827", "#1f2937", "#222", "#34495e", "#43b581"];
+
+        if (theme === "dark" && tooDarkInDarkMode.includes(normalized)) {
+            return fallbackDark;
+        }
+
+        if (theme === "light" && tooLightInLightMode.includes(normalized)) {
+            return fallbackLight;
         }
 
         return msgColor;
-    }
+    };
 
 
     return (
