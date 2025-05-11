@@ -40,6 +40,7 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
 
         return msgColor;
     }
+    console.log(msg.color);
 
     return (
         <div className={`${styles.container} fixed-flex-2 flex flex-col border p-3`}>
@@ -48,7 +49,7 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
                 {chatMessages.map((msg, i) => (
                     <div
                         key={i} className={styles.message}
-                        style={{ color: resolveColor(msg.color))
+                        style={{ color: resolveColor(msg.color)
                     }}
                     >
                         {msg.text}
