@@ -28,7 +28,7 @@ export default function useWebSocket(sessionId, onMessage, onOpen) {
         };
 
         socket.onclose = () => {
-            console.warn("WebSocket suletud, ühendan uuest");
+            console.warn("WebSocket suletud, ühendan uuesti");
             setTimeout(() => {
                 const newSocket = new WebSocket(socketUrl);
                 socketRef.current = newSocket;
@@ -45,5 +45,5 @@ export default function useWebSocket(sessionId, onMessage, onOpen) {
         };
     }, [sessionId]);
 
-    return socketRef.current;
+    return socketRef;
 }
