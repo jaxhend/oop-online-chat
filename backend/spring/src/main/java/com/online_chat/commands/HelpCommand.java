@@ -2,12 +2,12 @@ package com.online_chat.commands;
 
 
 import com.online_chat.model.ClientSession;
-import com.online_chat.service.ColoredMessage;
+import com.online_chat.service.MessageFormatter;
 
 public class HelpCommand implements Command {
 
     @Override
-    public ColoredMessage execute(ClientSession session, String[] args) {
+    public MessageFormatter execute(ClientSession session, String[] args) {
         String text = """
                 Saadaval käsud:
                 /join <ruum> – liitu või loo uus vestlusruum
@@ -16,7 +16,7 @@ public class HelpCommand implements Command {
                 /chatrooms – kuva avalikud vestlusruumid
                 /members – kuva hetkel aktiivsed kasutajad
                 """;
-        return new ColoredMessage(text, ColoredMessage.COMMANDS);
+        return new MessageFormatter(text, MessageFormatter.COMMANDS);
     }
 
     @Override

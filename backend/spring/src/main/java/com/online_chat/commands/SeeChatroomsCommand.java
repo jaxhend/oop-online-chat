@@ -5,7 +5,7 @@ import com.online_chat.model.ChatRoom;
 import com.online_chat.model.ChatRoomManager;
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.PrivateChatRoom;
-import com.online_chat.service.ColoredMessage;
+import com.online_chat.service.MessageFormatter;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,7 +22,7 @@ public class SeeChatroomsCommand implements Command {
     }
 
     @Override
-    public ColoredMessage execute(ClientSession session, String[] args) {
+    public MessageFormatter execute(ClientSession session, String[] args) {
         Map<String, ChatRoom> roomInfo = chatRoomManager.getRoomInfo();
 
         String result = Stream.of(
@@ -40,7 +40,7 @@ public class SeeChatroomsCommand implements Command {
                 .flatMap(s -> s)  // Teeme üheks streamiks
                 .collect(Collectors.joining(", "));
 
-        return new ColoredMessage("Saadaval vestlusruumid: " + result, ColoredMessage.COMMANDS);
+        return new MessageFormatter("Saadaval vestlusruumid: " + result, MessageFormatter.COMMANDS);
     }
 
     @Override

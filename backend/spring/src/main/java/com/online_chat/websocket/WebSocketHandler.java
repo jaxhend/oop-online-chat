@@ -3,7 +3,7 @@ package com.online_chat.websocket;
 import com.online_chat.model.ChatRoomManager;
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.ClientSessionManager;
-import com.online_chat.service.ColoredMessage;
+import com.online_chat.service.MessageFormatter;
 import com.online_chat.service.MessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +20,9 @@ import java.util.Set;
 
 @Component
 // extends TextWebSocketHandlerit, et töödelda tekstipõhiseid sõnumeid Websocketi kaudu
-public class ChatWebSocketHandler extends TextWebSocketHandler {
+public class WebSocketHandler extends TextWebSocketHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(ChatWebSocketHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
     // Hoiab kõiki WebSocketi sessioone, mis on aktiivsed.
     private final Set<WebSocketSession> sessions = Collections.synchronizedSet(new HashSet<>());
     private final ClientSessionManager sessionManager;
@@ -31,7 +31,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final int MAX_MESSAGE_LENGTH = 500;
 
 
-    public ChatWebSocketHandler(ClientSessionManager sessionManager, MessageProcessor messageProcessor, ChatRoomManager chatRoomManager) {
+    public WebSocketHandler(ClientSessionManager sessionManager, MessageProcessor messageProcessor, ChatRoomManager chatRoomManager) {
         this.sessionManager = sessionManager;
         this.messageProcessor = messageProcessor;
         this.chatRoomManager = chatRoomManager;
@@ -61,7 +61,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 if (previousUsername != null && !previousUsername.isBlank()) {
                     clientSession.setUsername(previousUsername);
                     String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha erinevaid käske.", previousUsername);
-                    messageProcessor.sendMessage(clientSession, new ColoredMessage(welcome, ColoredMessage.GREEN));
+                    messageProcessor.sendMessage(clientSession, new MessageFormatter(welcome, MessageFormatter.GREEN));
                 }
                 sessionManager.registerSession(clientSession);
             }
@@ -101,7 +101,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         String payload = message.getPayload().trim();
         if (payload.length() > MAX_MESSAGE_LENGTH) {
-            messageProcessor.sendMessage(clientSession, new ColoredMessage("Sõnum on liiga pikk. Proovi uuesti!", ColoredMessage.ERRORS));
+            messageProcessor.sendMessage(clientSession, new MessageFormatter("Sõnum on liiga pikk. Proovi uuesti!", MessageFormatter.ERRORS));
             return;
         }
 

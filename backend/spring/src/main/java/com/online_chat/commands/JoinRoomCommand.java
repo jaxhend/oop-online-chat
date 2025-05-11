@@ -3,7 +3,7 @@ package com.online_chat.commands;
 
 import com.online_chat.model.ChatRoomManager;
 import com.online_chat.model.ClientSession;
-import com.online_chat.service.ColoredMessage;
+import com.online_chat.service.MessageFormatter;
 
 public class JoinRoomCommand implements Command {
 
@@ -14,17 +14,17 @@ public class JoinRoomCommand implements Command {
     }
 
     @Override
-    public ColoredMessage execute(ClientSession session, String[] args) {
+    public MessageFormatter execute(ClientSession session, String[] args) {
         if (validCommand(args))
-            return new ColoredMessage("Kasutus: /join <ruumi_nimi>", ColoredMessage.ERRORS);
+            return new MessageFormatter("Kasutus: /join <ruumi_nimi>", MessageFormatter.ERRORS);
 
         String roomName = args[1].toLowerCase();
 
         if (roomName.contains("-")) {
-            return new ColoredMessage("Privaatvestluse alustamiseks või sellega liitumiseks kasuta käsku /private <kasutajanimi>", ColoredMessage.ERRORS);
+            return new MessageFormatter("Privaatvestluse alustamiseks või sellega liitumiseks kasuta käsku /private <kasutajanimi>", MessageFormatter.ERRORS);
         }
         if (session.getCurrentRoom() != null && roomName.equals(session.getCurrentRoom().getName())) {
-            return new ColoredMessage("Oled juba ruumis '" + roomName + "'.", ColoredMessage.ERRORS);
+            return new MessageFormatter("Oled juba ruumis '" + roomName + "'.", MessageFormatter.ERRORS);
         }
 
         // vajadusel loome uue ruumi ning eemaldame kliendi vanast ruumist ning lisame uude ruumi
@@ -32,7 +32,7 @@ public class JoinRoomCommand implements Command {
         chatRoomManager.removeClientFromCurrentRoom(session);
         chatRoomManager.addClientToRoom(session, roomName); // Lisab ruumi ja saadab sõnumi.
 
-        return new ColoredMessage("Liitusid ruumiga '" + roomName + "'", ColoredMessage.GREEN);
+        return new MessageFormatter("Liitusid ruumiga '" + roomName + "'", MessageFormatter.GREEN);
     }
 
     @Override

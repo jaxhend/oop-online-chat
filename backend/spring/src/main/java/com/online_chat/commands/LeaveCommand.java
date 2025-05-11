@@ -3,7 +3,7 @@ package com.online_chat.commands;
 
 import com.online_chat.model.ChatRoomManager;
 import com.online_chat.model.ClientSession;
-import com.online_chat.service.ColoredMessage;
+import com.online_chat.service.MessageFormatter;
 
 public class LeaveCommand implements Command {
 
@@ -14,12 +14,12 @@ public class LeaveCommand implements Command {
     }
 
     @Override
-    public ColoredMessage execute(ClientSession session, String[] args) {
+    public MessageFormatter execute(ClientSession session, String[] args) {
         if (!inARoom(session))
-            return new ColoredMessage("Sa ei ole üheski ruumis.", ColoredMessage.ERRORS);
+            return new MessageFormatter("Sa ei ole üheski ruumis.", MessageFormatter.ERRORS);
 
         chatRoomManager.removeClientFromCurrentRoom(session);
-        return new ColoredMessage("Lahkusid ruumist.", ColoredMessage.COMMANDS);
+        return new MessageFormatter("Lahkusid ruumist.", MessageFormatter.COMMANDS);
     }
 
     @Override

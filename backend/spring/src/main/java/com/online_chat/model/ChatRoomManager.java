@@ -1,6 +1,6 @@
 package com.online_chat.model;
 
-import com.online_chat.service.ColoredMessage;
+import com.online_chat.service.MessageFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -65,7 +65,7 @@ public class ChatRoomManager {
                             else
                                 text = String.format("Kasutaja '%s' liitus privaatvestlusega.", client.getUsername());
 
-                            String json = objectMapper.writeValueAsString(new ColoredMessage(text, ColoredMessage.ORANGE));
+                            String json = objectMapper.writeValueAsString(new MessageFormatter(text, MessageFormatter.ORANGE));
                             member.getWebSocketSession().sendMessage(new TextMessage(json));
                         } catch (IOException e) {
                             logger.error("Ruumi liikmetele teise kasutaja liitumissõnumi saatmise error. ", e);
@@ -91,7 +91,7 @@ public class ChatRoomManager {
                     .forEach(ws -> {
                         try {
                             String text = "Kasutaja '" + client.getUsername() + "' lahkus ruumist '" + room.getName() + "'.";
-                            String json = objectMapper.writeValueAsString(new ColoredMessage(text, ColoredMessage.ORANGE));
+                            String json = objectMapper.writeValueAsString(new MessageFormatter(text, MessageFormatter.ORANGE));
                             ws.sendMessage(new TextMessage(json));
                         } catch (IOException e) {
                             logger.error("Ruumi liikmetele teise kasutaja lahkumissõnumi saatmise error. ", e);

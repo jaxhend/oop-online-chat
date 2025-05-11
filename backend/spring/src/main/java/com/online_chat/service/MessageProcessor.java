@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 
-import static com.online_chat.service.ColoredMessage.WET_ASPHALT;
+import static com.online_chat.service.MessageFormatter.WET_ASPHALT;
 
 @Service
 public class MessageProcessor {
@@ -36,7 +36,7 @@ public class MessageProcessor {
             handleUsernameAssignment(session, message);
 
         } else if (message.startsWith("/")) {
-            ColoredMessage response = commandHandler.handle(session, message);
+            MessageFormatter response = commandHandler.handle(session, message);
             sendMessage(session, response);
 
         } else if (session.getCurrentRoom() != null) {
@@ -47,7 +47,7 @@ public class MessageProcessor {
                     Sa ei ole üheski vestlusruumis. Kasuta käske:
                     /join <chatruumi_nimi>, et liituda või luua vestlusruumiga,
                     /private <kasutaja_nimi>, et alustada privaatsõnumit.""";
-            sendMessage(session, new ColoredMessage(error, ColoredMessage.ERRORS));
+            sendMessage(session, new MessageFormatter(error, MessageFormatter.ERRORS));
         }
     }
 
@@ -56,14 +56,14 @@ public class MessageProcessor {
         String username = message.trim();
 
         if (username.isBlank() || username.contains("/") || username.contains(" ") || username.contains("-"))
-            sendMessage(session, new ColoredMessage("Kasutajanimi on keelatud või vales formaadis.", ColoredMessage.ERRORS));
+            sendUsernameMessage(session, "Kasutajanimi on keelatud või vales formaadis.");
         else if (!usernameRegistry.register(username, session.getId()))
-            sendMessage(session, new ColoredMessage("Kasutajanimi on keelatud või vales formaadis.", ColoredMessage.ERRORS));
+            sendUsernameMessage(session, "Kasutajanimi on juba võetud.");
         else {
             session.setUsername(username);
             sessionManager.setCookieUsername(session.getId(), username);
             String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha erinevaid käske.", session.getUsername());
-            sendMessage(session, new ColoredMessage(welcome, ColoredMessage.GREEN));
+            sendMessage(session, new MessageFormatter(welcome, MessageFormatter.GREEN));
         }
     }
 
@@ -75,7 +75,7 @@ public class MessageProcessor {
                 .count();
 
         if (otherUsers == 0) {
-            sendMessage(sender, new ColoredMessage("Siin pole kedagi!", ColoredMessage.ORANGE));
+            sendMessage(sender, new MessageFormatter("Siin pole kedagi!", MessageFormatter.ORANGE));
             return;
         }
 
@@ -87,10 +87,10 @@ public class MessageProcessor {
         sessionManager.getAllSessions().stream()
                 .filter(s -> sender.getCurrentRoom().equals(s.getCurrentRoom()))
                 .filter(s -> s.getWebSocketSession() != null && s.getWebSocketSession().isOpen())
-                .forEach(s -> sendMessage(s, new ColoredMessage(formatted, WET_ASPHALT)));
+                .forEach(s -> sendMessage(s, new MessageFormatter(formatted, WET_ASPHALT)));
     }
 
-    public void sendMessage(ClientSession session, ColoredMessage msg) {
+    public void sendMessage(ClientSession session, MessageFormatter msg) {
         try {
             String json = objectMapper.writeValueAsString(msg);
             session.getWebSocketSession().sendMessage(new TextMessage(json));
@@ -98,5 +98,14 @@ public class MessageProcessor {
             logger.error("Sõnumi saatmisel tekkis error", e);
         }
     }
+
+    private void sendUsernameMessage(ClientSession session, String msg) {
+        try {
+            session.getWebSocketSession().sendMessage(new TextMessage(msg));
+        } catch (Exception e) {
+            logger.error("Sõnumi saatmisel tekkis error", e);
+        }
+    }
+
 
 }

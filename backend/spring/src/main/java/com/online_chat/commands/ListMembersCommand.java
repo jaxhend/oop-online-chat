@@ -3,21 +3,21 @@ package com.online_chat.commands;
 import com.online_chat.model.ChatRoom;
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.ClientSessionManager;
-import com.online_chat.service.ColoredMessage;
+import com.online_chat.service.MessageFormatter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SeeMembersCommand implements Command {
+public class ListMembersCommand implements Command {
 
     private final ClientSessionManager sessionManager;
 
-    public SeeMembersCommand(ClientSessionManager sessionManager) {
+    public ListMembersCommand(ClientSessionManager sessionManager) {
         this.sessionManager = sessionManager;
     }
 
     @Override
-    public ColoredMessage execute(ClientSession session, String[] args) {
+    public MessageFormatter execute(ClientSession session, String[] args) {
         ChatRoom room = session.getCurrentRoom();
         List<String> usernames;
         if (room == null) {
@@ -28,9 +28,9 @@ public class SeeMembersCommand implements Command {
                     .collect(Collectors.toList());
         }
 
-        return new ColoredMessage("Aktiivsed kasutajad: " + usernames.stream()
+        return new MessageFormatter("Aktiivsed kasutajad: " + usernames.stream()
                 .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.joining(", ")), ColoredMessage.COMMANDS);
+                .collect(Collectors.joining(", ")), MessageFormatter.COMMANDS);
 
     }
 

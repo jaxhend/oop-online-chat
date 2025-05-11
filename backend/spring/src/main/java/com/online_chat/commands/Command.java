@@ -2,10 +2,10 @@ package com.online_chat.commands;
 
 
 import com.online_chat.model.ClientSession;
-import com.online_chat.service.ColoredMessage;
+import com.online_chat.service.MessageFormatter;
 
 public interface Command {
-    ColoredMessage execute(ClientSession session, String[] args);
+    MessageFormatter execute(ClientSession session, String[] args);
 
     boolean validCommand(String[] args);
 

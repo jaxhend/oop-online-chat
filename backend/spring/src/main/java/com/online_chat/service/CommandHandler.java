@@ -18,12 +18,12 @@ public class CommandHandler {
         commands.put("/join", new JoinRoomCommand(chatRoomManager));
         commands.put("/leave", new LeaveCommand(chatRoomManager));
         commands.put("/chatrooms", new SeeChatroomsCommand(chatRoomManager));
-        commands.put("/members", new SeeMembersCommand(sessionManager));
+        commands.put("/members", new ListMembersCommand(sessionManager));
         commands.put("/private", new PrivateJoinCommand(chatRoomManager, sessionManager));
         commands.put("/help", new HelpCommand());
     }
 
-    public ColoredMessage handle(ClientSession session, String input) {
+    public MessageFormatter handle(ClientSession session, String input) {
         String[] parts = input.split(" ");
 
         Command command = commands.get(parts[0].toLowerCase());
@@ -31,6 +31,6 @@ public class CommandHandler {
             return command.execute(session, parts);
         }
 
-        return new ColoredMessage("Tundmatu käsk: " + parts[0] + ". Kasuta /help, et näha käske.", ColoredMessage.ERRORS);
+        return new MessageFormatter("Tundmatu käsk: " + parts[0] + ". Kasuta /help, et näha käske.", MessageFormatter.ERRORS);
     }
 }

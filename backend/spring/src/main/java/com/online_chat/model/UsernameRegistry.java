@@ -21,7 +21,7 @@ public class UsernameRegistry {
         RegistryEntry existing = registeredNames.get(username);
 
         if (existing != null) {
-            if (existing.sessionId().equals(sessionId)) {
+            if (existing.sessionId().equalsIgnoreCase(sessionId)) {
                 return true;
             }
 

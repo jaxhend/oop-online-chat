@@ -16,12 +16,12 @@ import java.util.List;
 
 
 @RestController
-public class InfoController {
+public class ApplicationInfoController {
     private final RssScraper rssScraper;
     private final WeatherAPI weatherAPI;
     private final DeltaJsoupScraper deltaJsoupScraper;
 
-    public InfoController(RssScraper rssScraper, WeatherAPI weatherAPI, DeltaJsoupScraper deltaJsoupScraper) {
+    public ApplicationInfoController(RssScraper rssScraper, WeatherAPI weatherAPI, DeltaJsoupScraper deltaJsoupScraper) {
         this.rssScraper = rssScraper;
         this.weatherAPI = weatherAPI;
         this.deltaJsoupScraper = deltaJsoupScraper;

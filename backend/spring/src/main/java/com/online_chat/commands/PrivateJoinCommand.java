@@ -4,7 +4,7 @@ package com.online_chat.commands;
 import com.online_chat.model.ChatRoomManager;
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.ClientSessionManager;
-import com.online_chat.service.ColoredMessage;
+import com.online_chat.service.MessageFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;
@@ -26,23 +26,23 @@ public class PrivateJoinCommand implements Command {
     }
 
     @Override
-    public ColoredMessage execute(ClientSession session, String[] args) {
+    public MessageFormatter execute(ClientSession session, String[] args) {
         // kontrollime kasutaja sisendit, et vastaks nõuetele
         if (validCommand(args))
-            return new ColoredMessage("Kasutus: /private <kasutajanimi>", ColoredMessage.ERRORS);
+            return new MessageFormatter("Kasutus: /private <kasutajanimi>", MessageFormatter.ERRORS);
 
         if (args[1].equalsIgnoreCase(session.getUsername()))
-            return new ColoredMessage("Sa ei saa luua privaatvestlust iseendaga", ColoredMessage.ERRORS);
+            return new MessageFormatter("Sa ei saa luua privaatvestlust iseendaga", MessageFormatter.ERRORS);
 
         ClientSession target = sessionManager.getAllSessions().stream()
                 .filter(s -> args[1].equalsIgnoreCase(s.getUsername()))
                 .findFirst().orElse(null);
 
         if (target == null)
-            return new ColoredMessage("Ei leitud kasutajat '" + args[1] + "'", ColoredMessage.ERRORS);
+            return new MessageFormatter("Ei leitud kasutajat '" + args[1] + "'", MessageFormatter.ERRORS);
 
         if (session.getCurrentRoom() != null && session.getCurrentRoom().equals(target.getCurrentRoom()))
-            return new ColoredMessage("Oled juba privaatvestluses " + args[1], ColoredMessage.ERRORS);
+            return new MessageFormatter("Oled juba privaatvestluses " + args[1], MessageFormatter.ERRORS);
 
         // loome privaatse ruumi
         String roomId = buildPrivateRoomId(session.getUsername(), args[1]);
@@ -59,7 +59,7 @@ public class PrivateJoinCommand implements Command {
         String text = existed
                 ? "Liitusid olemasoleva privaatvestlusega kasutajaga \"" + args[1] + "\"."
                 : "Privaatvestlus kasutajaga \"" + args[1] + "\" on loodud.";
-        return new ColoredMessage(text, ColoredMessage.GREEN);
+        return new MessageFormatter(text, MessageFormatter.GREEN);
     }
 
     // Teisele osapoolele teavituse saatmine
@@ -68,7 +68,7 @@ public class PrivateJoinCommand implements Command {
             try {
                 String text = "Kasutaja '" + fromUsername + "' alustas sinuga privaatvestlust. " +
                         "Liitumiseks kasuta käsku: /private " + fromUsername;
-                String json = objectMapper.writeValueAsString(new ColoredMessage(text, ColoredMessage.GREEN));
+                String json = objectMapper.writeValueAsString(new MessageFormatter(text, MessageFormatter.GREEN));
                 target.getWebSocketSession()
                         .sendMessage(new TextMessage(json));
             } catch (IOException e) {

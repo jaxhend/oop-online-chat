@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class ColoredMessage {
+public class MessageFormatter {
     public static final String GREEN = "#43B581";    // Heleroheline
     public static final String COMMANDS = "#9B59B6";     // Lilla
     public static final String ERRORS = "#E74C3C";  // Punane
@@ -16,7 +16,7 @@ public class ColoredMessage {
     @JsonProperty
     private String color;
 
-    public ColoredMessage(String text, String color) {
+    public MessageFormatter(String text, String color) {
         this.text = "[" + currentTime() + "] " + text;
         this.color = color;
     }

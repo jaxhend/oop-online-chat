@@ -14,7 +14,7 @@ import java.util.Map;
 import static com.online_chat.controller.SessionController.cookieName;
 
 @Component
-public class HttpsHandshakeInterceptor implements HandshakeInterceptor {
+public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
