@@ -10,6 +10,7 @@ import useInitialData from "./hooks/useInitialData";
 import "./index.css";
 import AIChatPopover from "@/components/AIChatPanel/AIChatPopover";
 import useWebSocket from "@/hooks/useWebSocket";
+import styles from "./main.css";
 
 export default function OnlineChat() {
     const [usernameAccepted, setUsernameAccepted] = useState(false);
@@ -137,9 +138,15 @@ export default function OnlineChat() {
                 <NewsTicker newsList={newsList} animate={!loading}/>
 
                 <div className="container flex-1 p-5 gap-5 font-sans flex-row">
-                    <div className="fixed-flex-1 border p-3 overflow-y-auto flex flex-col">
-                        <DailyDeals deals={dailyDeals}/>
-                        <WeatherInfo weather={weatherInfo}/>
+
+                    <div className="scraper-info">
+                        <div className={styles["wrapper"]}>
+                            <DailyDeals deals={dailyDeals} />
+                        </div>
+
+                        <div className={styles["wrapper"]}>
+                            <WeatherInfo weather={weatherInfo} />
+                        </div>
                     </div>
 
 
