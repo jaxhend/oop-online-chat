@@ -25,7 +25,7 @@ export default function AIChatPanel({
 
         setTimeout(() => {
             setIsThinking(false);
-        }, 500);
+        }, 0);
     };
 
     useEffect(() => {
