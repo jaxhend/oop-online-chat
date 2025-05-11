@@ -53,7 +53,7 @@ export default function OnlineChat() {
     }, []);
 
 
-    const ws = useWebSocket(sessionId, (e) => {
+    const ws = sessionId ? useWebSocket(sessionId, (e) => {
         // Message handler
         if (e.data === "__heartbeat_pong__") return;
 
@@ -77,9 +77,13 @@ export default function OnlineChat() {
         }
     }, (socket) => {
         console.log("WebSocket ühendatud");
-    });
+    }) : null;
 
     const handleUsernameSubmit = (value) => {
+        if (!ws) {
+            setUsernameError("Puudub sessiooni ID. Proovi lehte värskendada.");
+            return;
+        }
         const socket = ws.current;
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(value);
