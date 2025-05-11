@@ -33,7 +33,7 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
 
         if (!msgColor) return fallback;
 
-        const tooDarkColors = ["#1f2937", "#111827", "#000", "#222", "#43B581", "#34495E"];
+        const tooDarkColors = ["#1f2937", "#111827", "#000", "#222", "#43b581", "#34495e"];
         if (theme === "dark" && tooDarkColors.includes(msgColor.toLowerCase())) {
             return fallback;
         }
