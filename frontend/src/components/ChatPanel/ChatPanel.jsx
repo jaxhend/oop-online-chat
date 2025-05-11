@@ -40,13 +40,15 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
 
         return msgColor;
     }
-    console.log(msg.color);
+
 
     return (
         <div className={`${styles.container} fixed-flex-2 flex flex-col border p-3`}>
             <h2 className={styles.title}>Vestlusplats</h2>
             <div ref={chatLogRef} className={styles.chatLog}>
-                {chatMessages.map((msg, i) => (
+                {chatMessages.map((msg, i) => {
+                    console.log("msg.color:", msg.color);
+                    return(
                     <div
                         key={i} className={styles.message}
                         style={{ color: resolveColor(msg.color)
@@ -54,7 +56,8 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
                     >
                         {msg.text}
                     </div>
-                ))}
+                    );
+                })}
             </div>
             <TerminalInput
                 onSubmit={onSend}
