@@ -3,7 +3,7 @@
     flex-direction: row;
     gap: 1.25rem;
     height: 100%;
-    padding: 1.25rem;
+    padding: 2rem;
 }
 
 .chat-panel {
@@ -26,5 +26,9 @@
 .body {
     overflow: hidden;
     overscroll-behavior: none;
+}
+
+.container {
+
 }
 
