@@ -146,20 +146,9 @@ export default function OnlineChat() {
             <div className="flex flex-col h-screen">
                 <NewsTicker newsList={newsList} animate={!loading}/>
 
-                <div className="container flex-1 p-5 gap-5 font-sans flex-row">
+                <div className="main-layout">
 
-                    <div className="scraper-info">
-                        <div className={"container"}>
-                            <DailyDeals deals={dailyDeals}/>
-                        </div>
-
-                        <div className={"container"}>
-                            <WeatherInfo weather={weatherInfo}/>
-                        </div>
-                    </div>
-
-
-                    <div className="fixed-flex-2 flex flex-col gap-4">
+                    <div className="chat-panel">
 
                         {usernameAccepted && (
                             <ChatPanel
@@ -173,6 +162,16 @@ export default function OnlineChat() {
                                 isActive={true}
                             />
                         )}
+
+                    </div>
+
+                    <div className="info-panel">
+                        <div className={"container"}>
+                            <DailyDeals deals={dailyDeals} />
+                        </div>
+                        <div className={"container"}>
+                            <WeatherInfo weather={weatherInfo} />
+                        </div>
 
                     </div>
                 </div>

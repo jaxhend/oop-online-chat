@@ -21,6 +21,7 @@ export default function UsernameDialog({onSubmit, error}) {
                         isActive={true}
                         onSubmit={onSubmit}
                         showEmojiButton={false}
+                        showTooltip = {false}
                         placeholder={"..."}
                     />
                 </div>

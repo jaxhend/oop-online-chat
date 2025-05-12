@@ -9,7 +9,7 @@
     height: 40px;
     border-radius: 50%;
     background: transparent;
-    border: 1px solid transparent;
+    border: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -40,6 +40,3 @@
     }
 }
 
-[data-theme="dark"] .emoji-trigger {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
