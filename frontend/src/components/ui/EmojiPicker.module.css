@@ -28,7 +28,7 @@
     position: absolute;
     bottom: 3rem;
     right: 0;
-    z-index: 1000;
+    z-index: 9999;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
