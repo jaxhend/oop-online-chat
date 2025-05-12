@@ -10,6 +10,7 @@ import useInitialData from "./hooks/useInitialData";
 import "./index.css";
 import AIChatPopover from "@/components/AIChatPanel/AIChatPopover";
 import useWebSocket from "@/hooks/useWebSocket";
+import styles from "./main.css";
 
 
 export default function OnlineChat() {
