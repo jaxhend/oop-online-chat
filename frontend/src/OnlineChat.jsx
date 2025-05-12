@@ -10,6 +10,7 @@ import useInitialData from "./hooks/useInitialData";
 import "./index.css";
 import AIChatPopover from "@/components/AIChatPanel/AIChatPopover";
 import useWebSocket from "@/hooks/useWebSocket";
+import styles from "./main.css";
 
 
 export default function OnlineChat() {
@@ -22,7 +23,7 @@ export default function OnlineChat() {
     const [isThinking, setIsThinking] = useState(false);
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
-    // const API_URL = "http://localhost:8080";
+    //const API_URL = "http://localhost:8080";
     const API_URL = "https://api.utchat.ee";
     const LLM_URL = "https://llm.utchat.ee/chatbot";
     const {newsList, dailyDeals, weatherInfo, loading} = useInitialData(API_URL);
