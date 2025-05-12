@@ -72,7 +72,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive}) 
                 onSubmit={onSend}
                 isActive={isActive}
                 showEmojiButton={true}
-                showTooltip={true}
+                showHelpIcon={true}
                 placeholder={"Sisesta sõnum..."}
             />
         </div>
