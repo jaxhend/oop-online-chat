@@ -3,7 +3,7 @@ import TerminalInput from "../TerminalInput/TerminalInput";
 import styles from "./UsernameDialog.module.css";
 import utLogo from '../../assets/ut-logo.webp';
 
-export default function UsernameDialog({ onSubmit, error }) {
+export default function UsernameDialog({onSubmit, error}) {
     return (
         <div className={styles.overlay}>
             <div className={styles["center-wrapper"]}>
@@ -15,7 +15,7 @@ export default function UsernameDialog({ onSubmit, error }) {
                         alt="UT logo"
                     />
                 </div>
-                <div className={styles["username-entry"]}>
+                <div className={`${styles["username-entry"]} ${styles.visible}`}>
                     <h2 className={styles["username-title"]}>Sisesta kasutajanimi</h2>
                     <TerminalInput
                         isActive={true}

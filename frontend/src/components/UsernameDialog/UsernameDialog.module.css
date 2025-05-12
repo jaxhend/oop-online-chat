@@ -31,27 +31,33 @@
     width: auto;
 }
 
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .username-entry {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
+    opacity: 0;
+}
+
+.visible {
+    animation: fade 0.5s ease forwards;
 }
 
 .username-title {
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-color, #fff);
-}
-
-.username-input {
-    padding: 0.75rem 1rem;
-    border: 1px solid #3b82f6; /* blue-500 */
-    border-radius: 6px;
-    font-size: 1rem;
-    background-color: transparent;
-    color: var(--text-color, #fff);
-    outline: none;
 }
 
 .username-input::placeholder {
@@ -62,7 +68,7 @@
     background-color: #1f1f1f;
     padding: 2rem;
     border-radius: 1rem;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     width: 90%;
     max-width: 400px;
     color: white;
@@ -94,7 +100,7 @@
     text-align: center;
 }
 
-.utlogo{
+.utlogo {
     width: 100%;
     max-width: 150px;
     height: 100%;
@@ -103,7 +109,7 @@
     margin-left: 3.5rem
 }
 
-.utname{
+.utname {
     margin-bottom: 1rem;
     margin-left: 5rem;
 }

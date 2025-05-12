@@ -1,4 +1,4 @@
-import { Sun, Moon } from "lucide-react";
+import {Moon, Sun} from "lucide-react";
 import useTheme from "@/hooks/useTheme";
 import styles from "../ThemeToggle/ThemeToggle.module.css"
 import {AnimatePresence, motion} from "framer-motion";
@@ -11,9 +11,9 @@ export default function ThemeToggle() {
             onClick={toggleTheme}
             className={styles["button"]}
             title="Toggle teema"
-            whileHover={{scale: 1.1, rotate:5}}
+            whileHover={{scale: 1.1, rotate: 5}}
             whileTap={{scale: 0.95}}
-            transition={{type: "spring", stiffness:300, damping:20}}
+            transition={{type: "spring", stiffness: 300, damping: 20}}
         >
             <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -25,7 +25,7 @@ export default function ThemeToggle() {
                     transition={{duration: 0.3}}
 
                 >
-                    {theme === "dark" ? <Sun /> : <Moon  />}
+                    {theme === "dark" ? <Sun/> : <Moon/>}
                 </motion.div>
             </AnimatePresence>
         </motion.button>

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "./WeatherInfo.module.css";
 
-export default function WeatherInfo({ weather }) {
+export default function WeatherInfo({weather}) {
     if (!weather || !weather.temperature) {
         return <p>Ilma andmeid ei ole saadaval</p>;
     }
@@ -12,7 +12,7 @@ export default function WeatherInfo({ weather }) {
             <p className={styles.paragraph}>Temperatuur: {weather.temperature}</p>
             {weather.feelsLike && <p className={styles.paragraph}>Tundub nagu: {weather.feelsLike}</p>}
             {weather.precipitation && <p className={styles.paragraph}>Sademed: {weather.precipitation}</p>}
-            {weather.iconUrl && <img src={weather.iconUrl} alt="Ilma ikoon" className={styles.icon} />}
+            {weather.iconUrl && <img src={weather.iconUrl} alt="Ilma ikoon" className={styles.icon}/>}
         </div>
     );
 }

@@ -28,7 +28,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final ClientSessionManager sessionManager;
     private final MessageProcessor messageProcessor;
     private final ChatRoomManager chatRoomManager;
-    private final int MAX_MESSAGE_LENGTH = 500;
 
 
     public WebSocketHandler(ClientSessionManager sessionManager, MessageProcessor messageProcessor, ChatRoomManager chatRoomManager) {
@@ -100,10 +99,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
         if (clientSession == null) return;
 
         String payload = message.getPayload().trim();
-        if (payload.length() > MAX_MESSAGE_LENGTH) {
-            messageProcessor.sendMessage(clientSession, new MessageFormatter("Sõnum on liiga pikk. Proovi uuesti!", MessageFormatter.ERRORS));
-            return;
-        }
 
         // Websocket ping pong, et ühendus ei kaoks
         if ("__heartbeat_ping__".equalsIgnoreCase(payload)) {

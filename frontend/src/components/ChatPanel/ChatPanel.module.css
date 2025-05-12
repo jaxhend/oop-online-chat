@@ -1,12 +1,14 @@
 .container {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 1.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    width: 100%;
+    border: 3px solid var(--border-color);
+    border-radius: 1rem;
     background-color: var(--bg-color);
-    min-width: 300px;
+    box-sizing: border-box;
 }
 
 .title {
@@ -28,30 +30,9 @@
     white-space: pre-wrap;
 }
 
+
 .message {
     margin-bottom: 0.5rem;
-}
-
-.inputGroup {
-    display: flex;
-    gap: 0.75rem;
-}
-
-.textarea {
-    border: 1px solid var(--border-color);
-    padding: 1rem;
-    resize: none;
-    flex: 1;
-    height: 2.5rem;
-    background-color: var(--input-bg);
-    color: var(--text-color);
-}
-
-.button {
-    border: 1px solid var(--border-color);
-    padding: 0.5rem 1rem;
-    height: 2.5rem;
-    cursor: pointer;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    word-break: break-word;
+    max-width: 100%;
 }

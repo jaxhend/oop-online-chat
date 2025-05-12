@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import {useEffect, useRef, useState} from "react";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
-import { motion, AnimatePresence } from "framer-motion";
+import {AnimatePresence, motion} from "framer-motion";
 import styles from "../ui/EmojiPicker.module.css";
 
-export default function EmojiPicker({ onSelect }) {
+export default function EmojiPicker({onSelect}) {
     const [open, setOpen] = useState(false);
     const wrapperRef = useRef();
 
@@ -24,8 +24,8 @@ export default function EmojiPicker({ onSelect }) {
                 className={styles["emoji-trigger"]}
                 title="Lisa emoji"
                 onClick={() => setOpen((prev) => !prev)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{scale: 1.05}}
+                whileTap={{scale: 0.95}}
             >
                 😀
             </motion.button>
@@ -34,15 +34,15 @@ export default function EmojiPicker({ onSelect }) {
                 {open && (
                     <motion.div
                         className={styles["emoji-picker"]}
-                        initial={{ opacity: 0, scale: 0.3, y: 20, originX: 1, originY: 1 }}
-                        animate={{ opacity: 1, scale: 1,  y: 0 }}
-                        exit={{ opacity: 0, scale:0.3, y: 8 }}
-                        transition={{ duration: 0.25, ease: "easeOut" }}
+                        initial={{opacity: 0, scale: 0.3, y: 20, originX: 1, originY: 1}}
+                        animate={{opacity: 1, scale: 1, y: 0}}
+                        exit={{opacity: 0, scale: 0.3, y: 8}}
+                        transition={{duration: 0.25, ease: "easeOut"}}
                     >
                         <Picker data={data} onEmojiSelect={(e) => {
                             onSelect(e);
                             setOpen(false);
-                        }} theme="dark" />
+                        }} theme="dark"/>
                     </motion.div>
                 )}
             </AnimatePresence>

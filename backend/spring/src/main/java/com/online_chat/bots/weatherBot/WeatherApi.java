@@ -15,12 +15,12 @@ import java.net.URL;
 import java.util.Scanner;
 
 @Component
-public class WeatherAPI {
+public class WeatherApi {
 
     @Value("${weather.key}")
     private String API_KEY;
     private static final String ENDPOINT = "https://api.weatherapi.com/v1/current.json?key=%s&q=Tartu,Estonia&lang=et";
-    private static final Logger logger = LoggerFactory.getLogger(WeatherAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(WeatherApi.class);
     private WeatherInfo latestWeather;
 
     @PostConstruct

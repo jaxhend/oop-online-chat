@@ -39,6 +39,13 @@ public class SessionController {
             sessionCookie.setAttribute("SameSite", "None");
             sessionCookie.setMaxAge(LOCK_DAYS * 24 * 60 * 60);
             response.addCookie(sessionCookie);
+
+            // Localhost testimiseks
+//            Cookie sessionCookie = new Cookie(cookieName, sessionId);
+//            sessionCookie.setPath("/");
+//            sessionCookie.setMaxAge(LOCK_DAYS * 24 * 60 * 60);
+//            response.addCookie(sessionCookie);
+
         }
 
         Map<String, String> sessionData = new HashMap<>();

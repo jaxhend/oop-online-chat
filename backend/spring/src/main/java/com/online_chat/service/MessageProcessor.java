@@ -1,7 +1,7 @@
 package com.online_chat.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.online_chat.bots.weatherBot.WeatherAPI;
+import com.online_chat.bots.weatherBot.WeatherApi;
 import com.online_chat.model.ClientSession;
 import com.online_chat.model.ClientSessionManager;
 import com.online_chat.model.UsernameRegistry;
@@ -17,7 +17,7 @@ import static com.online_chat.service.MessageFormatter.WET_ASPHALT;
 public class MessageProcessor {
 
     public static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final Logger logger = LoggerFactory.getLogger(WeatherAPI.class);
+    private static final Logger logger = LoggerFactory.getLogger(WeatherApi.class);
     private final CommandHandler commandHandler;
     private final ClientSessionManager sessionManager;
     private final UsernameRegistry usernameRegistry;
@@ -32,16 +32,22 @@ public class MessageProcessor {
 
     // Töötleb kasutaja saadetud sõnumi ning edastab selle
     public void processAndBroadcast(ClientSession session, String message) {
+        int MAX_MESSAGE_LENGTH = 500;
         if (session.getUsername() == null || session.getUsername().isBlank()) {
             handleUsernameAssignment(session, message);
+
+        } else if (message.length() > MAX_MESSAGE_LENGTH) {
+            sendMessage(session, new MessageFormatter("Sõnum on liiga pikk. Proovi uuesti!", MessageFormatter.ERRORS));
 
         } else if (message.startsWith("/")) {
             MessageFormatter response = commandHandler.handle(session, message);
             sendMessage(session, response);
 
-        } else if (session.getCurrentRoom() != null) {
-            broadcastToRoom(session, message);
-
+        } else if (session.getCurrentRoom() != null) { // Tavasõnumi väljasaatmine.
+            String msg = message.replace("\n", " ")
+                    .replace("\r", " ")
+                    .replaceAll("\\s+", " ");
+            broadcastToRoom(session, msg);
         } else {
             String error = """
                     Sa ei ole üheski vestlusruumis. Kasuta käske:
@@ -55,8 +61,19 @@ public class MessageProcessor {
     public void handleUsernameAssignment(ClientSession session, String message) {
         String username = message.trim();
 
-        if (username.isBlank() || username.contains("/") || username.contains(" ") || username.contains("-") || username.length() > 30)
-            sendUsernameMessage(session, "Kasutajanimi on keelatud või vales formaadis.");
+        if (username.contains("/"))
+            sendUsernameMessage(session, "Kasutajanimi ei tohi '/' sisaldada.");
+        else if (username.length() <= 3)
+            sendUsernameMessage(session, "Kasutajanimi peab olema vähemalt 4 tähemärki.");
+        else if (username.length() > 30)
+            sendUsernameMessage(session, "Kasutajanimi peab olema vähem kui 30 tähemärki.");
+        else if (username.contains("-"))
+            sendUsernameMessage(session, "Kasutajanimi ei tohi '-' sisaldada.");
+        else if (username.contains(" "))
+            sendUsernameMessage(session, "Kasutajanimi ei tohi tühikut sisaldada.");
+        else if (username.isBlank())
+            sendUsernameMessage(session, "Kasutajanimi ei saa tühi olla.");
+
         else if (!usernameRegistry.register(username, session.getId()))
             sendUsernameMessage(session, "Kasutajanimi on juba võetud.");
         else {

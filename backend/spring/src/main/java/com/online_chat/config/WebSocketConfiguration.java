@@ -26,5 +26,8 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
                 .addHandler(chatHandler, "/ws")
                 .addInterceptors(webSocketHandshakeInterceptor) // WebSocketi ühendused aadressil /ws käsitletakse ChatwebsocketHandleri kaudu
                 .setAllowedOrigins("https://www.utchat.ee");
+
+                // Localhosti jaoks
+//                .setAllowedOrigins("*");
     }
 }

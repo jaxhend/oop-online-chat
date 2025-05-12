@@ -1,9 +1,9 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import styles from "./ChatPanel.module.css";
 import TerminalInput from "../TerminalInput/TerminalInput";
 import useTheme from "@/hooks/useTheme";
 
-export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }) {
+export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive}) {
     const [userScrolledUp, setUserScrolledUp] = useState(false);
     const [theme] = useTheme();
 
@@ -17,7 +17,7 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
         };
         chatLog.addEventListener("scroll", handleScroll);
         return () => {
-            chatLog.removeEventListener("scroll", handleScroll())
+            chatLog.removeEventListener("scroll", handleScroll)
         };
     }, [chatLogRef]);
 
@@ -52,19 +52,19 @@ export default function ChatPanel({ chatMessages, onSend, chatLogRef, isActive }
 
 
     return (
-        <div className={`${styles.container} fixed-flex-2 flex flex-col border p-3`}>
+        <div className={styles.container}>
             <h2 className={styles.title}>Vestlusplats</h2>
             <div ref={chatLogRef} className={styles.chatLog}>
                 {chatMessages.map((msg, i) => {
-                    console.log("msg.color:", msg.color);
-                    return(
-                    <div
-                        key={i} className={styles.message}
-                        style={{ color: resolveColor(msg.color)
-                    }}
-                    >
-                        {msg.text}
-                    </div>
+                    return (
+                        <div
+                            key={i} className={styles.message}
+                            style={{
+                                color: resolveColor(msg.color)
+                            }}
+                        >
+                            {msg.text}
+                        </div>
                     );
                 })}
             </div>

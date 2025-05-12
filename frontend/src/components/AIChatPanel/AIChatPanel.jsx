@@ -1,7 +1,6 @@
-import React, {useState, useEffect, useRef} from "react";
-import { Textarea } from "@/components/ui/chat/textarea";
+import React, {useEffect, useRef, useState} from "react";
+import {Textarea} from "@/components/ui/textarea";
 import styles from "./AIChatPanel.module.css";
-import { Skeleton } from "@/components/ui/Skeleton";
 
 export default function AIChatPanel({
                                         botInput,
@@ -9,36 +8,72 @@ export default function AIChatPanel({
                                         onBotSend,
                                         chatHistory,
                                         isActive,
+                                        isThinking
                                     }) {
-    const [isThinking, setIsThinking] = useState(false);
-    const [response, setResponse] = useState("");
     const chatLogRef = useRef(null);
+    const lastInputRef = useRef("");
+    const [dots, setDots] = useState("");
+    const [charCount, setCharCount] = useState(0);
+    const [needsRestoration, setNeedsRestoration] = useState(false);
+    const MAX_MESSAGE_LENGTH = 300;
+
+
+    useEffect(() => {
+        lastInputRef.current = botInput;
+    }, [botInput]);
+
+
+    useEffect(() => {
+        if (isThinking) {
+            setNeedsRestoration(true);
+            // Input välja eelmise seisundi taastamine
+        } else if (needsRestoration && botInput === '') {
+            if (lastInputRef.current) {
+                onBotInputChange({target: {value: lastInputRef.current}});
+            }
+            setNeedsRestoration(false);
+        }
+    }, [isThinking, botInput, needsRestoration]);
+
 
     const handleSend = async () => {
-        if (!botInput.trim()) return;
-
-
-        setIsThinking(true);
-        setResponse("");
-
-        await onBotSend(botInput);
-
-        setTimeout(() => {
-            setIsThinking(false);
-        }, 0);
+        if (!botInput.trim() || isThinking || charCount > MAX_MESSAGE_LENGTH) return;
+        const processedMsg = botInput.replace(/\n/g, " ").replace(/\r/g, " ");
+        onBotSend(processedMsg);
     };
 
     useEffect(() => {
-        if (!isThinking) {
-            setResponse("");
-        }
-    }, [isThinking]);
+        setCharCount(botInput.length);
+    }, [botInput]);
+
+
+    const getCharCountColor = () => {
+        if (charCount > MAX_MESSAGE_LENGTH) return styles.charCountExceeded;
+        if (charCount > MAX_MESSAGE_LENGTH * 0.9) return styles.charCountWarning;
+        return styles.charCount;
+    };
 
     useEffect(() => {
         const el = chatLogRef.current;
         if (!el) return;
         el.scrollTop = el.scrollHeight;
     }, [chatHistory, isThinking])
+
+
+    useEffect(() => {
+        if (!isThinking) {
+            setDots("");
+            return;
+        }
+        const interval = setInterval(() => {
+            setDots(prev => {
+                if (prev.length >= 5) return "";
+                return prev + ".";
+            });
+        }, 500);
+        return () => clearInterval(interval);
+    }, [isThinking]);
+
 
     return (
         <div className={styles.container}>
@@ -53,10 +88,7 @@ export default function AIChatPanel({
 
                 {isThinking && (
                     <div className="flex flex-col gap-2 mt-2">
-                        <span className="text-muted-foreground text-sm">AI mõtleb...</span>
-                        <Skeleton className="h-4 w-3/4" />
-                        <Skeleton className="h-4 w-2/3" />
-                        <Skeleton className="h-4 w-1/2" />
+                        <span className="text-muted-foreground text-sm">AI mõtleb{dots}</span>
                     </div>
                 )}
             </div>
@@ -73,13 +105,17 @@ export default function AIChatPanel({
                             handleSend();
                         }
                     }}
-                    className={styles.textarea}
-                    placeholder="Sisesta küsimus..."
+                    className={`${styles.textarea} ${styles.customScrollbar}`}
+                    placeholder={"Sisesta küsimus..."}
                 />
+                <div className={getCharCountColor()}>
+                    {charCount}/{MAX_MESSAGE_LENGTH}
+                </div>
                 <button
                     onClick={handleSend}
-                    className={styles.button}
-                    disabled={!isActive}
+                    className={`${styles.button} 
+                                ${(isThinking || charCount > MAX_MESSAGE_LENGTH) ? styles.notAllowed : ''}`}
+                    disabled={!isActive || isThinking || !botInput.trim() || charCount > MAX_MESSAGE_LENGTH}
                 >
                     Saada
                 </button>

@@ -10,7 +10,7 @@ import useInitialData from "./hooks/useInitialData";
 import "./index.css";
 import AIChatPopover from "@/components/AIChatPanel/AIChatPopover";
 import useWebSocket from "@/hooks/useWebSocket";
-import styles from "./main.css";
+
 
 export default function OnlineChat() {
     const [usernameAccepted, setUsernameAccepted] = useState(false);
@@ -22,13 +22,16 @@ export default function OnlineChat() {
     const [isThinking, setIsThinking] = useState(false);
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
-    const {newsList, dailyDeals, weatherInfo, loading} = useInitialData("https://api.utchat.ee");
+    // const API_URL = "http://localhost:8080";
+    const API_URL = "https://api.utchat.ee";
+    const LLM_URL = "https://llm.utchat.ee/chatbot";
+    const {newsList, dailyDeals, weatherInfo, loading} = useInitialData(API_URL);
 
     // Küsime serverilt sessionId ning küpsise.
     useEffect(() => {
         const fetchSession = async () => {
             try {
-                const response = await fetch('https://api.utchat.ee/session/init', {
+                const response = await fetch(API_URL + '/session/init', {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -53,7 +56,7 @@ export default function OnlineChat() {
     }, []);
 
 
-    const ws = sessionId ? useWebSocket(sessionId, (e) => {
+    const ws = useWebSocket(sessionId, (e) => {
         // Message handler
         if (e.data === "__heartbeat_pong__") return;
 
@@ -65,19 +68,21 @@ export default function OnlineChat() {
             }
             setUsernameError("");
 
-            if (msg.text?.toLowerCase().includes("kasutajanimi on ")) {
-                setUsernameError(msg.text);
+            setChatMessages((prev) => [...prev, msg]);
+        } catch {
+            const text = e.data;
+
+            if (text.includes("Kasutajanimi")) {
+                setUsernameError(text);
                 setUsernameAccepted(false);
                 return;
             }
 
-            setChatMessages((prev) => [...prev, msg]);
-        } catch {
             setChatMessages((prev) => [...prev, {text: e.data}]);
         }
     }, (socket) => {
         console.log("WebSocket ühendatud");
-    }) : null;
+    });
 
     const handleUsernameSubmit = (value) => {
         if (!ws) {
@@ -102,7 +107,7 @@ export default function OnlineChat() {
         setIsThinking(true);
 
         try {
-            const res = await fetch("https://llm.utchat.ee/chatbot", {
+            const res = await fetch(LLM_URL, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({query: trimmed}),
@@ -128,7 +133,7 @@ export default function OnlineChat() {
 
     return (
         <>
-            {!loading && !usernameAccepted && (
+            {!usernameAccepted && (
                 <UsernameDialog onSubmit={handleUsernameSubmit} error={usernameError}/>
             )}
 
@@ -145,11 +150,11 @@ export default function OnlineChat() {
 
                     <div className="scraper-info">
                         <div className={"container"}>
-                            <DailyDeals deals={dailyDeals} />
+                            <DailyDeals deals={dailyDeals}/>
                         </div>
 
                         <div className={"container"}>
-                            <WeatherInfo weather={weatherInfo} />
+                            <WeatherInfo weather={weatherInfo}/>
                         </div>
                     </div>
 
@@ -160,8 +165,8 @@ export default function OnlineChat() {
                             <ChatPanel
                                 chatMessages={chatMessages}
                                 onSend={(msg) => {
-                                    if (ws && ws.readyState === WebSocket.OPEN) {
-                                        ws.send(msg);
+                                    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+                                        ws.current.send(msg);
                                     }
                                 }}
                                 chatLogRef={chatLogRef}

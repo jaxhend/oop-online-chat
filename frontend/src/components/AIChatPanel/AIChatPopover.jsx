@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useRef, use} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import AIChatPanel from "@/components/AIChatPanel/AIChatPanel";
 import styles from "./AIChatPopover.module.css";
-import { motion, AnimatePresence } from "framer-motion";
+import {AnimatePresence, motion} from "framer-motion";
 
 export default function AIChatPopover({
                                           chatHistory,
@@ -34,18 +34,18 @@ export default function AIChatPopover({
         <div className={styles.wrapper}>
             <AnimatePresence>
                 {!visible && (
-                <motion.button
-                    className={styles["bot-button"]}
-                    onClick={togglePopover}
-                    title="Ava AI Juturobot"
-                    initial={{opacity: 0, y:20}}
-                    animate={{opacity:1, y:0}}
-                    transition={{duration:0.6, ease:"easeOut"}}
-                    whileHover={{scale:1.1}}
+                    <motion.button
+                        className={styles["bot-button"]}
+                        onClick={togglePopover}
+                        title="Ava AI Juturobot"
+                        initial={{opacity: 0, y: 20}}
+                        animate={{opacity: 1, y: 0}}
+                        transition={{duration: 0.6, ease: "easeOut"}}
+                        whileHover={{scale: 1.1}}
 
-                >
-                    🤖
-                </motion.button>
+                    >
+                        🤖
+                    </motion.button>
                 )}
             </AnimatePresence>
 
@@ -54,10 +54,10 @@ export default function AIChatPopover({
                     <motion.div
                         className={styles["ai-chat-popover"]}
                         ref={popoverRef}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        transition={{ duration: 0.3 }}
+                        initial={{opacity: 0, y: 10}}
+                        animate={{opacity: 1, y: 0}}
+                        exit={{opacity: 0, y: 10}}
+                        transition={{duration: 0.3}}
                     >
                         <AIChatPanel
                             isThinking={isThinking}

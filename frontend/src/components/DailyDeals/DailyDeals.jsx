@@ -1,7 +1,7 @@
 import React from "react";
 import styles from './DailyDeals.module.css';
 
-export default function DailyDeals({ deals }) {
+export default function DailyDeals({deals}) {
     return (
         <div className={styles.section}>
             <h4 className={styles.title}>

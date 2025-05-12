@@ -1,7 +1,7 @@
-import React, { useLayoutEffect, useMemo, useRef } from "react";
+import React, {useLayoutEffect, useMemo, useRef} from "react";
 import styles from './NewsTicker.module.css';
 
-const NewsTicker = React.memo(({ newsList, animate }) => {
+const NewsTicker = React.memo(({newsList, animate}) => {
     const tickerRef = useRef(null);
     const repeatedNews = useMemo(() => [...newsList, ...newsList], [newsList]);
 

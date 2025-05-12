@@ -1,26 +1,27 @@
 .container {
     display: flex;
     flex-direction: column;
-    flex: 1;
+    flex: 1 1 auto;
     padding: 1.5rem;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background-color: var(--bg-color);
-    min-width: 250px;
-    max-height: 100%;
+    width: 500px;
+    height: 600px;
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .title {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1rem;
 }
 
 .chatLog {
     flex-grow: 1;
+    min-height: 300px;
     max-height: 400px;
-    min-height: 400px;
     overflow-y: auto;
     padding: 1rem;
     background-color: var(--bg-color);
@@ -30,8 +31,10 @@
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-wrap: break-word;
-
+    box-sizing: border-box;
+    word-break: break-word;
 }
+
 
 .message {
     margin-bottom: 0.5rem;
@@ -49,16 +52,17 @@
 
 .textarea {
     border: 1px solid var(--border-color);
-    padding: 1rem;
+    padding: 0.8rem;
     resize: none;
     flex: 1;
-    height: 2.5rem;
+    height: 3rem;
     background-color: var(--input-bg);
     color: var(--text-color);
-    font-size: 1.25rem;
+    font-size: 1rem;
     border-radius: 4px;
     font-family: inherit;
 }
+
 
 .button {
     border: 1px solid var(--border-color);
@@ -72,32 +76,43 @@
     transition: background-color 0.2s ease;
 }
 
-.button:hover {
+.button:not(.notAllowed):hover {
     background-color: var(--card-bg);
 }
 
-.thinkingContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1rem;
-    visibility: visible;
-    opacity: 1;
+.button.notAllowed {
+    opacity: 0.8;
+    cursor: not-allowed;
 }
 
-.thinkingContainer p {
-    font-size: 16px;
+.button.notAllowed:hover {
+    background-color: rgba(255, 0, 0, 0.15);
+    border-color: rgba(255, 0, 0, 0.3);
+}
+
+.charCount {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    font-size: 0.80rem;
     color: #888;
-    margin: 0.5rem 0;
+    font-weight: bold;
 }
 
-.responseContainer {
-    margin-top: 1rem;
-    font-size: 16px;
+.charCountWarning {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    font-size: 0.80rem;
+    color: #ccb800;
+    font-weight: bold;
 }
 
-.progress {
-    width: 100%;
-    margin: 0.5rem 0;
+.charCountExceeded {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    font-size: 0.80rem;
+    color: red;
+    font-weight: bold;
 }

@@ -1,9 +1,11 @@
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from "react";
 
 export default function useWebSocket(sessionId, onMessage, onOpen) {
     const socketRef = useRef(null);
 
     const socketUrl = `wss://api.utchat.ee/ws?sessionId=${sessionId}`;
+    // Localhost testimiseks
+    // const socketUrl = `ws://localhost:8080/ws?sessionId=${sessionId}`;
 
     useEffect(() => {
         if (!sessionId) return;

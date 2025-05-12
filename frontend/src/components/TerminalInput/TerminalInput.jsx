@@ -1,8 +1,8 @@
-import {useRef, useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import styles from "./TerminalInput.module.css"
 import EmojiPicker from "@/components/ui/EmojiPicker";
 
-export default function TerminalInput({ onSubmit, isActive, showEmojiButton = false, placeholder = "Sisesta sõnum..." }) {
+export default function TerminalInput({onSubmit, isActive, showEmojiButton = false, placeholder = "Sisesta sõnum..."}) {
     const inputRef = useRef(null);
     const [isEmpty, setIsEmpty] = useState(true);
 
@@ -60,7 +60,7 @@ export default function TerminalInput({ onSubmit, isActive, showEmojiButton = fa
                 className={`${styles.input} ${isEmpty ? styles.empty : ''}`}
                 data-placeholder={placeholder}
             />
-            {showEmojiButton && <EmojiPicker onSelect={(emoji) => insertEmojiAtCaret(emoji.native)} />}
+            {showEmojiButton && <EmojiPicker onSelect={(emoji) => insertEmojiAtCaret(emoji.native)}/>}
         </div>
     );
 }

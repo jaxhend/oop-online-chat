@@ -35,7 +35,7 @@
 }
 
 @media (max-width: 640px) {
-    .emoji-trigger{
+    .emoji-trigger {
         display: none;
     }
 }
