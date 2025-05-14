@@ -19,7 +19,8 @@ export default function AIChatPanel({
 
 
     useEffect(() => {
-        lastInputRef.current = botInput;
+        if(isThinking)
+            lastInputRef.current = botInput;
     }, [botInput]);
 
 
@@ -33,7 +34,7 @@ export default function AIChatPanel({
             }
             setNeedsRestoration(false);
         }
-    }, [isThinking, botInput, needsRestoration]);
+    }, [isThinking, botInput, needsRestoration, onBotInputChange]);
 
 
     const handleSend = async () => {
@@ -105,7 +106,7 @@ export default function AIChatPanel({
                             handleSend();
                         }
                     }}
-                    className={`${styles.textarea} ${styles.customScrollbar}`}
+                    className={`${styles.textarea}`}
                     placeholder={"Sisesta küsimus..."}
                 />
                 <div className={getCharCountColor()}>

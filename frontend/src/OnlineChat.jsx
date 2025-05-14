@@ -23,7 +23,7 @@ export default function OnlineChat() {
     const [isThinking, setIsThinking] = useState(false);
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
-    //const API_URL = "http://localhost:8080";
+    // const API_URL = "http://localhost:8080";
     const API_URL = "https://api.utchat.ee";
     const LLM_URL = "https://llm.utchat.ee/chatbot";
     const {newsList, dailyDeals, weatherInfo, loading} = useInitialData(API_URL);
