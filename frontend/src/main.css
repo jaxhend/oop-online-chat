@@ -1,10 +1,9 @@
 .main-layout{
     display: flex;
     flex-direction: row;
-    gap: 1.25rem;
+    gap: 2rem;
     height: 100%;
     padding: 2rem;
-    padding-top: 2rem;
     flex-wrap: wrap;
 
 }
