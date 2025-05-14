@@ -2,9 +2,11 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    max-height: 100%;
+    flex: 1;
+    min-width: 0;
     padding: 1.5rem;
     box-shadow: 0 3px 10px var(--border-color);
-
     border:  1.25px solid var(--border-color);
     border-radius: 1rem;
     background-color: var(--bg-color);
@@ -22,10 +24,15 @@
 .itemList {
     list-style: none;
     padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .item {
-    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    word-break: break-word;
 }
 
 .restaurant {

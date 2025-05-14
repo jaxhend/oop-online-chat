@@ -5,8 +5,8 @@
     padding: 1rem;
     box-shadow: 0 3px 10px #2C5696;
     width: 100%;
-    max-width: 220px;
-    max-height: 280px;
+    max-width: 100%;
+    height: auto;
 
     display: flex;
     flex-direction: column;
@@ -15,12 +15,15 @@
     overflow: hidden;
     color: var(--text-color);
     font-size: 0.9rem;
+    flex: 1;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .city {
@@ -55,6 +58,8 @@
     justify-content: space-between;
     font-size: 1rem;
     margin-top: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .metric {
@@ -66,6 +71,7 @@
 .icon {
     width: 48px;
     height: 48px;
+    flex-shrink: 0;
 }
 
 .bottom-info {
@@ -76,6 +82,7 @@
     gap: 0.5rem;
     font-size: 0.8rem;
     font-weight: 500;
+    flex-wrap: wrap;
 }
 
 .info-group {

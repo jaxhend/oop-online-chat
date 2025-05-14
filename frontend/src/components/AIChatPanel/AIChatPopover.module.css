@@ -1,18 +1,4 @@
-.button {
-    position: fixed;
-    bottom: 50px;
-    right: 50px;
-    width: 60px;
-    height: 60px;
-    padding: 12px;
-    border: 1px solid ;
-    background-color: white;
-    border-radius: 50%;
-    font-size: 40px;
-    line-height: 1;
-    cursor: pointer;
-    z-index: 1000;
-}
+
 
 .bot-button {
     position: fixed;
@@ -21,7 +7,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    font-size: 50px;
+    font-size: 3rem;
     text-align: center;
     display: flex;
     align-items: center;
@@ -30,7 +16,7 @@
     border: 1px solid var(--border-color);
     background:none;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px var(--border-color);
 }
 
 
@@ -40,26 +26,24 @@
     bottom: 3rem;
     right: 0;
     width: 360px;
-    max-width: 360px;
-    max-height: 500px;
-
-    background-color: white;
-    border: 1px solid #ccc;
+    max-width: 90vw;
+    max-height: 70vh;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 1rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 
 .wrapper {
-    max-width: 500px;
+    max-width: 100%;
     position: fixed;
     bottom: 1.5rem;
     right: 1.5rem;
     z-index: 1000;
 }
 
-[data-theme="dark"] .bot-button {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
