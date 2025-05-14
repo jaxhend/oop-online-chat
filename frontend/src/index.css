@@ -86,7 +86,8 @@ body {
     display: flex;
     flex-direction: column;
     padding-top: 50px;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     overscroll-behavior: none;
 }
 
