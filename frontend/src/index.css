@@ -87,7 +87,7 @@ body {
     flex-direction: column;
     padding-top: 50px;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     overscroll-behavior: none;
 }
 

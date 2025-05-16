@@ -1,6 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Textarea} from "@/components/ui/textarea";
 import styles from "./AIChatPanel.module.css";
+import { HelpCircle } from "lucide-react";
+import {AnimatePresence, motion} from "framer-motion";
+
 
 export default function AIChatPanel({
                                         botInput,
@@ -16,6 +19,7 @@ export default function AIChatPanel({
     const [charCount, setCharCount] = useState(0);
     const [needsRestoration, setNeedsRestoration] = useState(false);
     const MAX_MESSAGE_LENGTH = 300;
+    const [showTooltip, setShowTooltip] = useState(false);
 
 
     useEffect(() => {
@@ -78,7 +82,32 @@ export default function AIChatPanel({
 
     return (
         <div className={styles.container}>
-            <h3 className={styles.title}>AI Juturobot</h3>
+            <div className={styles["title-row"]}>
+                <h3 className={styles.titleWithIcon}>
+                    AI Juturobot
+                    <span
+                        className={styles["help-wrapper"]}
+                        onMouseEnter={() => setShowTooltip(true)}
+                        onMouseLeave={() => setShowTooltip(false)}
+                    >
+            <HelpCircle className={styles["help-icon"]} />
+            <AnimatePresence>
+                {showTooltip && (
+                    <motion.div
+                        className={styles["tool-tip"]}
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 10 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        Mudel:<br />
+                        LLAMA 2-7B
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </span>
+                </h3>
+            </div>
 
             <div className={styles.chatLog} ref={chatLogRef}>
                 {chatHistory.map((entry, i) => (
