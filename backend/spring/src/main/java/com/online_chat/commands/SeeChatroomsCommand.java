@@ -3,8 +3,8 @@ package com.online_chat.commands;
 
 import com.online_chat.chatrooms.ChatRoom;
 import com.online_chat.chatrooms.ChatRoomManager;
-import com.online_chat.client.ClientSession;
 import com.online_chat.chatrooms.PrivateChatRoom;
+import com.online_chat.client.ClientSession;
 import com.online_chat.model.MessageFormatter;
 
 import java.util.Map;

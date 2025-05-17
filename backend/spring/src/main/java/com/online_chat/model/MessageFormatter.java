@@ -43,6 +43,10 @@ public class MessageFormatter {
         this.text = text;
     }
 
+    public void addText(String text) {
+        this.text += text;
+    }
+
     public String getColor() {
         return color;
     }

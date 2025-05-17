@@ -34,6 +34,7 @@ public class ProfanityFilter {
             String line;
             while ((line = reader.readLine()) != null)
                 words.add(line.trim());
+            System.out.println("Laetud sõnade arv on: " + words.size());
         } catch (IOException e) {
             logger.error("ProfanityFilter viskas faili lugemisel IOExecptioni:  ", e);
         }

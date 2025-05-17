@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,23 +51,27 @@ public class MessageProcessor {
         if (session.getUsername() == null || session.getUsername().isBlank()) {
             handleUsernameAssignment(session, message);
 
+        } else if (profanityFilter.containsProfanity(message)) {
+            sendMessage(session, new MessageFormatter("Kasutasid vulgaarseid sõnu, proovi jääda viisakaks!", MessageFormatter.RED));
         } else if (message.length() > MAX_MESSAGE_LENGTH) {
             sendMessage(session, new MessageFormatter("Sõnum on liiga pikk. Proovi uuesti!", MessageFormatter.RED));
 
         } else if (message.startsWith("/")) {
-            if (profanityFilter.containsProfanity(message)) {
-                sendMessage(session, new MessageFormatter("Kasutasid vulgaarseid sõnu, proovi jääda viisakaks!", MessageFormatter.RED));
-                return;
-            }
             MessageFormatter response = commandHandler.handle(session, message);
-            sendMessage(session, response);
-            showOldMessages(session, response);
+            List<MessageFormatter> oldMessages = getOldMessages(session, response);
+            if (oldMessages.isEmpty())
+                sendMessage(session, response);
+            else {
+                response.addText("Viimase 24h jooksul saadetud sõnumid: ");
+                sendMessage(session, response);
+                oldMessages.forEach(msg -> sendMessage(session, msg));
+            }
 
         } else if (session.getCurrentRoom() != null) { // Tavasõnumi väljasaatmine.
             String msg = profanityFilter.filterMessage(
                     message.replace("\n", " ")
-                    .replace("\r", " ")
-                    .replaceAll("\\s+", " "));
+                            .replace("\r", " ")
+                            .replaceAll("\\s+", " "));
             broadcastToRoom(session, msg);
 
         } else {
@@ -151,21 +156,21 @@ public class MessageProcessor {
         }
     }
 
-    private void showOldMessages(ClientSession session, MessageFormatter response) {
+    private List<MessageFormatter> getOldMessages(ClientSession session, MessageFormatter response) {
+        List<MessageFormatter> oldMessages = new ArrayList<>();
         String text = response.getText();
         Pattern pattern = Pattern.compile("Liitusid ruumiga '([^']*)'");
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            // Leiab regexi abil chatruumi.
+            // Leiab regexi abil chatruumi nime.
             List<ChatRoomMessage> lastMessages = chatRoomMessageService.findRoomMessages(matcher.group(1));
             for (ChatRoomMessage msg : lastMessages) {
-                MessageFormatter oldMessage = msg.getMessageFormatter();
-                // Kui sõnum on kasutaja enda oma, siis kasutame sinist värvi.
-                if (msg.getUsername().equals(session.getUsername())) {
-                    oldMessage.setColor(BLUE);
-                    sendMessage(session, oldMessage);
-                } else sendMessage(session, oldMessage);
+                MessageFormatter message = msg.getMessageFormatter();
+                if (msg.getUsername().equals(session.getUsername()))
+                    message.setColor(BLUE); // Kui sõnum on kasutaja enda oma, siis kasutame sinist värvi.
+                oldMessages.add(message);
             }
         }
+        return oldMessages;
     }
 }
