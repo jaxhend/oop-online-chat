@@ -1,17 +1,17 @@
 package com.online_chat.commands;
 
 
-import com.online_chat.model.ChatRoom;
-import com.online_chat.model.ChatRoomManager;
-import com.online_chat.model.ClientSession;
-import com.online_chat.model.PrivateChatRoom;
-import com.online_chat.service.MessageFormatter;
+import com.online_chat.chatrooms.ChatRoom;
+import com.online_chat.chatrooms.ChatRoomManager;
+import com.online_chat.client.ClientSession;
+import com.online_chat.chatrooms.PrivateChatRoom;
+import com.online_chat.model.MessageFormatter;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.online_chat.model.ChatRoomManager.defaultRooms;
+import static com.online_chat.chatrooms.ChatRoomManager.defaultRooms;
 
 public class SeeChatroomsCommand implements Command {
 
@@ -40,7 +40,7 @@ public class SeeChatroomsCommand implements Command {
                 .flatMap(s -> s)  // Teeme üheks streamiks
                 .collect(Collectors.joining(", "));
 
-        return new MessageFormatter("Saadaval vestlusruumid: " + result, MessageFormatter.COMMANDS);
+        return new MessageFormatter("Saadaval vestlusruumid: " + result, MessageFormatter.PURPLE);
     }
 
     @Override

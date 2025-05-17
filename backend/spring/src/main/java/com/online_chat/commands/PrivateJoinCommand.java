@@ -1,10 +1,10 @@
 package com.online_chat.commands;
 
 
-import com.online_chat.model.ChatRoomManager;
-import com.online_chat.model.ClientSession;
-import com.online_chat.model.ClientSessionManager;
-import com.online_chat.service.MessageFormatter;
+import com.online_chat.chatrooms.ChatRoomManager;
+import com.online_chat.client.ClientSession;
+import com.online_chat.client.ClientSessionManager;
+import com.online_chat.model.MessageFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;
@@ -29,20 +29,20 @@ public class PrivateJoinCommand implements Command {
     public MessageFormatter execute(ClientSession session, String[] args) {
         // kontrollime kasutaja sisendit, et vastaks nõuetele
         if (validCommand(args))
-            return new MessageFormatter("Kasutus: /private <kasutajanimi>", MessageFormatter.ERRORS);
+            return new MessageFormatter("Kasutus: /private <kasutajanimi>", MessageFormatter.RED);
 
         if (args[1].equalsIgnoreCase(session.getUsername()))
-            return new MessageFormatter("Sa ei saa luua privaatvestlust iseendaga", MessageFormatter.ERRORS);
+            return new MessageFormatter("Sa ei saa luua privaatvestlust iseendaga", MessageFormatter.RED);
 
         ClientSession target = sessionManager.getAllSessions().stream()
                 .filter(s -> args[1].equalsIgnoreCase(s.getUsername()))
                 .findFirst().orElse(null);
 
         if (target == null)
-            return new MessageFormatter("Ei leitud kasutajat '" + args[1] + "'", MessageFormatter.ERRORS);
+            return new MessageFormatter("Ei leitud kasutajat '" + args[1] + "'", MessageFormatter.RED);
 
         if (session.getCurrentRoom() != null && session.getCurrentRoom().equals(target.getCurrentRoom()))
-            return new MessageFormatter("Oled juba privaatvestluses " + args[1], MessageFormatter.ERRORS);
+            return new MessageFormatter("Oled juba privaatvestluses " + args[1], MessageFormatter.RED);
 
         // loome privaatse ruumi
         String roomId = buildPrivateRoomId(session.getUsername(), args[1]);

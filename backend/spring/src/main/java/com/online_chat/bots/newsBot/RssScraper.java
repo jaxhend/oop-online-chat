@@ -43,10 +43,12 @@ public class RssScraper {
     @Scheduled(fixedRate = 1800000)
     public void updateAllFeeds() {
         try {
+            logger.info("Uudiste scrapemine algas.");
             for (String topic : List.of("1", "2", "3", "4", "5")) {
                 List<NewsItem> items = scrape(topic);
                 newsCache.put(topic, items);
             }
+            logger.info("Uudiste scrapemine lõppes.");
         } catch (IOException e) {
             logger.error("Uudiste scraperi error", e);
         }

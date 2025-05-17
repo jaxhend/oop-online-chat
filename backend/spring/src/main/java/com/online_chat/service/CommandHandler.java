@@ -1,9 +1,10 @@
 package com.online_chat.service;
 
 import com.online_chat.commands.*;
-import com.online_chat.model.ChatRoomManager;
-import com.online_chat.model.ClientSession;
-import com.online_chat.model.ClientSessionManager;
+import com.online_chat.chatrooms.ChatRoomManager;
+import com.online_chat.client.ClientSession;
+import com.online_chat.client.ClientSessionManager;
+import com.online_chat.model.MessageFormatter;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -31,6 +32,6 @@ public class CommandHandler {
             return command.execute(session, parts);
         }
 
-        return new MessageFormatter("Tundmatu käsk: " + parts[0] + ". Kasuta /help, et näha käske.", MessageFormatter.ERRORS);
+        return new MessageFormatter("Tundmatu käsk: " + parts[0] + ". Kasuta /help, et näha käske.", MessageFormatter.RED);
     }
 }

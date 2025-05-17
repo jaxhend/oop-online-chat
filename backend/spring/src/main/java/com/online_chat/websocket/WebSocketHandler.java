@@ -1,9 +1,9 @@
 package com.online_chat.websocket;
 
-import com.online_chat.model.ChatRoomManager;
-import com.online_chat.model.ClientSession;
-import com.online_chat.model.ClientSessionManager;
-import com.online_chat.service.MessageFormatter;
+import com.online_chat.chatrooms.ChatRoomManager;
+import com.online_chat.client.ClientSession;
+import com.online_chat.client.ClientSessionManager;
+import com.online_chat.model.MessageFormatter;
 import com.online_chat.service.MessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

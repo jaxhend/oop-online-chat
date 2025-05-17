@@ -1,5 +1,6 @@
-package com.online_chat.model;
+package com.online_chat.client;
 
+import com.online_chat.chatrooms.ChatRoom;
 import org.springframework.web.socket.WebSocketSession;
 
 public class ClientSession {

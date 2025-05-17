@@ -24,7 +24,7 @@ export default function UsernameDialog({onSubmit, error}) {
                    <motion.div
                        initial={{ opacity: 0, y: 300 }}
                        animate={{ opacity: 1, y: 0 }}
-                       transition={{ duration: 2.5 }}
+                       transition={{ duration: 1.5 }}
 
 
                    >
@@ -38,7 +38,7 @@ export default function UsernameDialog({onSubmit, error}) {
                                onSubmit={onSubmit}
                                showEmojiButton={false}
                                showTooltip = {false}
-                               placeholder={"..."}
+                               placeholder={"Kirjuta kasutajanimi siia ..."}
                            />
                        </motion.div>
                    </motion.div>

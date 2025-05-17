@@ -1,5 +1,7 @@
-package com.online_chat.model;
+package com.online_chat.chatrooms;
 
+
+import com.online_chat.client.ClientSession;
 
 public class RegularChatRoom extends ChatRoom {
 

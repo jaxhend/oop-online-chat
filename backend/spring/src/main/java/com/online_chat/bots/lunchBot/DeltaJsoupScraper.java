@@ -24,7 +24,9 @@ public class DeltaJsoupScraper {
     @Scheduled(cron = "0 0 11 * * MON-FRI")
     public void updateLunchOffers() {
         try {
+            logger.info("Päevapakkumiste scrapemine algas.");
             this.cachedOffers = lunchOffers();
+            logger.info("Päevapakkumiste scrapemine lõppes.");
         } catch (IOException e) {
             logger.error("Päevapakkumiste scraperi error ", e);
             this.cachedOffers = List.of(new DailyOffer("Delta", "Pakkumiste laadimine ebaõnnestus"));

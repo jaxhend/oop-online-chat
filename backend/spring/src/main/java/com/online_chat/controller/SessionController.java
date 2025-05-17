@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.online_chat.model.UsernameRegistry.LOCK_DAYS;
+import static com.online_chat.client.UsernameRegistry.LOCK_DAYS;
 
 @RestController
 public class SessionController {
@@ -45,7 +45,6 @@ public class SessionController {
 //            sessionCookie.setPath("/");
 //            sessionCookie.setMaxAge(LOCK_DAYS * 24 * 60 * 60);
 //            response.addCookie(sessionCookie);
-
         }
 
         Map<String, String> sessionData = new HashMap<>();

@@ -64,25 +64,17 @@ export default function OnlineChat() {
         try {
             const msg = JSON.parse(e.data);
 
-            if (msg.text?.includes("Tere tulemast")) {
+            if (msg.text?.includes("Tere tulemast"))
                 setUsernameAccepted(true);
-            }
-            setUsernameError("");
 
+            setUsernameError("");
             setChatMessages((prev) => [...prev, msg]);
         } catch {
             const text = e.data;
-
-            if (text.includes("Kasutajanimi")) {
-                setUsernameError(text);
-                setUsernameAccepted(false);
-                return;
-            }
-
+            setUsernameError(text);
+            setUsernameAccepted(false);
             setChatMessages((prev) => [...prev, {text: e.data}]);
         }
-    }, (socket) => {
-        console.log("WebSocket ühendatud");
     });
 
     const handleUsernameSubmit = (value) => {
