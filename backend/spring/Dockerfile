@@ -19,11 +19,12 @@
  RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
 
  # Kopeerime ehitatud JAR-faili
-  COPY --from=builder --chown=appuser:appgroup /app/backend/spring/target/spring-1.0.0.jar /app/spring.jar
+ COPY --from=builder --chown=appuser:appgroup /app/backend/spring/target/spring-1.0.0.jar /app/spring.jar
 
+ RUN mkdir -p /app/data && chown -R appuser:appgroup /app/data
 
-  USER appuser
+ USER appuser
 
-  EXPOSE 8080
+ EXPOSE 8080
 
-  ENTRYPOINT ["java", "-jar", "/app/spring.jar"]
+ ENTRYPOINT ["java", "-jar", "/app/spring.jar"]
