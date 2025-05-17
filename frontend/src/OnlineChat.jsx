@@ -73,7 +73,6 @@ export default function OnlineChat() {
             const text = e.data;
             setUsernameError(text);
             setUsernameAccepted(false);
-            setChatMessages((prev) => [...prev, {text: e.data}]);
         }
     });
 

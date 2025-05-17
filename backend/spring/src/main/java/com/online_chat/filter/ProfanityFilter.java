@@ -29,12 +29,11 @@ public class ProfanityFilter {
 
     private List<String> loadProfanity() {
         List<String> words = new ArrayList<>();
-        try (InputStream is = getClass().getResourceAsStream("/profanity.txt");
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("profanity.txt");
              BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             String line;
             while ((line = reader.readLine()) != null)
                 words.add(line.trim());
-            System.out.println("Laetud sõnade arv on: " + words.size());
         } catch (IOException e) {
             logger.error("ProfanityFilter viskas faili lugemisel IOExecptioni:  ", e);
         }

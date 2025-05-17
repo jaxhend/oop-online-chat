@@ -50,19 +50,20 @@ public class MessageProcessor {
         int MAX_MESSAGE_LENGTH = 300;
         if (session.getUsername() == null || session.getUsername().isBlank()) {
             handleUsernameAssignment(session, message);
-
-        } else if (profanityFilter.containsProfanity(message)) {
-            sendMessage(session, new MessageFormatter("Kasutasid vulgaarseid sõnu, proovi jääda viisakaks!", MessageFormatter.RED));
         } else if (message.length() > MAX_MESSAGE_LENGTH) {
             sendMessage(session, new MessageFormatter("Sõnum on liiga pikk. Proovi uuesti!", MessageFormatter.RED));
 
         } else if (message.startsWith("/")) {
+            if (profanityFilter.containsProfanity(message)) {
+                sendMessage(session, new MessageFormatter("Kasutasid vulgaarseid sõnu, proovi jääda viisakaks!", MessageFormatter.RED));
+                return;
+            }
             MessageFormatter response = commandHandler.handle(session, message);
             List<MessageFormatter> oldMessages = getOldMessages(session, response);
             if (oldMessages.isEmpty())
                 sendMessage(session, response);
             else {
-                response.addText("Viimase 24h jooksul saadetud sõnumid: ");
+                response.addText(". Viimase 24h jooksul saadetud sõnumid: ");
                 sendMessage(session, response);
                 oldMessages.forEach(msg -> sendMessage(session, msg));
             }
