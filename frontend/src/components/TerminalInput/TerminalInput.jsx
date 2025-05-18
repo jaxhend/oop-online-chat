@@ -82,13 +82,14 @@ export default function TerminalInput({
                                 exit={{ opacity: 0, x: 10 }}
                                 transition={{ duration: 0.2 }}
                             >
-                                Tere tulemast UTchat veebilehele! <br />
+                                <b>Tere tulemast UTchat veebilehele!</b> <br />
                                 Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga. <br />
                                 Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega <br />
                                 või pidada privaatselt vestlust oma sõbraga. Sõnumid säilivad <br />
-                                vestlusruumides 24 tundi, pärast mida need kustutatakse. Palume jääda <br />
-                                suhtlemisel viisakaks ning seetõttu asendatakse enim levinud vulgaarsused <br />
-                                automaatselt tärniga (*). <b>Head suhtlemist!</b>
+                                vestlusruumides 24 tundi, pärast mida need kustutatakse. <br />
+                                Palume jääda suhtlemisel viisakaks ning seetõttu asendatakse <br />
+                                enim levinud vulgaarsused vulgaarsused automaatselt tärniga (*). <br />
+                                Head suhtlemist!
                             </motion.div>
                         )}
                     </AnimatePresence>
