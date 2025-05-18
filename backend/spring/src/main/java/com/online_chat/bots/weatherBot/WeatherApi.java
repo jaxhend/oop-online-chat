@@ -27,7 +27,9 @@ public class WeatherApi {
     @Scheduled(fixedRate = 600000)
     public void scheduledUpdate() {
         try {
+            logger.info("Ilma scrapemine algas.");
             this.latestWeather = fetchWeather();
+            logger.info("Ilma scrapemine lõpp.");
         } catch (IOException e) {
             logger.error("Ilma API teenuse error", e);
         }

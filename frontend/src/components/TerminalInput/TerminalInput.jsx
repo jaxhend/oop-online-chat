@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import styles from "./TerminalInput.module.css"
-import EmojiPicker from "@/components/ui/EmojiPicker";
+import EmojiPicker from "@/components/ChatPanelComponents/EmojiPicker";
 import { HelpCircle } from "lucide-react";
 import {motion, AnimatePresence} from "framer-motion";
 
@@ -82,12 +82,14 @@ export default function TerminalInput({
                                 exit={{ opacity: 0, x: 10 }}
                                 transition={{ duration: 0.2 }}
                             >
-                                Saadaval käsud: <br />
-                                <code>/join &lt;ruum&gt;</code> – liitu või loo uus vestlusruum <br />
-                                <code>/private &lt;kasutajanimi&gt;</code> – alusta või liitu privaatvestlusega<br />
-                                <code>/leave</code> – lahku aktiivsest vestlusest<br />
-                                <code>/chatrooms</code> – kuva avalikud vestlusruumid<br />
-                                <code>/members</code> – kuva hetkel aktiivsed kasutajad
+                                <b>Tere tulemast UTchat veebilehele!</b> <br />
+                                Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga. <br />
+                                Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega <br />
+                                või pidada privaatselt vestlust oma sõbraga. Sõnumid säilivad <br />
+                                vestlusruumides 24 tundi, pärast mida need kustutatakse. <br />
+                                Palume jääda suhtlemisel viisakaks ning seetõttu asendatakse <br />
+                                enim levinud vulgaarsused vulgaarsused automaatselt tärniga (*). <br />
+                                Head suhtlemist!
                             </motion.div>
                         )}
                     </AnimatePresence>

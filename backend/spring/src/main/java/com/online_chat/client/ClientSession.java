@@ -1,6 +1,11 @@
-package com.online_chat.model;
+package com.online_chat.client;
 
+import com.online_chat.chatrooms.ChatRoom;
 import org.springframework.web.socket.WebSocketSession;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientSession {
     // Igal sessionil on unikaalne id
@@ -9,9 +14,20 @@ public class ClientSession {
     private String username = "";
     private ChatRoom currentRoom;
     private transient WebSocketSession webSocketSession;
+    private Map<String, LocalDateTime> lastSeenMessages;
 
     public ClientSession(String id) {
         this.id = id;
+        this.lastSeenMessages = new HashMap<>();
+    }
+
+
+    public LocalDateTime getLastSeenTimestamp(String chatRoom) {
+        return lastSeenMessages.get(chatRoom);
+    }
+
+    public void updateLastSeenMessage(String chatRoom) {
+        lastSeenMessages.put(chatRoom, LocalDateTime.now());
     }
 
     public String getId() {

@@ -1,9 +1,9 @@
 package com.online_chat.commands;
 
-import com.online_chat.model.ChatRoom;
-import com.online_chat.model.ClientSession;
-import com.online_chat.model.ClientSessionManager;
-import com.online_chat.service.MessageFormatter;
+import com.online_chat.chatrooms.ChatRoom;
+import com.online_chat.client.ClientSession;
+import com.online_chat.client.ClientSessionManager;
+import com.online_chat.model.MessageFormatter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +30,7 @@ public class ListMembersCommand implements Command {
 
         return new MessageFormatter("Aktiivsed kasutajad: " + usernames.stream()
                 .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.joining(", ")), MessageFormatter.COMMANDS);
+                .collect(Collectors.joining(", ")), MessageFormatter.PURPLE);
 
     }
 

@@ -16,7 +16,7 @@ public class ApiConfiguration implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
-        // Localhost testimiseks
+//         Localhost testimiseks
 //        registry.addMapping("/**")
 //                .allowedOrigins("http://localhost:5173/")
 //                .allowedMethods("GET")

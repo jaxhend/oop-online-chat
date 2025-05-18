@@ -1,8 +1,8 @@
 package com.online_chat.commands;
 
 
-import com.online_chat.model.ClientSession;
-import com.online_chat.service.MessageFormatter;
+import com.online_chat.client.ClientSession;
+import com.online_chat.model.MessageFormatter;
 
 public class HelpCommand implements Command {
 
@@ -16,7 +16,7 @@ public class HelpCommand implements Command {
                 /chatrooms – kuva avalikud vestlusruumid
                 /members – kuva hetkel aktiivsed kasutajad
                 """;
-        return new MessageFormatter(text, MessageFormatter.COMMANDS);
+        return new MessageFormatter(text, MessageFormatter.PURPLE);
     }
 
     @Override

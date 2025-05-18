@@ -1,8 +1,8 @@
 package com.online_chat.commands;
 
 
-import com.online_chat.model.ClientSession;
-import com.online_chat.service.MessageFormatter;
+import com.online_chat.client.ClientSession;
+import com.online_chat.model.MessageFormatter;
 
 public interface Command {
     MessageFormatter execute(ClientSession session, String[] args);

@@ -1,4 +1,4 @@
-package com.online_chat.model;
+package com.online_chat.client;
 
 import org.springframework.stereotype.Component;
 
@@ -12,10 +12,8 @@ public class ClientSessionManager {
     private final Map<String, ClientSession> sessions = new ConcurrentHashMap<>();
     // salvestame kõik cookied ja nendega seotud kasutajanimed
     private final Map<String, String> cookieUsernames = new ConcurrentHashMap<>();
-    private final UsernameRegistry usernameRegistry;
 
-    public ClientSessionManager(UsernameRegistry usernameRegistry) {
-        this.usernameRegistry = usernameRegistry;
+    public ClientSessionManager() {
     }
 
     // Uue sessioni lisamine

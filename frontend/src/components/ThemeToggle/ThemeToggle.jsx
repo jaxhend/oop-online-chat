@@ -11,9 +11,11 @@ export default function ThemeToggle() {
             onClick={toggleTheme}
             className={styles["button"]}
             title="Toggle teema"
-            whileHover={{scale: 1.1, rotate: 5}}
-            whileTap={{scale: 0.95}}
-            transition={{type: "spring", stiffness: 300, damping: 20}}
+            whileHover={{ scale: 1.1, rotate: 5, transition: { type: "spring", stiffness: 300, damping: 20 } }}
+            whileTap={{ scale: 0.95, transition: { type: "spring", stiffness: 300, damping: 20 } }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
         >
             <AnimatePresence mode="wait" initial={false}>
                 <motion.div

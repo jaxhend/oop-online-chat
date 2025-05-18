@@ -1,4 +1,4 @@
-package com.online_chat.model;
+package com.online_chat.client;
 
 import org.springframework.stereotype.Component;
 

@@ -1,9 +1,9 @@
 package com.online_chat.commands;
 
 
-import com.online_chat.model.ChatRoomManager;
-import com.online_chat.model.ClientSession;
-import com.online_chat.service.MessageFormatter;
+import com.online_chat.chatrooms.ChatRoomManager;
+import com.online_chat.client.ClientSession;
+import com.online_chat.model.MessageFormatter;
 
 public class JoinRoomCommand implements Command {
 
@@ -16,15 +16,16 @@ public class JoinRoomCommand implements Command {
     @Override
     public MessageFormatter execute(ClientSession session, String[] args) {
         if (validCommand(args))
-            return new MessageFormatter("Kasutus: /join <ruumi_nimi>", MessageFormatter.ERRORS);
+            return new MessageFormatter("Kasutus: /join <ruumi_nimi>", MessageFormatter.RED);
 
         String roomName = args[1].toLowerCase();
+        if (!roomName.matches("[a-zA-ZäöüõÄÖÜÕ0-9]+"))
+            return new MessageFormatter("Vestlusruumi nimi tohib sisaldada ainult eesti tähestiku tähti ja numbreid.", MessageFormatter.RED);
+        else if (roomName.length() > 30)
+            return new MessageFormatter("Vestlusruumi nimi peab olema vähem kui 30 tähemärki.", MessageFormatter.RED);
 
-        if (roomName.contains("-")) {
-            return new MessageFormatter("Privaatvestluse alustamiseks või sellega liitumiseks kasuta käsku /private <kasutajanimi>", MessageFormatter.ERRORS);
-        }
-        if (session.getCurrentRoom() != null && roomName.equals(session.getCurrentRoom().getName())) {
-            return new MessageFormatter("Oled juba ruumis '" + roomName + "'.", MessageFormatter.ERRORS);
+        if (session.getCurrentRoom() != null && roomName.equalsIgnoreCase(session.getCurrentRoom().getName())) {
+            return new MessageFormatter("Oled juba ruumis '" + roomName + "'.", MessageFormatter.RED);
         }
 
         // vajadusel loome uue ruumi ning eemaldame kliendi vanast ruumist ning lisame uude ruumi

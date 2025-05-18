@@ -1,51 +1,52 @@
-import {useEffect, useRef} from "react";
+import {useCallback, useEffect, useRef} from "react";
 
 export default function useWebSocket(sessionId, onMessage, onOpen) {
     const socketRef = useRef(null);
+    const pingRef = useRef(null);
 
-    const socketUrl = `wss://api.utchat.ee/ws?sessionId=${sessionId}`;
+    const url = `wss://api.utchat.ee/ws?sessionId=${sessionId}`;
     // Localhost testimiseks
-    // const socketUrl = `ws://localhost:8080/ws?sessionId=${sessionId}`;
+    // const url = `ws://localhost:8080/ws?sessionId=${sessionId}`;
 
-    useEffect(() => {
-        if (!sessionId) return;
-
-        const socket = new WebSocket(socketUrl);
-        socketRef.current = socket;
-
-        const pingInterval = setInterval(() => {
+    const handleOpen = useCallback((socket) => {
+        if (pingRef.current) clearInterval(pingRef.current); // Tühistame eelmise intervalli.
+        pingRef.current = setInterval(() => {
             if (socket.readyState === WebSocket.OPEN) {
                 socket.send("__heartbeat_ping__");
             }
-        }, 30000); // 30 sekundit
+        }, 30000);
 
-        socket.onopen = () => {
-            onOpen?.(socket);
-        };
+        onOpen?.(socket);
+    }, [onOpen]);
 
+
+    const connect = useCallback(() => {
+        if (!sessionId) return;
+        const socket = new WebSocket(url);
+        socketRef.current = socket;
+
+        socket.onopen    = () => handleOpen(socket);
         socket.onmessage = onMessage;
-
-        socket.onerror = (err) => {
-            console.error("WebSocket error:", err);
-        };
+        socket.onerror   = (err) => console.error("WebSocket error: ", err);
 
         socket.onclose = () => {
             console.warn("WebSocket suletud, ühendan uuesti");
-            setTimeout(() => {
-                const newSocket = new WebSocket(socketUrl);
-                socketRef.current = newSocket;
-
-                newSocket.onmessage = socket.onmessage;
-                newSocket.onclose = socket.onclose;
-                newSocket.onerror = socket.onerror;
-            }, 5000); // 5 sekundi pärast reconnectib
+            socket.onopen = socket.onmessage = socket.onerror = socket.onclose = null;
+            clearInterval(pingRef.current);
+            setTimeout(connect, 5000);
         };
+    }, [sessionId, onMessage, handleOpen]);
 
+
+    useEffect(() => {
+        connect();
         return () => {
-            clearInterval(pingInterval);
-            socket.close();
+            clearInterval(pingRef.current);
+            socketRef.current?.close();
+            socketRef.current = null;
         };
     }, [sessionId]);
+
 
     return socketRef;
 }

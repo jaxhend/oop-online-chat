@@ -17,6 +17,8 @@
     min-height: 100vh;
     gap: 2rem;
     text-align: center;
+    width: 90%;
+    max-width: 500px;
 }
 
 .branding-title {
@@ -69,6 +71,30 @@
     opacity: 0.6;
 }
 
+.input-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.terminal-wrapper {
+    width: 80%;
+    max-width: 300px;
+    overflow: hidden;
+}
+
+.terminal-wrapper :global(.terminal-input) {
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.terminal-wrapper :global(input) {
+    max-width: 100%;
+    width: 100%;
+}
+
+
 .dialog {
     background-color: #1f1f1f;
     padding: 2rem;
@@ -119,10 +145,15 @@
     margin-left: 5rem;
 }
 
+.error-container {
+    height: 1.5rem;
+    margin-top: -1rem;
+}
+
 .error-text {
     color: #b91c1c;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
+    font-size: 1rem;
     text-align: center;
     font-weight: bold;
+    margin: 0;
 }

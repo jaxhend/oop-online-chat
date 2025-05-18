@@ -1,6 +1,7 @@
-package com.online_chat.model;
+package com.online_chat.chatrooms;
 
-import com.online_chat.service.MessageFormatter;
+import com.online_chat.client.ClientSession;
+import com.online_chat.model.MessageFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -121,7 +122,10 @@ public class ChatRoomManager {
         }
 
         // Ajastage ruumi eemaldamine 24 tunni pärast, kui keegi ei liitu
-        ScheduledFuture<?> scheduledFuture = scheduler.schedule(() -> rooms.remove(room.getName()), 24, TimeUnit.HOURS);
+        ScheduledFuture<?> scheduledFuture = scheduler.schedule(() -> {
+            rooms.remove(room.getName());
+            logger.info("Kustutatakse ruum: " + room.getName());
+        }, 24, TimeUnit.HOURS);
         roomTimers.put(room.getName(), scheduledFuture);
     }
 

@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 import {AnimatePresence, motion} from "framer-motion";
-import styles from "../ui/EmojiPicker.module.css";
+import styles from ".//EmojiPicker.module.css";
 
 export default function EmojiPicker({onSelect}) {
     const [open, setOpen] = useState(false);

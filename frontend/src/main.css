@@ -2,11 +2,11 @@
     display: flex;
     flex-direction: row;
     gap: 2rem;
+    flex: 1;
     height: 100%;
-    padding: 2rem;
-    flex-wrap: wrap;
+    max-width: 1800px;
     margin-left: 2rem;
-
+    padding: 0 2rem 10px;
 }
 
 .chat-panel {
@@ -16,26 +16,7 @@
     gap: 1rem;
     min-width: 0;
     width: 100%;
-
-}
-
-.scaled-wrapper-container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--bg-color);
-    overflow: hidden;
-    position: relative;
-}
-
-.scaled-content {
-    width: 100%;
     height: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    transform-origin: top left;
 }
 
 .info-panel {
@@ -45,10 +26,11 @@
     gap: 1rem;
     min-width: 0;
     width: 100%;
+    height: 100%;
 
 }
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .main-layout {
         flex-direction: column;
         padding: 1rem;
@@ -57,12 +39,9 @@
     .info-panel {
         width: 100%;
     }
+    body {
+        padding-top: 10px;
+    }
 }
-
-.body {
-    overflow-x: hidden;
-    overscroll-behavior: none;
-}
-
 
 

@@ -7,11 +7,10 @@ import ChatPanel from "./components/ChatPanel/ChatPanel";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import useTheme from "./hooks/useTheme";
 import useInitialData from "./hooks/useInitialData";
+import AIChatPopover from "./components/AIChatPanel/AIChatPopover";
+import useWebSocket from "./hooks/useWebSocket";
 import "./index.css";
-import AIChatPopover from "@/components/AIChatPanel/AIChatPopover";
-import useWebSocket from "@/hooks/useWebSocket";
-import styles from "./main.css";
-
+import "./main.css";
 
 export default function OnlineChat() {
     const [usernameAccepted, setUsernameAccepted] = useState(false);
@@ -28,7 +27,21 @@ export default function OnlineChat() {
     const LLM_URL = "https://llm.utchat.ee/chatbot";
     const {newsList, dailyDeals, weatherInfo, loading} = useInitialData(API_URL);
 
-    // Küsime serverilt sessionId ning küpsise.
+    const originalTitleRef = useRef(document.title);
+    const isTabActiveRef = useRef(true);
+
+    useEffect(() => {
+        const handleVisibility = () => {
+            isTabActiveRef.current = document.visibilityState === "visible";
+            if (isTabActiveRef.current) {
+                document.title = originalTitleRef.current;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibility);
+        return () => document.removeEventListener("visibilitychange", handleVisibility);
+    }, []);
+
+
     useEffect(() => {
         const fetchSession = async () => {
             try {
@@ -56,54 +69,46 @@ export default function OnlineChat() {
         fetchSession();
     }, []);
 
-
     const ws = useWebSocket(sessionId, (e) => {
-        // Message handler
         if (e.data === "__heartbeat_pong__") return;
 
         try {
             const msg = JSON.parse(e.data);
 
-            if (msg.text?.includes("Tere tulemast")) {
+            if (msg.text?.includes("Tere tulemast"))
                 setUsernameAccepted(true);
-            }
-            setUsernameError("");
 
+            if (!isTabActiveRef.current) {
+                document.title = "🔔 Uus sõnum!";
+            }
+
+            setUsernameError("");
             setChatMessages((prev) => [...prev, msg]);
         } catch {
             const text = e.data;
-
-            if (text.includes("Kasutajanimi")) {
-                setUsernameError(text);
-                setUsernameAccepted(false);
-                return;
-            }
-
-            setChatMessages((prev) => [...prev, {text: e.data}]);
+            setUsernameError(text);
+            setUsernameAccepted(false);
         }
-    }, (socket) => {
-        console.log("WebSocket ühendatud");
     });
 
     const handleUsernameSubmit = (value) => {
-        if (!ws) {
+        if (!ws?.current) {
             setUsernameError("Puudub sessiooni ID. Proovi lehte värskendada.");
             return;
         }
         const socket = ws.current;
-        if (socket && socket.readyState === WebSocket.OPEN) {
+        if (socket.readyState === WebSocket.OPEN) {
             socket.send(value);
         } else {
             setUsernameError("Puudub serveriga ühendus. Proovi uuesti!");
         }
     };
 
-
     const sendToBot = async () => {
         const trimmed = botInput.trim();
         if (!trimmed) return;
-        setChatHistory((prev) => [
-            ...prev, {sender: "Sina", text: trimmed},]);
+
+        setChatHistory((prev) => [...prev, {sender: "Sina", text: trimmed}]);
         setBotInput("");
         setIsThinking(true);
 
@@ -114,18 +119,13 @@ export default function OnlineChat() {
                 body: JSON.stringify({query: trimmed}),
             });
             const data = await res.json();
-            setIsThinking(false);
-
-            setChatHistory((prev) => [
-                ...prev,
-                {sender: "Robot", text: data.response || "..."},
-            ]);
+            setChatHistory((prev) => [...prev, {sender: "Robot", text: data.response || "..."}]);
         } catch (err) {
             console.error("LLM API error:", err);
-            setChatHistory((prev) => [
-                ...prev,
-                {sender: "Robot", text: "Serveri viga. Proovi mõne aja pärast uuesti."},
-            ]);
+            setChatHistory((prev) => [...prev, {
+                sender: "Robot",
+                text: "Serveri viga. Proovi mõne aja pärast uuesti."
+            }]);
         } finally {
             setBotInput("");
             setIsThinking(false);
@@ -144,13 +144,11 @@ export default function OnlineChat() {
                 </div>
             )}
 
-            <div className="flex flex-col h-screen">
+            <div className="flex flex-col">
                 <NewsTicker newsList={newsList} animate={!loading}/>
 
                 <div className="main-layout">
-
                     <div className="chat-panel">
-
                         {usernameAccepted && (
                             <ChatPanel
                                 chatMessages={chatMessages}
@@ -161,19 +159,22 @@ export default function OnlineChat() {
                                 }}
                                 chatLogRef={chatLogRef}
                                 isActive={true}
+                                theme={theme}
                             />
                         )}
-
                     </div>
 
                     <div className="info-panel">
-                        <div className={"container"}>
-                            <DailyDeals deals={dailyDeals} />
+                        <div className="container">
+                            {usernameAccepted && (
+                            <DailyDeals deals={dailyDeals}/>
+                                )}
                         </div>
-                        <div className={"container"}>
-                            <WeatherInfo weather={weatherInfo} />
+                        <div className="container">
+                            {usernameAccepted && (
+                            <WeatherInfo weather={weatherInfo}/>
+                            )}
                         </div>
-
                     </div>
                 </div>
 
