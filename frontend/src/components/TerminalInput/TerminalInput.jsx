@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import styles from "./TerminalInput.module.css"
-import EmojiPicker from "@/components/ui/EmojiPicker";
+import EmojiPicker from "@/components/ChatPanelComponents/EmojiPicker";
 import { HelpCircle } from "lucide-react";
 import {motion, AnimatePresence} from "framer-motion";
 

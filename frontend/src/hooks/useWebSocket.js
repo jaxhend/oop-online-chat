@@ -6,7 +6,7 @@ export default function useWebSocket(sessionId, onMessage, onOpen) {
 
     const url = `wss://api.utchat.ee/ws?sessionId=${sessionId}`;
     // Localhost testimiseks
-    // const socketUrl = `ws://localhost:8080/ws?sessionId=${sessionId}`;
+    // const url = `ws://localhost:8080/ws?sessionId=${sessionId}`;
 
     const handleOpen = useCallback((socket) => {
         if (pingRef.current) clearInterval(pingRef.current); // Tühistame eelmise intervalli.

@@ -11,7 +11,7 @@ import java.util.List;
 public interface ChatRoomMessageRepository extends JpaRepository<ChatRoomMessage, Long> {
     // ChatRoomMessage - entity, Long - ID.
 
-    List<ChatRoomMessage> findChatRoomMessageByChatRoomNameOrderByTimestampAsc(String chatRoomName);
+    List<ChatRoomMessage> findChatRoomMessageByChatRoomNameAndTimestampAfterOrderByTimestampAsc(String chatRoomName, LocalDateTime timestamp);
 
     void deleteByTimestampBefore(LocalDateTime timestampBefore);
 

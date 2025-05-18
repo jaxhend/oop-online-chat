@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Textarea} from "@/components/ui/textarea";
+import {Textarea} from "@/components/ChatPanelComponents/textarea";
 import styles from "./AIChatPanel.module.css";
 import { HelpCircle } from "lucide-react";
 import {AnimatePresence, motion} from "framer-motion";
@@ -100,8 +100,14 @@ export default function AIChatPanel({
                         exit={{ opacity: 0, x: 10 }}
                         transition={{ duration: 0.2 }}
                     >
-                        Mudel:<br />
-                        LLAMA 2-7B
+                        Mudel: LLAMA 2-7B <br />
+                        Hetke teadmised:
+                        <ul className={styles.listItems}>
+                            <li>TÜ õppekavad</li>
+                            <li>TÜ õppeained</li>
+                            <li>Lehekülje <a href="https://ut.ee" target="_blank">ut.ee</a> sisu</li>
+                            <li>Lehekülje <a href="https://cs.ut.ee" target="_blank">cs.ut.ee</a> sisu</li>
+                        </ul>
                     </motion.div>
                 )}
             </AnimatePresence>
