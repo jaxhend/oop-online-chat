@@ -82,14 +82,13 @@ export default function TerminalInput({
                                 exit={{ opacity: 0, x: 10 }}
                                 transition={{ duration: 0.2 }}
                             >
-                                Kasuta käsku <code>/help</code>,et näha erinevaid käske.
-                                Siin ve
-                                Saadaval käsud: <br />
-                                <code>/join &lt;ruum&gt;</code> – liitu või loo uus vestlusruum <br />
-                                <code>/private &lt;kasutajanimi&gt;</code> – alusta või liitu privaatvestlusega<br />
-                                <code>/leave</code> – lahku aktiivsest vestlusest<br />
-                                <code>/chatrooms</code> – kuva avalikud vestlusruumid<br />
-                                <code>/members</code> – kuva hetkel aktiivsed kasutajad
+                                Tere tulemast UTchat veebilehele! <br />
+                                Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga. <br />
+                                Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega <br />
+                                või pidada privaatselt vestlust oma sõbraga. Sõnumid säilivad <br />
+                                vestlusruumides 24 tundi, pärast mida need kustutatakse. Palume jääda <br />
+                                suhtlemisel viisakaks ning seetõttu asendatakse enim levinud vulgaarsused <br />
+                                automaatselt tärniga (*). <b>Head suhtlemist!</b>
                             </motion.div>
                         )}
                     </AnimatePresence>
