@@ -100,7 +100,7 @@ export default function AIChatPanel({
                         exit={{ opacity: 0, x: 10 }}
                         transition={{ duration: 0.2 }}
                     >
-                        Mudel: LLAMA 2-7B <br />
+                        Mudel: TartuNLP LLammas <br />
                         Server: Tartu Ülikooli HPC <br />
                         Hetke teadmised:
                         <ul className={styles.listItems}>
