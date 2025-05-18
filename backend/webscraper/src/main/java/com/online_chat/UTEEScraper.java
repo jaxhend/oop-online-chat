@@ -59,7 +59,7 @@ public class UTEEScraper {
         return urls;
     }
 
-    private static void scrapeAndSave(String pageUrl) {
+    private static void scrapeAndSave(String url) {
         WebDriverManager.chromedriver().setup(); // Seab automaatselt WebDriveri üles
         ChromeOptions options = new ChromeOptions().addArguments("--headless=new", "--window-size=1920,1080");
         WebDriver driver = new ChromeDriver(options);
@@ -70,7 +70,7 @@ public class UTEEScraper {
             MongoCollection<Document> counterCol = db.getCollection("counters");
             MongoCollection<Document> collection = db.getCollection("ut_pages");
 
-            driver.get(pageUrl);
+            driver.get(url);
             wait.until(d -> ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
 
             List<Map<String, String>> sections = extractSections(driver);
@@ -78,13 +78,13 @@ public class UTEEScraper {
             for (Map<String, String> sec : sections) {
                 Document doc = new Document();
                 doc.put("_id", getNextId(counterCol));
-                doc.put("url", pageUrl);
+                doc.put("url", url);
                 doc.put("pealkiri", sec.get("pealkiri"));
                 doc.put("sisu", sec.get("sisu"));
                 collection.insertOne(doc);
             }
         } catch (Exception e) {
-            System.err.println("Error scraping " + pageUrl + ": " + e.getMessage());
+            System.err.println("Error scraping " + url + ": " + e.getMessage());
         } finally {
             driver.quit();
         }
@@ -122,8 +122,8 @@ public class UTEEScraper {
     }
 
     // Tõstab counter väärtuse ja tagastab uue ID MongoDB jaoks
-    private static int getNextId(MongoCollection<Document> countersCollection) {
-        Document counter = countersCollection.findOneAndUpdate(
+    private static int getNextId(MongoCollection<Document> counters) {
+        Document counter = counters.findOneAndUpdate(
                 eq("_id", "ut_pages"),
                 Updates.inc("seq", 1),
                 new FindOneAndUpdateOptions().returnDocument(AFTER)
