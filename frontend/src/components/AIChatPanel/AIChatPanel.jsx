@@ -101,6 +101,7 @@ export default function AIChatPanel({
                         transition={{ duration: 0.2 }}
                     >
                         Mudel: LLAMA 2-7B <br />
+                        Server: Tartu Ülikooli HPC <br />
                         Hetke teadmised:
                         <ul className={styles.listItems}>
                             <li>TÜ õppekavad</li>
