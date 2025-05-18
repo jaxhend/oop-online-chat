@@ -14,11 +14,9 @@ export function ThemeProvider({ children }) {
         const root = document.documentElement;
         root.setAttribute("data-theme", theme);
         localStorage.setItem("theme", theme);
-        console.log("Theme changed in context:", theme);
     }, [theme]);
 
     const toggleTheme = () => {
-        console.log("Toggling theme in context");
         setTheme(prev => (prev === "dark" ? "light" : "dark"));
     };
 
