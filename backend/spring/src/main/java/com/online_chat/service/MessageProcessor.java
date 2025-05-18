@@ -182,7 +182,7 @@ public class MessageProcessor {
             sendMessage(session, response);
         else {
             response.addText(".\n " +
-                    "✉ Viimase 24 tunni lugemata sõnumid (" + oldMessages.size() + ")");
+                    "✉\uFE0F Viimase 24 tunni lugemata sõnumid (" + oldMessages.size() + ")");
             sendMessage(session, response);
             oldMessages.forEach(msg -> sendMessage(session, msg));
             MessageFormatter lastMessage = new MessageFormatter("✅ Varasemad sõnumid on kuvatud", GREEN);

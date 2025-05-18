@@ -82,6 +82,8 @@ export default function TerminalInput({
                                 exit={{ opacity: 0, x: 10 }}
                                 transition={{ duration: 0.2 }}
                             >
+                                Kasuta käsku <code>/help</code>,et näha erinevaid käske.
+                                Siin ve
                                 Saadaval käsud: <br />
                                 <code>/join &lt;ruum&gt;</code> – liitu või loo uus vestlusruum <br />
                                 <code>/private &lt;kasutajanimi&gt;</code> – alusta või liitu privaatvestlusega<br />
