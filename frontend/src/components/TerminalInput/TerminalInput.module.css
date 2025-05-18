@@ -57,6 +57,11 @@
     color: var(--border-color);
     opacity: 0.8;
     cursor: help;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    text-align: justify;
 }
 
 .tool-tip {
@@ -64,12 +69,11 @@
     bottom: 120%;
     right: 0;
     background-color: var(--bg-color);
-    color: var(--border-color);
+    color: var(--text-color);
     border: 1px solid var(--border-color);
     border-radius: 0.5rem;
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
-    font-weight: bold;
     white-space: nowrap;
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);

@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.online_chat.model.MessageFormatter.BLACK;
-import static com.online_chat.model.MessageFormatter.BLUE;
+import static com.online_chat.model.MessageFormatter.*;
 
 @Service
 public class MessageProcessor {
@@ -59,14 +59,9 @@ public class MessageProcessor {
                 return;
             }
             MessageFormatter response = commandHandler.handle(session, message);
+            // Kontrollib, kas tegemist oli /join käsuga ja leiab üles varasemad sõnumid
             List<MessageFormatter> oldMessages = getOldMessages(session, response);
-            if (oldMessages.isEmpty())
-                sendMessage(session, response);
-            else {
-                response.addText(". Viimase 24h jooksul saadetud sõnumid: ");
-                sendMessage(session, response);
-                oldMessages.forEach(msg -> sendMessage(session, msg));
-            }
+            sendOldMessages(oldMessages, session, response);
 
         } else if (session.getCurrentRoom() != null) { // Tavasõnumi väljasaatmine.
             String msg = profanityFilter.filterMessage(
@@ -96,7 +91,7 @@ public class MessageProcessor {
         else if (username.length() <= 3)
             sendUsernameMessage(session, "Kasutajanimi peab olema vähemalt 4 tähemärki.");
         else if (username.length() > 20)
-            sendUsernameMessage(session, "Kasutajanimi pikkus peab olema vähem kui 20 tähemärki.");
+            sendUsernameMessage(session, "Kasutajanime pikkus peab olema vähem kui 20 tähemärki.");
         else if (profanityFilter.containsProfanity(username))
             sendUsernameMessage(session, "Kasutasid vulgaarseid sõnu, proovi jääda viisakaks!");
         else if (!usernameRegistry.register(username, session.getId()))
@@ -133,9 +128,10 @@ public class MessageProcessor {
                 .filter(s -> sender.getCurrentRoom().equals(s.getCurrentRoom()))
                 .filter(s -> s.getWebSocketSession() != null && s.getWebSocketSession().isOpen())
                 .forEach(s -> {
-                    if (s.equals(sender)) // Enda saadetud sõnum on sinist värvi.
+                    if (s.equals(sender)) { // Enda saadetud sõnum on sinist värvi.
                         sendMessage(s, new MessageFormatter(formatted, BLUE));
-                    else sendMessage(s, msg);
+                        s.updateLastSeenMessage(roomName); // Värskendab viimase sõnu nägemise aega.
+                    } else sendMessage(s, msg);
                 });
 
     }
@@ -164,8 +160,14 @@ public class MessageProcessor {
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
             // Leiab regexi abil chatruumi nime.
-            List<ChatRoomMessage> lastMessages = chatRoomMessageService.findRoomMessages(matcher.group(1));
-            for (ChatRoomMessage msg : lastMessages) {
+            String chatRoomName = matcher.group(1);
+            LocalDateTime lastSeen = session.getLastSeenTimestamp(chatRoomName);
+            List<ChatRoomMessage> lastChatRoomMessages;
+            if (lastSeen == null) // Kasutaja liitub esimest korda vestlusruumiga
+                lastChatRoomMessages = chatRoomMessageService.findRoomMessages(chatRoomName);
+            else
+                lastChatRoomMessages = chatRoomMessageService.findRoomMessages(chatRoomName, lastSeen);
+            for (ChatRoomMessage msg : lastChatRoomMessages) {
                 MessageFormatter message = msg.getMessageFormatter();
                 if (msg.getUsername().equals(session.getUsername()))
                     message.setColor(BLUE); // Kui sõnum on kasutaja enda oma, siis kasutame sinist värvi.
@@ -173,5 +175,19 @@ public class MessageProcessor {
             }
         }
         return oldMessages;
+    }
+
+    private void sendOldMessages(List<MessageFormatter> oldMessages, ClientSession session, MessageFormatter response) {
+        if (oldMessages.isEmpty())
+            sendMessage(session, response);
+        else {
+            response.addText(".\n " +
+                    "✉\uFE0F Viimase 24 tunni lugemata sõnumid (" + oldMessages.size() + ")");
+            sendMessage(session, response);
+            oldMessages.forEach(msg -> sendMessage(session, msg));
+            MessageFormatter lastMessage = new MessageFormatter("✅ Varasemad sõnumid on kuvatud", GREEN);
+            lastMessage.removeTime(); // Eemaldame kellaaja.
+            sendMessage(session, lastMessage);
+        }
     }
 }

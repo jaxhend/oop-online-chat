@@ -2,7 +2,6 @@ package com.online_chat.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -45,6 +44,11 @@ public class MessageFormatter {
 
     public void addText(String text) {
         this.text += text;
+    }
+
+    public void removeTime() {
+        int index = text.indexOf("]");
+        this.text = text.substring(index + 2);
     }
 
     public String getColor() {

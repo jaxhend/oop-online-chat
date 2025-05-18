@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from "react";
 import styles from "./ChatPanel.module.css";
 import TerminalInput from "../TerminalInput/TerminalInput";
-import useTheme from "@/hooks/useTheme";
+import {motion} from "framer-motion";
 
-export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive}) {
+export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, theme}) {
     const [userScrolledUp, setUserScrolledUp] = useState(false);
-    const [theme] = useTheme();
 
     useEffect(() => { // Kontrollib, kas kasutaja on üles scrollinud
         const chatLog = chatLogRef.current;
@@ -29,52 +28,57 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive}) 
 
 
     const resolveColor = (msgColor) => {
-        const fallbackDark = "#eaeaea";
-        const fallbackLight = "#1a1a1a"; // tumedam kui #000, pisut pehmem
+        const white = "#eaeaea";
+        const black = "#000000";
 
-        if (!msgColor) return theme === "dark" ? fallbackDark : fallbackLight;
+        if (!msgColor) return theme === "dark" ? white : black;
 
         const normalized = msgColor.toLowerCase();
 
-        const tooLightInLightMode = ["#eaeaea"];
-        const tooDarkInDarkMode = ["#34495e"];
-
-        if (theme === "dark" && tooDarkInDarkMode.includes(normalized)) {
-            return fallbackDark;
+        if (theme === "dark") {
+            if (normalized === black) return white;
+            if (normalized === white) return white;
+        } else {
+            if (normalized === white) return black;
+            if (normalized === black) return black;
         }
-
-        if (theme === "light" && tooLightInLightMode.includes(normalized)) {
-            return fallbackLight;
-        }
-
-        return msgColor;
+        return msgColor; // Muidu tagastab teise värvi.
     };
 
 
     return (
-        <div className={styles.container}>
-            <h2 className={styles.title}>Vestlusplats</h2>
-            <div ref={chatLogRef} className={styles.chatLog}>
-                {chatMessages.map((msg, i) => {
-                    return (
-                        <div
-                            key={i} className={styles.message}
-                            style={{
-                                color: resolveColor(msg.color)
-                            }}
-                        >
-                            {msg.text}
-                        </div>
-                    );
-                })}
+        <motion.div
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{duration: 0.6}}
+        >
+
+            <div className={styles.container}>
+                <h2 className={styles.title}>Vestlusplats</h2>
+                <div ref={chatLogRef} className={styles.chatLog}>
+                    {chatMessages.map((msg, i) => {
+                        const uniqueKey = msg.id || `msg-${i}-${msg.text.substring(0,10)}`;
+                        return (
+                            <div
+                                key={uniqueKey}
+                                className={styles.message}
+                                style={{
+                                    color: resolveColor(msg.color)
+                                }}
+                            >
+                                {msg.text}
+                            </div>
+                        );
+                    })}
+                </div>
+                <TerminalInput
+                    onSubmit={onSend}
+                    isActive={isActive}
+                    showEmojiButton={true}
+                    showHelpIcon={true}
+                    placeholder={"Sisesta sõnum..."}
+                />
             </div>
-            <TerminalInput
-                onSubmit={onSend}
-                isActive={isActive}
-                showEmojiButton={true}
-                showHelpIcon={true}
-                placeholder={"Sisesta sõnum..."}
-            />
-        </div>
+        </motion.div>
     );
 }

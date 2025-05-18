@@ -26,8 +26,13 @@ public class ChatRoomMessageService {
     }
 
     // Leiab chatruumi varasemad sõnumid.
+    public List<ChatRoomMessage> findRoomMessages(String chatRoomName, LocalDateTime lastSeen) {
+        return messageRepository.findChatRoomMessageByChatRoomNameAndTimestampAfterOrderByTimestampAsc(chatRoomName, lastSeen);
+    }
+
     public List<ChatRoomMessage> findRoomMessages(String chatRoomName) {
-        return messageRepository.findChatRoomMessageByChatRoomNameOrderByTimestampAsc(chatRoomName);
+        LocalDateTime twentyFourHours = LocalDateTime.now().minusHours(24);
+        return messageRepository.findChatRoomMessageByChatRoomNameAndTimestampAfterOrderByTimestampAsc(chatRoomName, twentyFourHours);
     }
 
     @Transactional
