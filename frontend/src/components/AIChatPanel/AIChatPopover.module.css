@@ -1,0 +1,49 @@
+
+
+.bot-button {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    font-size: 3rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border-color);
+    background:none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px var(--border-color);
+}
+
+
+
+.popover {
+    position: absolute;
+    bottom: 3rem;
+    right: 0;
+    width: 360px;
+    max-width: 90vw;
+    max-height: 70vh;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.wrapper {
+    max-width: 100%;
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 1000;
+}
+

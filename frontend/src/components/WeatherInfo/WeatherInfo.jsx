@@ -1,36 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "./WeatherInfo.module.css";
+import { motion } from "framer-motion";
 
-const fetchFlaskContent = async (endpoint, setter) => {
-    try {
-        const response = await fetch(`https://api.utchat.ee/${endpoint}`);
-        const data = await response.json();
-        setter(data);
-    } catch (error) {
-        console.error("Error fetching data:", error);
+export default function WeatherInfo({weather}) {
+    if (!weather || !weather.temperature) {
+        return <p>Ilma andmeid ei ole saadaval</p>;
     }
-};
-
-export default function WeatherInfo() {
-    const [weather, setWeather] = useState({});
-
-    useEffect(() => {
-        fetchFlaskContent("ilm", setWeather);
-    }, []);
 
     return (
-        <div className={styles.section}>
-            <h4 className={styles.title}>Ilm</h4>
-            {weather.temperature ? (
-                <>
-                    <p className={styles.paragraph}>Temperatuur: {weather.temperature}°C</p>
-                    {weather.feelsLike && <p className={styles.paragraph}>Tundub nagu: {weather.feelsLike}°C</p>}
-                    {weather.precipitation && <p className={styles.paragraph}>Sademed: {weather.precipitation}mm</p>}
-                    {weather.iconUrl && <img src={weather.iconUrl} alt="Ilma ikoon" className={styles.icon} />}
-                </>
-            ) : (
-                <p className={styles.paragraph}>Ilma andmeid ei ole saadaval</p>
-            )}
-        </div>
+        <motion.div
+            className={styles.card}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+        >
+            <div className={styles.header}>
+                <h3 className={styles.city}>Tartu</h3>
+                <span className={styles.time}>{new Date().toLocaleTimeString("et-EE", { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+
+            <div className={styles.tempBlock}>
+                <h1 className={styles.temperature}>{weather.temperature}</h1>
+                <p className={styles.condition}>Hetkeilm</p>
+            </div>
+
+            <div className={styles["bottom-info"]}>
+                <div className={styles["info-group"]}>
+                    <div className={styles["info-item"]}>
+                        🌡 <strong>Tundub nagu:</strong>  <span>{weather.feelsLike || "?"}</span>
+                    </div>
+                    <div className={styles["info-item"]}>
+                        💧<strong>Sademed:</strong> <span>{weather.precipitation || "?"}</span>
+                    </div>
+                </div>
+                <motion.img
+                    src={weather.iconUrl}
+                    alt="Ilma ikoon"
+                    className={styles.icon}
+
+                />
+            </div>
+
+        </motion.div>
     );
 }

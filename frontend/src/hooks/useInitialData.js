@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
 export default function useInitialData(apiUrl) {
     const [newsList, setNewsList] = useState([]);
@@ -24,5 +24,5 @@ export default function useInitialData(apiUrl) {
         ]).finally(() => setLoading(false));
     }, [apiUrl]);
 
-    return { newsList, dailyDeals, weatherInfo, loading };
+    return {newsList, dailyDeals, weatherInfo, loading};
 }

@@ -5,6 +5,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,30 +17,27 @@ import java.util.List;
 @Component
 public class DeltaJsoupScraper {
 
+    private static final Logger logger = LoggerFactory.getLogger(DeltaJsoupScraper.class);
     private List<DailyOffer> cachedOffers = List.of(new DailyOffer("Delta", "Pakkumised pole veel saadaval"));
 
     @PostConstruct
-    public void init() throws IOException {
-        updateCache();
-    }
     @Scheduled(cron = "0 0 11 * * MON-FRI")
-    public void updateLunchOffers() throws IOException {
-        cachedOffers = lunchOffers();
-    }
-
-    private void updateCache() {
+    public void updateLunchOffers() {
         try {
+            logger.info("Päevapakkumiste scrapemine algas.");
             this.cachedOffers = lunchOffers();
+            logger.info("Päevapakkumiste scrapemine lõppes.");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Päevapakkumiste scraperi error ", e);
             this.cachedOffers = List.of(new DailyOffer("Delta", "Pakkumiste laadimine ebaõnnestus"));
         }
     }
+
     public List<DailyOffer> getLatestLunchOffers() {
         return cachedOffers;
     }
 
-    public  List<DailyOffer> lunchOffers() throws IOException {
+    private List<DailyOffer> lunchOffers() throws IOException {
         String url = "https://xn--pevapakkumised-5hb.ee/tartu/delta-kohvik";
 
         Document doc = Jsoup.connect(url).get();
@@ -48,26 +47,17 @@ public class DeltaJsoupScraper {
         for (Element diner : diners) {
             String dinerName = diner.select("h3").text();
             if (dinerName.toLowerCase().contains("delta")) {
-                System.out.println("Kohvik: " + dinerName);
                 Elements offers = diner.select("div.offer");
                 for (Element offer : offers) {
                     String description = offer.ownText();
                     String price = offer.select("strong").text();
                     if (!description.isEmpty()) {
-                        offersList.add(new DailyOffer(description, description + " - " + price));
+                        offersList.add(new DailyOffer(dinerName, description + " - " + price));
                     }
                 }
             }
         }
-
         return offersList;
     }
-
-
-    public static void main(String[] args) throws IOException {
-        DeltaJsoupScraper scraper = new DeltaJsoupScraper();
-        System.out.println(scraper.lunchOffers());
-    }
-
 
 }

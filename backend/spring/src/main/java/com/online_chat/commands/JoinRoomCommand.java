@@ -1,8 +1,9 @@
 package com.online_chat.commands;
 
 
-import com.online_chat.model.ChatRoomManager;
-import com.online_chat.model.ClientSession;
+import com.online_chat.chatrooms.ChatRoomManager;
+import com.online_chat.client.ClientSession;
+import com.online_chat.model.MessageFormatter;
 
 public class JoinRoomCommand implements Command {
 
@@ -13,19 +14,18 @@ public class JoinRoomCommand implements Command {
     }
 
     @Override
-    public String execute(ClientSession session, String[] args) {
-        if (!validCommand(args)) return "Kasutus: /join <ruumi_nimi>";
+    public MessageFormatter execute(ClientSession session, String[] args) {
+        if (validCommand(args))
+            return new MessageFormatter("Kasutus: /join <ruumi_nimi>", MessageFormatter.RED);
 
         String roomName = args[1].toLowerCase();
+        if (!roomName.matches("[a-zA-ZäöüõÄÖÜÕ0-9]+"))
+            return new MessageFormatter("Vestlusruumi nimi tohib sisaldada ainult eesti tähestiku tähti ja numbreid.", MessageFormatter.RED);
+        else if (roomName.length() > 30)
+            return new MessageFormatter("Vestlusruumi nimi peab olema vähem kui 30 tähemärki.", MessageFormatter.RED);
 
-        if (roomName.contains("-")) {
-            return "Sul ei ole õigust liituda selle privaatse ruumiga!";
-        }
-        if (roomName.contains(session.getUsername().toLowerCase()) && roomName.contains("-")) {
-            return "See on privaatvestlus, mille osa sa oled. Liitumiseks kasuta: /private <teise_kasutaja_nimi>";
-        }
-        if (session.getCurrentRoom() != null && roomName.equals(session.getCurrentRoom().getName())) {
-            return "Oled juba ruumis '" + roomName + "'.";
+        if (session.getCurrentRoom() != null && roomName.equalsIgnoreCase(session.getCurrentRoom().getName())) {
+            return new MessageFormatter("Oled juba ruumis '" + roomName + "'.", MessageFormatter.RED);
         }
 
         // vajadusel loome uue ruumi ning eemaldame kliendi vanast ruumist ning lisame uude ruumi
@@ -33,11 +33,11 @@ public class JoinRoomCommand implements Command {
         chatRoomManager.removeClientFromCurrentRoom(session);
         chatRoomManager.addClientToRoom(session, roomName); // Lisab ruumi ja saadab sõnumi.
 
-        return "Liitusid ruumiga: " + roomName;
+        return new MessageFormatter("Liitusid ruumiga '" + roomName + "'", MessageFormatter.GREEN);
     }
 
     @Override
     public boolean validCommand(String[] args) {
-        return args.length == 2;
+        return args.length != 2;
     }
 }

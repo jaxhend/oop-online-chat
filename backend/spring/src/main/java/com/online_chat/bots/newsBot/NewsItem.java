@@ -22,23 +22,12 @@ public class NewsItem {
         return link;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public String getPublishDate() {
         return publishDate;
     }
 
-    @Override
-    public String toString() {
-        return """
-                📰 %s
-                📅 %s
-                📝 %s
-                🔗 %s
-                
-                """.formatted(title, publishDate, description, link);
+    public String getDescription() {
+        return description;
     }
 }
 

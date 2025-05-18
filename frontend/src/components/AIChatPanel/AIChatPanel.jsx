@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { Textarea } from "@/components/ui/chat/textarea";
+import React, {useEffect, useRef, useState} from "react";
+import {Textarea} from "@/components/ui/textarea";
 import styles from "./AIChatPanel.module.css";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { HelpCircle } from "lucide-react";
+import {AnimatePresence, motion} from "framer-motion";
+
 
 export default function AIChatPanel({
                                         botInput,
@@ -9,15 +11,105 @@ export default function AIChatPanel({
                                         onBotSend,
                                         chatHistory,
                                         isActive,
+                                        isThinking
                                     }) {
-    const [isThinking, setIsThinking] = useState(false);
-    const [response, setResponse] = useState("");
+    const chatLogRef = useRef(null);
+    const lastInputRef = useRef("");
+    const [dots, setDots] = useState("");
+    const [charCount, setCharCount] = useState(0);
+    const [needsRestoration, setNeedsRestoration] = useState(false);
+    const MAX_MESSAGE_LENGTH = 300;
+    const [showTooltip, setShowTooltip] = useState(false);
+
+
+    useEffect(() => {
+        if(isThinking)
+            lastInputRef.current = botInput;
+    }, [botInput]);
+
+
+    useEffect(() => {
+        if (isThinking) {
+            setNeedsRestoration(true);
+            // Input välja eelmise seisundi taastamine
+        } else if (needsRestoration && botInput === '') {
+            if (lastInputRef.current) {
+                onBotInputChange({target: {value: lastInputRef.current}});
+            }
+            setNeedsRestoration(false);
+        }
+    }, [isThinking, botInput, needsRestoration, onBotInputChange]);
+
+
+    const handleSend = async () => {
+        if (!botInput.trim() || isThinking || charCount > MAX_MESSAGE_LENGTH) return;
+        const processedMsg = botInput.replace(/\n/g, " ").replace(/\r/g, " ");
+        onBotSend(processedMsg);
+    };
+
+    useEffect(() => {
+        setCharCount(botInput.length);
+    }, [botInput]);
+
+
+    const getCharCountColor = () => {
+        if (charCount > MAX_MESSAGE_LENGTH) return styles.charCountExceeded;
+        if (charCount > MAX_MESSAGE_LENGTH * 0.9) return styles.charCountWarning;
+        return styles.charCount;
+    };
+
+    useEffect(() => {
+        const el = chatLogRef.current;
+        if (!el) return;
+        el.scrollTop = el.scrollHeight;
+    }, [chatHistory, isThinking])
+
+
+    useEffect(() => {
+        if (!isThinking) {
+            setDots("");
+            return;
+        }
+        const interval = setInterval(() => {
+            setDots(prev => {
+                if (prev.length >= 5) return "";
+                return prev + ".";
+            });
+        }, 500);
+        return () => clearInterval(interval);
+    }, [isThinking]);
+
 
     return (
         <div className={styles.container}>
-            <h3 className={styles.title}>AI Juturobot</h3>
+            <div className={styles["title-row"]}>
+                <h3 className={styles.titleWithIcon}>
+                    AI Juturobot
+                    <span
+                        className={styles["help-wrapper"]}
+                        onMouseEnter={() => setShowTooltip(true)}
+                        onMouseLeave={() => setShowTooltip(false)}
+                    >
+            <HelpCircle className={styles["help-icon"]} />
+            <AnimatePresence>
+                {showTooltip && (
+                    <motion.div
+                        className={styles["tool-tip"]}
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 10 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        Mudel:<br />
+                        LLAMA 2-7B
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </span>
+                </h3>
+            </div>
 
-            <div className={styles.chatLog}>
+            <div className={styles.chatLog} ref={chatLogRef}>
                 {chatHistory.map((entry, i) => (
                     <div key={i} className={styles.message}>
                         <strong>{entry.sender}:</strong> {entry.text}
@@ -26,16 +118,7 @@ export default function AIChatPanel({
 
                 {isThinking && (
                     <div className="flex flex-col gap-2 mt-2">
-                        <span className="text-muted-foreground text-sm">AI mõtleb...</span>
-                        <Skeleton className="h-4 w-3/4" />
-                        <Skeleton className="h-4 w-2/3" />
-                        <Skeleton className="h-4 w-1/2" />
-                    </div>
-                )}
-
-                {response && !isThinking && (
-                    <div className={styles.responseContainer}>
-                        <p>Bot: {response}</p>
+                        <span className="text-muted-foreground text-sm">AI mõtleb{dots}</span>
                     </div>
                 )}
             </div>
@@ -49,19 +132,22 @@ export default function AIChatPanel({
                     onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey && isActive) {
                             e.preventDefault();
-                            onBotSend(setIsThinking, setResponse);
+                            handleSend();
                         }
                     }}
-                    className={styles.textarea}
-                    placeholder="Sisesta küsimus..."
-                    readOnly={!isActive}
+                    className={`${styles.textarea}`}
+                    placeholder={"Sisesta küsimus..."}
                 />
+                <div className={getCharCountColor()}>
+                    {charCount}/{MAX_MESSAGE_LENGTH}
+                </div>
                 <button
-                    onClick={() => onBotSend(setIsThinking, setResponse)}
-                    className={styles.button}
-                    disabled={!isActive}
+                    onClick={handleSend}
+                    className={`${styles.button} 
+                                ${(isThinking || charCount > MAX_MESSAGE_LENGTH) ? styles.notAllowed : ''}`}
+                    disabled={!isActive || isThinking || !botInput.trim() || charCount > MAX_MESSAGE_LENGTH}
                 >
-                    Saada botile
+                    Saada
                 </button>
             </div>
         </div>

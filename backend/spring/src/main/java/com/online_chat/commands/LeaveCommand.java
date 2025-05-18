@@ -1,8 +1,9 @@
 package com.online_chat.commands;
 
 
-import com.online_chat.model.ChatRoomManager;
-import com.online_chat.model.ClientSession;
+import com.online_chat.chatrooms.ChatRoomManager;
+import com.online_chat.client.ClientSession;
+import com.online_chat.model.MessageFormatter;
 
 public class LeaveCommand implements Command {
 
@@ -13,15 +14,16 @@ public class LeaveCommand implements Command {
     }
 
     @Override
-    public String execute(ClientSession session, String[] args) {
-        if (!inARoom(session)) return "Sa ei ole üheski ruumis.";
+    public MessageFormatter execute(ClientSession session, String[] args) {
+        if (!inARoom(session))
+            return new MessageFormatter("Sa ei ole üheski ruumis.", MessageFormatter.RED);
 
         chatRoomManager.removeClientFromCurrentRoom(session);
-        return "Lahkusid ruumist.";
+        return new MessageFormatter("Lahkusid ruumist.", MessageFormatter.PURPLE);
     }
 
     @Override
     public boolean validCommand(String[] args) {
-        return args.length == 1;
+        return false;
     }
 }

@@ -6,6 +6,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,15 +20,18 @@ import java.util.*;
 public class RssScraper {
 
     private static final String eestiUudised = "https://www.postimees.ee/rss?r=122";
-    private static final String välisUudised = "https://www.postimees.ee/rss?r=123";
+    private static final String valisUudised = "https://www.postimees.ee/rss?r=123";
     private static final String spordiUudised = "http://sport.postimees.ee/rss/";
     private static final String teadusUudised = "http://www.postimees.ee/rss/?r=145";
     private static final String kultuuriUudised = "http://www.postimees.ee/rss/?r=129";
     private static final Map<String, List<NewsItem>> newsCache = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(RssScraper.class);
+
+
     private String getFeedUrlByChoice(String chosenTopic) {
         return switch (chosenTopic) {
             case "1" -> eestiUudised;
-            case "2" -> välisUudised;
+            case "2" -> valisUudised;
             case "3" -> spordiUudised;
             case "4" -> teadusUudised;
             case "5" -> kultuuriUudised;
@@ -35,24 +40,27 @@ public class RssScraper {
     }
 
     @PostConstruct
-    public void init() throws IOException {
-        updateAllFeeds();
-    }
     @Scheduled(fixedRate = 1800000)
-    public void updateAllFeeds() throws IOException {
-        for (String topic : List.of("1", "2", "3", "4", "5")) {
-            List<NewsItem> items = scrape(topic);
-            newsCache.put(topic, items);
+    public void updateAllFeeds() {
+        try {
+            logger.info("Uudiste scrapemine algas.");
+            for (String topic : List.of("1", "2", "3", "4", "5")) {
+                List<NewsItem> items = scrape(topic);
+                newsCache.put(topic, items);
+            }
+            logger.info("Uudiste scrapemine lõppes.");
+        } catch (IOException e) {
+            logger.error("Uudiste scraperi error", e);
         }
     }
 
-    public List<NewsItem> getLatestNews(String topic) throws IOException {
+    public List<NewsItem> getLatestNews(String topic) {
         return newsCache.getOrDefault(topic, List.of(
                 new NewsItem("Uudiseid pole hetkel saadaval.", "", "", "")
         ));
     }
 
-    public List<NewsItem> scrape(String topic) throws IOException {
+    private List<NewsItem> scrape(String topic) throws IOException {
         List<NewsItem> newsItems = new ArrayList<>();
         String url = getFeedUrlByChoice(topic);
 

@@ -5,9 +5,7 @@ import {CookiesProvider} from "react-cookie";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
-        <CookiesProvider>
-            <OnlineChat />
-        </CookiesProvider>
-    </React.StrictMode>
+    <CookiesProvider>
+        <OnlineChat/>
+    </CookiesProvider>
 );

@@ -1,17 +1,43 @@
 <!DOCTYPE html>
 <html lang="et">
 <head>
-  <meta charset="UTF-8" />
-  <title>UTCHAT</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link
-          rel="icon"
-          href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Universit%C3%A4t_Tartu_Logo.svg/1200px-Universit%C3%A4t_Tartu_Logo.svg.png"
-          type="image/png"
-  />
+    <meta charset="UTF-8"/>
+    <title>UTchat - tudengite vestlusplats</title>
+
+    <!-- SEO jaoks -->
+    <meta name="description"
+          content="UTchat on tudengitele mõeldud platvorm, kus arutatakse õpingute, eksamite ja tudengielu üle. Tule liitu aruteluga!"/>
+    <meta name="keywords"
+          content="tudengite arutelu, Eesti ülikool, UTChat, ülikoolielu, eksamid, tudengikogukond, aruteluplatvorm"/>
+
+    <meta property="og:title" content="UTchat – tudengite vestlusplats"/>
+    <meta property="og:description"
+          content="UTchat on tudengitele mõeldud platvorm, kus arutatakse õpingute, eksamite ja tudengielu üle. Tule liitu aruteluga!"/>
+    <meta property="og:image" content="src/assets/ut-logo.png"/>
+    <meta property="og:image:type" content="image/png"/>
+    <meta property="og:url" content="https://utchat.ee"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "UTchat",
+            "url": "https://utchat.ee",
+            "description": "Eesti ülikoolide tudengite vestlusplats",
+            "logo": "https://utchat.ee/src/assets/ut-logo.png"
+        }
+    </script>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="preload" href="src/assets/ut-logo.webp" as="image" type="image/webp"/>
+    <link rel="icon" href="src/assets/ut-logo.webp" type="image/webp"/>
+    <link rel="icon" href="src/assets/ut-logo.png" type="image/png"/>
+
 </head>
 <body>
 <div id="root"></div>
-<script type="module" src="/src/main.jsx"></script>
+<script type="module" src="src/main.jsx"></script>
 </body>
 </html>

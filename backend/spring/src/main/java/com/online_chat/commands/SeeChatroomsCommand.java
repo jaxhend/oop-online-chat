@@ -1,14 +1,17 @@
 package com.online_chat.commands;
 
 
-import com.online_chat.model.ChatRoomManager;
-import com.online_chat.model.ClientSession;
+import com.online_chat.chatrooms.ChatRoom;
+import com.online_chat.chatrooms.ChatRoomManager;
+import com.online_chat.chatrooms.PrivateChatRoom;
+import com.online_chat.client.ClientSession;
+import com.online_chat.model.MessageFormatter;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.online_chat.model.ChatRoomManager.defaultRooms;
+import static com.online_chat.chatrooms.ChatRoomManager.defaultRooms;
 
 public class SeeChatroomsCommand implements Command {
 
@@ -19,23 +22,29 @@ public class SeeChatroomsCommand implements Command {
     }
 
     @Override
-    public String execute(ClientSession session, String[] args) {
-        Set<String> roomNames = chatRoomManager.getRoomNames();
+    public MessageFormatter execute(ClientSession session, String[] args) {
+        Map<String, ChatRoom> roomInfo = chatRoomManager.getRoomInfo();
 
-        String result = Stream.concat(
-                defaultRooms.stream()
-                        .filter(roomNames::contains)
-                        .map(name -> name + " (" + chatRoomManager.getRoom(name).getClientsCount() + ")"),
+        String result = Stream.of(
+                        defaultRooms.stream()
+                                .map(name -> name + " (" + chatRoomManager.getRoom(name).getClientsCount() + ")"),
 
-                roomNames.stream()
-                    .filter(name -> !defaultRooms.contains(name) && !name.toLowerCase().contains(":"))
-                    .map(name -> name + " (" + chatRoomManager.getRoom(name).getClientsCount() + ")")
-        ).collect(Collectors.joining(", "));
-        return "Saadaval vestlusruumid: " + result;
+                        roomInfo.entrySet().stream()
+                                .filter(entry -> !defaultRooms.contains(entry.getKey()) && entry.getValue().isPublicChatRoom()) // välista default ruumid
+                                .map(entry -> entry.getKey() + " (" + entry.getValue().getClientsCount() + ")"),
+
+                        roomInfo.entrySet().stream()
+                                .filter(entry -> entry.getValue().canJoin(session) && entry.getValue() instanceof PrivateChatRoom)
+                                .map(entry -> entry.getKey() + " (" + entry.getValue().getClientsCount() + ")")
+                )
+                .flatMap(s -> s)  // Teeme üheks streamiks
+                .collect(Collectors.joining(", "));
+
+        return new MessageFormatter("Saadaval vestlusruumid: " + result, MessageFormatter.PURPLE);
     }
 
     @Override
     public boolean validCommand(String[] args) {
-        return true;
+        return false;
     }
 }
