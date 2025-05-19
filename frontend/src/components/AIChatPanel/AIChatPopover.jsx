@@ -12,6 +12,13 @@ export default function AIChatPopover({
                                       }) {
     const [visible, setVisible] = useState(false);
     const popoverRef = useRef();
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
+
+    useEffect(() => {
+        const handler = () => setIsMobile(window.innerWidth <= 800);
+        window.addEventListener("resize", handler);
+        return () => window.removeEventListener("resize", handler);
+    }, []);
 
 
     useEffect(() => {
@@ -30,7 +37,18 @@ export default function AIChatPopover({
     const togglePopover = () => {
         setVisible((prev => !prev));
     }
-    return (
+    return isMobile ?  (
+        <div className={styles["mobile-panel"]}>
+            <AIChatPanel
+                isThinking={isThinking}
+                isActive={true}
+                chatHistory={chatHistory}
+                botInput={botInput}
+                onBotInputChange={onBotInputChange}
+                onBotSend={onBotSend}
+            />
+        </div>
+    ) : (
         <div className={styles.wrapper}>
             <AnimatePresence>
                 {!visible && (
