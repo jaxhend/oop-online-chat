@@ -30,7 +30,9 @@
     cursor: pointer;
     box-shadow: 0 2px 2px var(--border-color);
     transition: background-color 0.2s ease;
-    width: 100%;
+    width: auto;
+    max-width: 100%;
+    white-space: nowrap;
 }
 
 .command-bar {
