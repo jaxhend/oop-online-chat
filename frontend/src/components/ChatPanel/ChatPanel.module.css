@@ -71,7 +71,7 @@
     align-self: flex-start;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .command-bar {
         display: none;
     }
