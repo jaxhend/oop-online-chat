@@ -51,6 +51,8 @@ public class DeltaJsoupScraper {
             for (String cafeName : diners) {
                 if (dinerName.toLowerCase().contains(cafeName)) {
                     offersList.put(cafeName, new ArrayList<>());
+                if (dinerName.toLowerCase().contains(cafeName.toLowerCase())) {
+                    offersList.putIfAbsent(cafeName, new ArrayList<>());
                     Elements offers = diner.select("div.offer");
                     for (Element offer : offers) {
                         String description = offer.ownText();
@@ -63,6 +65,18 @@ public class DeltaJsoupScraper {
             }
         }
         return offersList;
+    }
+
+    public static void main(String[] args) throws IOException {
+        DeltaJsoupScraper scraper = new DeltaJsoupScraper();
+        Map<String, List<DailyOffer>> offers = scraper.lunchOffers();
+
+        for (Map.Entry<String, List<DailyOffer>> entry : offers.entrySet()) {
+            System.out.println("☕ " + entry.getKey());
+            for (DailyOffer offer : entry.getValue()) {
+                System.out.println("  ➤ " + offer.getOffer());
+            }
+        }
     }
 
 }
