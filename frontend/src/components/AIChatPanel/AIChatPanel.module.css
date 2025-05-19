@@ -23,6 +23,7 @@
     align-items: center;
     justify-content: center;
     vertical-align: middle;
+    transform: translateY(5px);
 }
 
 .help-wrapper {
