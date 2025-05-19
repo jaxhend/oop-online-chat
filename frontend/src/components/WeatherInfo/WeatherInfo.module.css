@@ -1,6 +1,6 @@
 .card {
     background-color: var(--bg-color);
-    border-radius: 1.5rem;
+    border-radius: 1rem;
     border: 1.25px solid var(--border-color);
     padding: 10px; /* clamp */
     box-shadow: 0 3px 10px #2C5696;

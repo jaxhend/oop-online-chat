@@ -20,7 +20,13 @@ export default function AIChatPanel({
     const [needsRestoration, setNeedsRestoration] = useState(false);
     const MAX_MESSAGE_LENGTH = 300;
     const [showTooltip, setShowTooltip] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 800);
 
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 800);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     useEffect(() => {
         if(isThinking)
@@ -148,14 +154,17 @@ export default function AIChatPanel({
                 <div className={getCharCountColor()}>
                     {charCount}/{MAX_MESSAGE_LENGTH}
                 </div>
-                <button
-                    onClick={handleSend}
-                    className={`${styles.button} 
+
+                {!isMobile && (
+                    <button
+                        onClick={handleSend}
+                        className={`${styles.button} 
                                 ${(isThinking || charCount > MAX_MESSAGE_LENGTH) ? styles.notAllowed : ''}`}
-                    disabled={!isActive || isThinking || !botInput.trim() || charCount > MAX_MESSAGE_LENGTH}
-                >
-                    Saada
-                </button>
+                        disabled={!isActive || isThinking || !botInput.trim() || charCount > MAX_MESSAGE_LENGTH}
+                    >
+                        Saada
+                    </button>
+                )}
             </div>
         </div>
     );
