@@ -9,6 +9,7 @@
     background-color: var(--bg-color);
     max-height: 85vh;
     height: 85vh;
+    max-width: 90vh;
 }
 
 .header-row {
@@ -63,6 +64,7 @@
     box-sizing: border-box;
     word-break: break-word;
     overflow-wrap: break-word;
+    font-size: 16px;
 }
 
 
@@ -75,6 +77,11 @@
     .command-bar {
         display: none;
     }
+    .chatLog {
+        font-size: 14px;
+    }
+
+
 }
 
 

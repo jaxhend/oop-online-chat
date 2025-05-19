@@ -86,13 +86,13 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                         whileHover={{scale: 1.05}}
                         whileTap={{scale: 0.95}}
                         className={styles["command-button"]}
-                        onClick={() => onSend("/chatrooms")}
+                        onClick={() => onSend("/vestlusruumid")}
                     > Vestlusruumid</motion.button>
                     <motion.button
                         whileHover={{scale: 1.05}}
                         whileTap={{scale: 0.95}}
                         className={styles["command-button"]}
-                        onClick={() => onSend("/members")}
+                        onClick={() => onSend("/kasutajad")}
                     >
                         Kasutajad
                     </motion.button>
@@ -100,7 +100,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                         whileHover={{scale: 1.05}}
                         whileTap={{scale: 0.95}}
                         className={styles["command-button"]}
-                        onClick={() => setInputText("/join ")}
+                        onClick={() => setInputText("/liitu ")}
                     >
                         Liitu
                     </motion.button>
@@ -108,7 +108,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                         whileHover={{scale: 1.05}}
                         whileTap={{scale: 0.95}}
                         className={styles["command-button"]}
-                        onClick={() => setInputText("/private ")}
+                        onClick={() => setInputText("/privaat ")}
                     >
                         Privaatsõnum
                     </motion.button>
@@ -116,9 +116,17 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                         whileHover={{scale: 1.05}}
                         whileTap={{scale: 0.95}}
                         className={styles["command-button"]}
-                        onClick={() => onSend("/leave")}
+                        onClick={() => onSend("/lahku")}
                     >
                         Lahku ruumist
+                    </motion.button>
+                    <motion.button
+                        whileHover={{scale: 1.05}}
+                        whileTap={{scale: 0.95}}
+                        className={styles["command-button"]}
+                        onClick={() => onSend("/abi")}
+                    >
+                        Abi
                     </motion.button>
                 </div>
                 <TerminalInput

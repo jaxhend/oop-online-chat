@@ -167,12 +167,12 @@ export default function OnlineChat() {
                     <div className="info-panel">
                         <div className="container">
                             {usernameAccepted && (
-                            <DailyDeals deals={dailyDeals}/>
-                                )}
+                                <DailyDeals deals={dailyDeals}/>
+                            )}
                         </div>
                         <div className="container">
                             {usernameAccepted && (
-                            <WeatherInfo weather={weatherInfo}/>
+                                <WeatherInfo weather={weatherInfo}/>
                             )}
                         </div>
                     </div>

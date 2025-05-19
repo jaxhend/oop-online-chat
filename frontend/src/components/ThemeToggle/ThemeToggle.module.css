@@ -1,7 +1,7 @@
 
 
 .button {
-    position: fixed;
+    position: absolute;
     perspective: 600px;
     margin-top: 0;
     margin-left: 1rem;
@@ -25,3 +25,10 @@
     justify-content: center;
 }
 
+@media (max-width: 800px) {
+    .button {
+        margin-left: 7px;
+
+
+    }
+}

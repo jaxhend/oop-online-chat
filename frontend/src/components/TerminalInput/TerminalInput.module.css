@@ -18,10 +18,13 @@
 
 .input {
     outline: none;
+    resize: none;
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-break: break-word;
+    overflow-y: auto;
     flex: 1;
+    height: 50px;
     min-height: 40px;
     border: 2px solid #3b82f6;
     border-radius: 0.5rem;
@@ -32,6 +35,8 @@
     overflow-x: hidden;
     box-sizing: border-box;
     font-size: 1rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 
@@ -77,4 +82,26 @@
     white-space: nowrap;
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 800px) {
+    .input {
+        font-size: 0.8rem;
+    }
+    .empty::before {
+        font-size: 0.8rem;
+    }
+    .tool-tip {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 1000px) {
+    .tool-tip {
+        white-space: pre-wrap;
+    }
+}
+
+@media (max-width: 800px) {
+
 }
