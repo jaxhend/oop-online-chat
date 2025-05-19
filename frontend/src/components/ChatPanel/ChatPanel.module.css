@@ -22,18 +22,21 @@
     background-color: var(--bg-color);
     border: 1px solid var(--border-color);
     color: var(--text-color);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+    padding: 0.2rem 0.1rem;
+    border-radius: 12px;
     font-weight: 500;
+    font-family: inherit;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 2px var(--border-color);
     transition: background-color 0.2s ease;
+    width: 100%;
 }
 
 .command-bar {
     display: flex;
     gap: 0.25rem;
     align-items: center;
+    justify-content: space-between;
 
 }
 

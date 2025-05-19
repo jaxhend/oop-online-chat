@@ -32,9 +32,10 @@
     border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 0.4rem 1rem;
-    font-weight: 500;
+    font-weight: bold;
     cursor: pointer;
     color: var(--text-color);
+    font-family: inherit;
 }
 
 .list {
