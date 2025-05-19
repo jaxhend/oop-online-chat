@@ -95,6 +95,8 @@
 .inputGroup {
     display: flex;
     gap: 0.75rem;
+    position: relative;
+    align-items: center;
 }
 
 .textarea {
