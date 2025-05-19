@@ -47,19 +47,15 @@
     padding: 1.5rem;
 }
 
-.mobile-panel {
+.mobile-layout {
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    flex-direction: row;
+    gap: 2rem;
     flex: 1;
-    max-width: 92vw;
-    margin: 1.5rem auto;
-    padding: 1.5rem;
-    box-sizing: border-box;
-    border-radius: 1rem;
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 12px var(--border-color);
+    height: 100%;
+    max-width: 1800px;
+    margin-left: 2rem;
+    padding: 0 1rem 10px;
 }
 
 @media (max-width: 800px) {

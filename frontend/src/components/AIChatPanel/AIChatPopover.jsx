@@ -38,7 +38,7 @@ export default function AIChatPopover({
         setVisible((prev => !prev));
     }
     return isMobile ?  (
-        <div className={styles["mobile-panel"]}>
+        <div className={styles["mobile-layout"]}>
             <AIChatPanel
                 isThinking={isThinking}
                 isActive={true}
