@@ -19,34 +19,31 @@
     margin-bottom: 1rem;
 }
 
-.command-button {
-    flex: 1; 
-    white-space: nowrap;
-    text-align: center;
-    padding: 0.5rem 0.75rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    border-radius: 1rem;
-    font-weight: 500;
-    font-family: inherit;
-    cursor: pointer;
-    box-shadow: 0 2px 2px var(--border-color);
-    transition: background-color 0.2s ease;
-}
-
 .command-bar {
     display: flex;
     gap: 0.5rem;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: nowrap; 
-    overflow-x: auto; 
+    flex-wrap: nowrap;
+}
+
+.command-button {
+    flex: 1 1 0;
+    text-align: center;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    padding: 0.4rem 0.5rem;
+    border-radius: 1rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    box-shadow: 0 2px 2px var(--border-color);
+    transition: background-color 0.2s ease;
+    min-width: 0; 
 }
 
 .title {
