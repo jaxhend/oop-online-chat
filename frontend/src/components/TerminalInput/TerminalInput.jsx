@@ -1,16 +1,17 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState, forwardRef, useImperativeHandle} from "react";
 import styles from "./TerminalInput.module.css"
 import EmojiPicker from "@/components/ChatPanelComponents/EmojiPicker";
 import { HelpCircle } from "lucide-react";
 import {motion, AnimatePresence} from "framer-motion";
 
-export default function TerminalInput({
+const TerminalInput = forwardRef(function TerminalInput({
                                           onSubmit,
                                           isActive,
                                           showEmojiButton = false,
                                           showHelpIcon = false,
                                           placeholder = "Sisesta sõnum...",
-                                      }) {
+
+                                      }, ref) {
     const inputRef = useRef(null);
     const [isEmpty, setIsEmpty] = useState(true);
     const [showTooltip, setShowTooltip] = useState(false);
@@ -55,6 +56,23 @@ export default function TerminalInput({
         }
     };
 
+   useImperativeHandle(ref, () => ({
+       setText: (text) => {
+           if (inputRef.current) {
+               inputRef.current.innerText = text;
+               inputRef.current.focus();
+               const range = document.createRange();
+               range.selectNodeContents(inputRef.current);
+               range.collapse(false);
+               const selection = window.getSelection();
+               selection.removeAllRanges();
+               selection.addRange(range);
+
+               setIsEmpty(text.trim() === "");
+           }
+       }
+   }));
+
     return (
         <div className={styles.wrapper}>
             <div
@@ -98,4 +116,7 @@ export default function TerminalInput({
             {showEmojiButton && <EmojiPicker onSelect={(emoji) => insertEmojiAtCaret(emoji.native)} />}
         </div>
     );
-}
+});
+
+export default TerminalInput;
+
