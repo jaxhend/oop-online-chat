@@ -70,7 +70,7 @@ export default function AIChatPopover({
             <AnimatePresence>
                 {visible && (
                     <motion.div
-                        className={styles["ai-chat-popover"]}
+                        className={styles["popover"]}
                         ref={popoverRef}
                         initial={{opacity: 0, y: 10}}
                         animate={{opacity: 1, y: 0}}
