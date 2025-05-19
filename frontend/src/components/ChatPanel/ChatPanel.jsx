@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, {useRef, useEffect, useState} from "react";
 import styles from "./ChatPanel.module.css";
 import TerminalInput from "../TerminalInput/TerminalInput";
 import {motion} from "framer-motion";
+import terminalInput from "../TerminalInput/TerminalInput";
 
 export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, theme}) {
     const [userScrolledUp, setUserScrolledUp] = useState(false);
+    const terminalInputRef = useRef(null);
 
     useEffect(() => { // Kontrollib, kas kasutaja on üles scrollinud
         const chatLog = chatLogRef.current;
@@ -45,6 +47,12 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
         return msgColor; // Muidu tagastab teise värvi.
     };
 
+    const setInputText = (text) => {
+        if (terminalInputRef.current?.setText) {
+            terminalInputRef.current.setText(text);
+        }
+    }
+
 
     return (
         <motion.div
@@ -54,7 +62,49 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
         >
 
             <div className={styles.container}>
-                <h2 className={styles.title}>Vestlusplats</h2>
+                <div className={styles["header-row"]}>
+                    <h2 className={styles.title}>Vestlusplats</h2>
+                    <div className={styles["command-bar"]}>
+                        <motion.button
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
+                            className={styles["command-button"]}
+                            onClick={() => onSend("/chatrooms")}
+                        > Vestlusruumid</motion.button>
+                        <motion.button
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
+                            className={styles["command-button"]}
+                            onClick={() => onSend("/members")}
+                        >
+                            Kasutajad
+                        </motion.button>
+                        <motion.button
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
+                            className={styles["command-button"]}
+                            onClick={() => setInputText("/join ")}
+                        >
+                        Liitu
+                        </motion.button>
+                        <motion.button
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
+                            className={styles["command-button"]}
+                            onClick={() => setInputText("/private ")}
+                        >
+                            privaatsõnum
+                        </motion.button>
+                        <motion.button
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
+                            className={styles["command-button"]}
+                            onClick={() => onSend("/leave")}
+                        >
+                            Lahku ruumist
+                        </motion.button>
+                    </div>
+                </div>
                 <div ref={chatLogRef} className={styles.chatLog}>
                     {chatMessages.map((msg, i) => {
                         const uniqueKey = msg.id || `msg-${i}-${msg.text.substring(0,10)}`;
@@ -77,6 +127,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                     showEmojiButton={true}
                     showHelpIcon={true}
                     placeholder={"Sisesta sõnum..."}
+                    ref={terminalInputRef}
                 />
             </div>
         </motion.div>
