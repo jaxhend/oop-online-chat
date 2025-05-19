@@ -68,7 +68,7 @@ public class UTEEScraper {
         try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
             MongoDatabase db = mongoClient.getDatabase("webscraping");
             MongoCollection<Document> counterCol = db.getCollection("counters");
-            MongoCollection<Document> collection = db.getCollection("ut_pages");
+            MongoCollection<Document> collection = db.getCollection("testing");
 
             driver.get(url);
             wait.until(d -> ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
@@ -124,7 +124,7 @@ public class UTEEScraper {
     // Tõstab counter väärtuse ja tagastab uue ID MongoDB jaoks
     private static int getNextId(MongoCollection<Document> counters) {
         Document counter = counters.findOneAndUpdate(
-                eq("_id", "ut_pages"),
+                eq("_id", "testing"),
                 Updates.inc("seq", 1),
                 new FindOneAndUpdateOptions().returnDocument(AFTER)
         );

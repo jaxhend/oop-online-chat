@@ -59,7 +59,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 String previousUsername = sessionManager.getUsername(sessionId);
                 if (previousUsername != null && !previousUsername.isBlank()) {
                     clientSession.setUsername(previousUsername);
-                    String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha erinevaid käske.", previousUsername);
+                    String welcome = String.format("Tere tulemast, %s! Kasuta /abi, et näha erinevaid käske.", previousUsername);
                     messageProcessor.sendMessage(clientSession, new MessageFormatter(welcome, MessageFormatter.GREEN));
                 }
                 sessionManager.registerSession(clientSession);

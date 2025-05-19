@@ -27,13 +27,13 @@ import static com.mongodb.client.model.ReturnDocument.AFTER;
 public class OisCurricula {
 
     public static void main(String[] args) {
-//        Set<String> veebilehed = getAllCurriculas();
-//        for (String s : veebilehed) {
-//            getCurriculaInfo(s);
-//        }
+       Set<String> veebilehed = getAllCurriculas();
+       for (String s : veebilehed) {
+            getCurriculaInfo(s);
+   }
 
-//        Testimiseks
-        getCurriculaInfo("https://ois2.ut.ee/#/curricula/2476");
+
+        //getCurriculaInfo("https://ois2.ut.ee/#/curricula/2476");
     }
 
 
@@ -276,9 +276,11 @@ public class OisCurricula {
             chunk.putIfAbsent("opivaljundid", matcher.group(1).trim());
         }
 
-        // Moodulite info lisamine
+        /* Moodulite info lisamine
         pattern = Pattern.compile("(?s)Moodulid\\s*(.*?)(?=\\nÜldinfo|\\Z)");
         matcher = pattern.matcher(text);
+
+
 
         if (matcher.find()) {
             String moodulidContent = matcher.group(1).trim();
@@ -299,6 +301,9 @@ public class OisCurricula {
             if (!newLines.isEmpty())
                 chunk.put("moodulid", String.join("\n", newLines));
         }
+        */
     }
+
+
 }
 

@@ -10,11 +10,11 @@ public class HelpCommand implements Command {
     public MessageFormatter execute(ClientSession session, String[] args) {
         String text = """
                 Saadaval käsud:
-                /join <ruum> – liitu või loo uus vestlusruum
-                /private <kasutajanimi> – alusta või liitu privaatvestlusega
-                /leave – lahku aktiivsest vestlusest
-                /chatrooms – kuva avalikud vestlusruumid
-                /members – kuva hetkel aktiivsed kasutajad
+                /liitu <ruum> – liitu või loo uus vestlusruum
+                /privaat <kasutajanimi> – alusta või liitu privaatvestlusega
+                /lahku – lahku aktiivsest vestlusest
+                /vestlusruumid – kuva avalikud vestlusruumid
+                /kasutajad – kuva hetkel aktiivsed kasutajad
                 """;
         return new MessageFormatter(text, MessageFormatter.PURPLE);
     }

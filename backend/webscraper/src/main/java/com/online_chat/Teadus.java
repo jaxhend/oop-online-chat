@@ -77,7 +77,7 @@ public class Teadus {
 
     private static AtomicInteger getCounter(MongoCollection<Document> counters) {
         Document counter = counters.findOneAndUpdate(
-                eq("_id", "teadus"),
+                eq("_id", "testing"),
                 Updates.inc("seq", 1),
                 new FindOneAndUpdateOptions().upsert(true).returnDocument(AFTER)
         );

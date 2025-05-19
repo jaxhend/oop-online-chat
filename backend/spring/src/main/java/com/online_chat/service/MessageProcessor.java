@@ -73,7 +73,7 @@ public class MessageProcessor {
         } else {
             String error = """
                     Sa ei ole üheski vestlusruumis. Kasuta käske:
-                    /join <chatruumi_nimi>, et liituda või luua vestlusruumiga,
+                    /liitu <chatruumi_nimi>, et liituda või luua vestlusruumiga,
                     /private <kasutaja_nimi>, et alustada privaatsõnumit.""";
             sendMessage(session, new MessageFormatter(error, MessageFormatter.RED));
         }

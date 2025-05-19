@@ -59,7 +59,7 @@ public class CsScraper {
         try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
             MongoDatabase db = mongoClient.getDatabase("webscraping");
             MongoCollection<Document> counters = db.getCollection("counters");
-            MongoCollection<Document> collection = db.getCollection("ut_pages");
+            MongoCollection<Document> collection = db.getCollection("testing");
 
             driver.get(url);
             Thread.sleep(500);
@@ -131,7 +131,7 @@ public class CsScraper {
 
     private static AtomicInteger getCounter(MongoCollection<Document> counters) {
         Document counter = counters.findOneAndUpdate(
-                eq("_id", "ut_pages"),
+                eq("_id", "testing"),
                 Updates.inc("seq", 1),
                 new FindOneAndUpdateOptions().upsert(true).returnDocument(AFTER)
         );

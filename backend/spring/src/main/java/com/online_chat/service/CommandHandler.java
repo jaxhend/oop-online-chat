@@ -16,12 +16,12 @@ public class CommandHandler {
     private final Map<String, Command> commands = new HashMap<>();
 
     public CommandHandler(ChatRoomManager chatRoomManager, ClientSessionManager sessionManager) {
-        commands.put("/join", new JoinRoomCommand(chatRoomManager));
-        commands.put("/leave", new LeaveCommand(chatRoomManager));
-        commands.put("/chatrooms", new SeeChatroomsCommand(chatRoomManager));
-        commands.put("/members", new ListMembersCommand(sessionManager));
-        commands.put("/private", new PrivateJoinCommand(chatRoomManager, sessionManager));
-        commands.put("/help", new HelpCommand());
+        commands.put("/liitu", new JoinRoomCommand(chatRoomManager));
+        commands.put("/lahku", new LeaveCommand(chatRoomManager));
+        commands.put("/vestlusruumid", new SeeChatroomsCommand(chatRoomManager));
+        commands.put("/kasutajad", new ListMembersCommand(sessionManager));
+        commands.put("/privaat", new PrivateJoinCommand(chatRoomManager, sessionManager));
+        commands.put("/abi", new HelpCommand());
     }
 
     public MessageFormatter handle(ClientSession session, String input) {
@@ -32,6 +32,6 @@ public class CommandHandler {
             return command.execute(session, parts);
         }
 
-        return new MessageFormatter("Tundmatu käsk: " + parts[0] + ". Kasuta /help, et näha käske.", MessageFormatter.RED);
+        return new MessageFormatter("Tundmatu käsk: " + parts[0] + ". Kasuta /abi, et näha käske.", MessageFormatter.RED);
     }
 }

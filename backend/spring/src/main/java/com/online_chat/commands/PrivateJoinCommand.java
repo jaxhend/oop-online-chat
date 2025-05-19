@@ -29,7 +29,7 @@ public class PrivateJoinCommand implements Command {
     public MessageFormatter execute(ClientSession session, String[] args) {
         // kontrollime kasutaja sisendit, et vastaks nõuetele
         if (validCommand(args))
-            return new MessageFormatter("Kasutus: /private <kasutajanimi>", MessageFormatter.RED);
+            return new MessageFormatter("Kasutus: /privaat <kasutajanimi>", MessageFormatter.RED);
 
         if (args[1].equalsIgnoreCase(session.getUsername()))
             return new MessageFormatter("Sa ei saa luua privaatvestlust iseendaga", MessageFormatter.RED);
@@ -67,7 +67,7 @@ public class PrivateJoinCommand implements Command {
         if (target.getWebSocketSession() != null && target.getWebSocketSession().isOpen()) {
             try {
                 String text = "Kasutaja '" + fromUsername + "' alustas sinuga privaatvestlust. " +
-                        "Liitumiseks kasuta käsku: /private " + fromUsername;
+                        "Liitumiseks kasuta käsku: /privaat " + fromUsername;
                 String json = objectMapper.writeValueAsString(new MessageFormatter(text, MessageFormatter.GREEN));
                 target.getWebSocketSession()
                         .sendMessage(new TextMessage(json));

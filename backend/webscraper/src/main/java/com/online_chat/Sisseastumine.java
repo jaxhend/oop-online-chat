@@ -84,7 +84,7 @@ public class Sisseastumine {
 
     private static AtomicInteger getNextId(MongoCollection<Document> counters) {
         Document counter = counters.findOneAndUpdate(
-                eq("_id", "csut_sisseastumine"),
+                eq("_id", "testing"),
                 Updates.inc("seq", 1),
                 new FindOneAndUpdateOptions().upsert(true).returnDocument(AFTER)
         );

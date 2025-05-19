@@ -22,15 +22,17 @@ public class ListMembersCommand implements Command {
         List<String> usernames;
         if (room == null) {
             usernames = sessionManager.getAllUsernames();
+            return new MessageFormatter("Aktiivsed kasutajad vestlusplatsil: " + usernames.stream()
+                    .sorted(String.CASE_INSENSITIVE_ORDER)
+                    .collect(Collectors.joining(", ")), MessageFormatter.PURPLE);
         } else {
             usernames = room.getClients().stream()
                     .map(ClientSession::getUsername)
                     .collect(Collectors.toList());
+            return new MessageFormatter("Aktiivsed kasutaja ruumis: " + usernames.stream()
+                    .sorted(String.CASE_INSENSITIVE_ORDER)
+                    .collect(Collectors.joining(", ")), MessageFormatter.PURPLE);
         }
-
-        return new MessageFormatter("Aktiivsed kasutajad: " + usernames.stream()
-                .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.joining(", ")), MessageFormatter.PURPLE);
 
     }
 

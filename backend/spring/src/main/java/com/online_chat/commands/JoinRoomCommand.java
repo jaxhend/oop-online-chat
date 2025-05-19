@@ -16,7 +16,7 @@ public class JoinRoomCommand implements Command {
     @Override
     public MessageFormatter execute(ClientSession session, String[] args) {
         if (validCommand(args))
-            return new MessageFormatter("Kasutus: /join <ruumi_nimi>", MessageFormatter.RED);
+            return new MessageFormatter("Kasutus: /liitu <ruumi_nimi>", MessageFormatter.RED);
 
         String roomName = args[1].toLowerCase();
         if (!roomName.matches("[a-zA-ZäöüõÄÖÜÕ0-9]+"))
