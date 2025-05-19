@@ -19,6 +19,24 @@
     font-weight: 700;
 }
 
+.buttons {
+    display: flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+    justify-content: center;
+}
+
+.button {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.4rem 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
 .list {
     list-style: none;
     padding: 0;

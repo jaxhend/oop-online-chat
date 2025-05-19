@@ -20,9 +20,9 @@ import java.util.Map;
 public class DeltaJsoupScraper {
 
     private static final Logger logger = LoggerFactory.getLogger(DeltaJsoupScraper.class);
-    private Map<String, List<DailyOffer>> cachedOffers = Map.of("Delta", List.of(new DailyOffer("Delta","Pakkumised pole veel saadaval")));
-
-    private static final List<String> diners = List.of("Delta", "Drinkgeld");
+    private Map<String, List<DailyOffer>> cachedOffers = new HashMap<>();
+    private static final List<String> diners = List.of("delta", "drinkgeld");
+    private static final Map<String, String> cafeAliases = Map.of("delta", "Delta kohvik", "drinkgeld", "Drinkgeld / Ülikooli kohvik");
     @PostConstruct
     @Scheduled(cron = "0 0 11 * * MON-FRI")
     public void updateLunchOffers() {
@@ -46,21 +46,31 @@ public class DeltaJsoupScraper {
         Elements dinerList = doc.select("div.meal");
 
         Map<String, List<DailyOffer>> offersList = new HashMap<>();
+
         for (Element diner : dinerList) {
-            String dinerName = diner.select("h3").text();
+            String dinerName = diner.select("h3").text().toLowerCase();
+            System.out.println("Leitud kohvik: " + dinerName);
+
             for (String cafeName : diners) {
-                if (dinerName.toLowerCase().contains(cafeName)) {
-                    offersList.put(cafeName, new ArrayList<>());
-                if (dinerName.toLowerCase().contains(cafeName.toLowerCase())) {
-                    offersList.putIfAbsent(cafeName, new ArrayList<>());
+                if (dinerName.contains(cafeName)) {
+                    String displayName = cafeAliases.getOrDefault(cafeName, cafeName);
+
                     Elements offers = diner.select("div.offer");
+                    List<DailyOffer> parsedOffers = new ArrayList<>();
                     for (Element offer : offers) {
                         String description = offer.ownText();
                         String price = offer.select("strong").text();
+                        if (description.endsWith(".")) {
+                            description = description.substring(0, description.length() - 1);
+                        }
                         if (!description.isEmpty()) {
-                            offersList.get(cafeName).add(new DailyOffer(cafeName, description + " - " + price));
+                            parsedOffers.add(new DailyOffer(displayName, description + "  " + price));
                         }
                     }
+                    if (!parsedOffers.isEmpty()) {
+                        offersList.put(displayName, parsedOffers);
+                    }
+
                 }
             }
         }
