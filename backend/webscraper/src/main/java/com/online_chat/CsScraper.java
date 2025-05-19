@@ -64,7 +64,7 @@ public class CsScraper {
             driver.get(url);
             Thread.sleep(500);
 
-            // Eemalda küpsisebänner kui see takistab
+            // Eemaldab küpsisebänneri kui see takistab
             try {
                 ((JavascriptExecutor) driver).executeScript("""
                     const banner = document.querySelector('.eu-cookie-compliance-banner');
