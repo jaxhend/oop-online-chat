@@ -68,6 +68,13 @@
     align-self: flex-start;
 }
 
+@media (max-width: 768px) {
+    .command-bar {
+        display: none;
+    }
+}
+
+
 
 
 
