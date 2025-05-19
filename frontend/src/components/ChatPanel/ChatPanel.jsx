@@ -120,6 +120,14 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                     >
                         Lahku ruumist
                     </motion.button>
+                    <motion.button
+                        whileHover={{scale: 1.05}}
+                        whileTap={{scale: 0.95}}
+                        className={styles["command-button"]}
+                        onClick={() => onSend("/help")}
+                    >
+                        Küsi abi
+                    </motion.button>
                 </div>
                 <TerminalInput
                     onSubmit={onSend}
