@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -28,8 +29,8 @@ public class ApplicationInfoController {
     }
 
     @GetMapping("/paevapakkumised")
-    public ResponseEntity<List<DailyOffer>> getDeals() {
-        List<DailyOffer> deals = deltaJsoupScraper.getLatestLunchOffers();
+    public ResponseEntity<Map<String, List<DailyOffer>>> getDeals() {
+        Map<String, List<DailyOffer>> deals = deltaJsoupScraper.getLatestLunchOffers();
         return ResponseEntity.ok(deals);
     }
 
