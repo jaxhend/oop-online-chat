@@ -34,6 +34,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     max-height: 70vh;
     max-width: 90vw;
+    will-change: transform, opacity;
 }
 
 @media (max-width: 640px) {
