@@ -120,7 +120,6 @@ export default function OnlineChat() {
             const data = await res.json();
             setChatHistory((prev) => [...prev, {sender: "Robot", text: data.response || "..."}]);
         } catch (err) {
-            console.error("LLM API error:", err);
             setChatHistory((prev) => [...prev, {
                 sender: "Robot",
                 text: "Serveri viga. Proovi mõne aja pärast uuesti."
