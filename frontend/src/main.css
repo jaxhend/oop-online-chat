@@ -95,7 +95,7 @@
         height: auto;
         max-height: 80px;
         filter: brightness(1000%) contrast(200%);
-        opacity: 0.9;
+        opacity: 1.0;
     }
 }
 
