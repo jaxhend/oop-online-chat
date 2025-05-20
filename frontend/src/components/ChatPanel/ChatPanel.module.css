@@ -73,7 +73,7 @@
     scrollbar-color: rgba(128, 128, 128, 0.4) transparent;
     box-sizing: border-box;
     word-break: break-word;
-    font-size: clamp(14px, 1.1vw, 16px);
+    font-size: clamp(16px, 1.3vw, 20px);
     overflow-wrap: break-word;
 }
 
@@ -133,6 +133,18 @@
     .tool-tip {
         font-size: 0.8rem;
     }
+    .command-bar {
+        display: none;
+        margin: 0;
+    }
+
+    .chatLog {
+        font-size: clamp(10px, 3vw, 16px);
+    }
+
+    .title {
+        font-size: clamp(20px, 5vw, 30px);
+    }
 }
 
 @media (max-width: 1000px) {
@@ -142,19 +154,5 @@
     }
 }
 
-@media (max-width: 800px) {
-    .command-bar {
-        display: none;
-        margin: 0;
-    }
 
-    .chatLog {
-        font-size: 13px;
-    }
-
-    .title {
-        font-size: clamp(20px, 5vw, 30px);
-    }
-
-}
 
