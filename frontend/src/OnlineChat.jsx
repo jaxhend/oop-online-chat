@@ -141,15 +141,17 @@ export default function OnlineChat() {
             <div className="flex flex-col">
                 <div className="footer-info">
                     <div className="footer-text">
-                        <p>
-                            <strong>Tere tulemast UTchat veebilehele!</strong><br />
-                            Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga.
-                            Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega või pidada privaatset vestlust oma sõbraga.
-                            Sõnumid säilivad avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse.
-                            Privaatvestluse sõnumeid ei salvestata.
-                            Palume jääda suhtlemisel viisakaks ning seetõttu asendatakse enim levinud vulgaarsused automaatselt tärniga (*).
-                            Head suhtlemist!
-                        </p>
+                        <strong>Tere tulemast UTchat veebilehele!</strong><br />
+                        <div className="footer-content">
+                            <p>
+                                Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga.
+                                Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega või pidada privaatset vestlust oma sõbraga.
+                                Sõnumid säilivad avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse.
+                                Privaatvestluse sõnumeid ei salvestata.
+                                Palume jääda suhtlemisel viisakaks ning seetõttu asendatakse enim levinud vulgaarsused automaatselt tärniga (*).
+                                Head suhtlemist!
+                            </p>
+                        </div>
                     </div>
                     <div className="footer-logo">
                         <img src={utLogo} alt="TÜ logo"/>

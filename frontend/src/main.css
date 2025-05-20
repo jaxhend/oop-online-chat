@@ -7,6 +7,7 @@
     max-width: 1800px;
     padding: 0 2rem 10px;
     width: 100%;
+    align-items: center;
 }
 
 .wide-div {
@@ -55,22 +56,36 @@
 
 @media (max-width: 800px) {
     .footer-info {
-        display: block;
-        background-color: #004b9b;
+        display: flex;
+        flex-direction: column;
+        background-color: #2c5696;
         color: white;
         padding: 1rem;
-        font-size: 0.85rem;
         line-height: 1.5;
         text-align: center;
         white-space: pre-wrap;
         border-top: 2px solid var(--border-color);
+        align-items: center;
+        justify-content: center;
+
 
     }
     .footer-text {
         flex: 3;
-        font-size: 0.85rem;
+        font-size: clamp(0.85rem, 2.5vw, 1.0rem);
         line-height: 1.5;
         overflow-wrap: break-word;
+
+    }
+    .footer-content {
+        text-align: justify;
+    }
+
+    .footer-title {
+        flex: 3;
+        font-size: clamp(0.85rem, 2.5vw, 1.0rem);
+        line-height: 1.5;
+        text-align: center;
     }
 
     .footer-text ul {
