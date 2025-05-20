@@ -34,9 +34,7 @@
     position: relative;
     overflow-x: hidden;
     box-sizing: border-box;
-    font-size: 1rem;
-    word-break: break-word;
-    overflow-wrap: break-word;
+    font-size: clamp(12px, 1.1vw, 16px);
 }
 
 

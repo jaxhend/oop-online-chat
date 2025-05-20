@@ -79,7 +79,7 @@
     overflow-wrap: break-word;
     box-sizing: border-box;
     word-break: break-word;
-    font-size: 14px;
+    font-size: clamp(12px, 1.1vw, 16px);
 }
 
 
@@ -105,7 +105,7 @@
     flex: 1;
     background-color: var(--input-bg);
     color: var(--text-color);
-    font-size: 1rem;
+    font-size: clamp(12px, 1.1vw, 16px);
     border-radius: 4px;
     font-family: inherit;
 }
@@ -180,5 +180,5 @@ li a:hover {
 }
 
 h3 {
-    margin: 15px;
+    margin: 10px 0;
 }

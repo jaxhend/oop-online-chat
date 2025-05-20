@@ -19,8 +19,6 @@
     box-shadow: 0 4px 12px var(--border-color);
 }
 
-
-
 .popover {
     position: fixed;
     bottom: 4rem;
@@ -35,7 +33,6 @@
 }
 
 
-
 .wrapper {
     max-width: 100%;
     position: fixed;
@@ -45,7 +42,6 @@
 }
 
 .mobile-panel {
-
     margin-bottom: 1rem;
     left: 0;
     right: 0;
@@ -56,6 +52,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px var(--border-color);
 }
+
 @media (max-width: 800px) {
     .wrapper {
         display: none;
