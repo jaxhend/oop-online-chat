@@ -120,6 +120,7 @@ body {
 
 .flex-col {
     flex-direction: column;
+    align-items: center;
 }
 
 .flex-row {
