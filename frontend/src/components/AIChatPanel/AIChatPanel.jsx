@@ -126,7 +126,6 @@ export default function AIChatPanel({
             <div className={styles.chatLog} ref={chatLogRef}>
                 {chatHistory.map((entry, i) => (
                     <div key={i} className={styles.message}>
-                        <strong>{entry.sender}:</strong>{" "}
                         <strong>{entry.sender}:</strong> {entry.text}
                     </div>
                 ))}
