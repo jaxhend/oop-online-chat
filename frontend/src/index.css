@@ -54,6 +54,11 @@
     --scrollbar-track-color: transparent;
     --bg-secondary: #f9fafb;
     --bg-hover: #e2e8f0;
+    width: 100%;
+}
+
+#root {
+    width: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -115,6 +120,7 @@ body {
 
 .flex-col {
     flex-direction: column;
+    align-items: center;
 }
 
 .flex-row {
