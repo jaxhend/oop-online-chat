@@ -35,8 +35,9 @@
 
 .tool-tip {
     position: absolute;
-    left: 120%;
-    top: 0;
+    left: 0;
+    top: 100%;
+    transform: translateX(-50%);
     background-color: var(--bg-color);
     color: var(--text-color);
     border: 1px solid var(--border-color);
@@ -184,5 +185,8 @@ h3 {
 @media (max-width: 800px) {
     .container {
         margin: 7px;
+    }
+    .help-icon {
+        display: none;
     }
 }
