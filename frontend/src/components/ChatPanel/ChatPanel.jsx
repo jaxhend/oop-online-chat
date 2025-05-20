@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState} from "react";
 import styles from "./ChatPanel.module.css";
 import TerminalInput from "../TerminalInput/TerminalInput";
 import {motion} from "framer-motion";
-import terminalInput from "../TerminalInput/TerminalInput";
+import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
 
 export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, theme}) {
     const [userScrolledUp, setUserScrolledUp] = useState(false);
@@ -63,7 +63,10 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
 
             <div className={styles.container}>
                 <div className={styles["header-row"]}>
-                    <h2 className={styles.title}>Vestlusplats</h2>
+                    <div className={styles["title-bar"]}>
+                        <h2 className={styles.title}>Vestlusplats</h2>
+                        <ThemeToggle/>
+                    </div>
                 </div>
                 <div ref={chatLogRef} className={styles.chatLog}>
                     {chatMessages.map((msg, i) => {

@@ -4,7 +4,6 @@ import DailyDeals from "./components/DailyDeals/DailyDeals";
 import WeatherInfo from "./components/WeatherInfo/WeatherInfo";
 import UsernameDialog from "./components/UsernameDialog/UsernameDialog";
 import ChatPanel from "./components/ChatPanel/ChatPanel";
-import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 import useTheme from "./hooks/useTheme";
 import useInitialData from "./hooks/useInitialData";
 import AIChatPopover from "./components/AIChatPanel/AIChatPopover";
@@ -22,7 +21,7 @@ export default function OnlineChat() {
     const [isThinking, setIsThinking] = useState(false);
     const chatLogRef = useRef(null);
     const [theme, toggleTheme] = useTheme();
-    // const API_URL = "http://localhost:8080";
+    //const API_URL = "http://localhost:8080";
     const API_URL = "https://api.utchat.ee";
     const LLM_URL = "https://llm.utchat.ee/chatbot";
     const {newsList, dailyDeals, weatherInfo, loading} = useInitialData(API_URL);
@@ -138,11 +137,6 @@ export default function OnlineChat() {
                 <UsernameDialog onSubmit={handleUsernameSubmit} error={usernameError}/>
             )}
 
-            {!loading && usernameAccepted && (
-                <div className="absolute top-4 right-4">
-                    <ThemeToggle theme={theme} onToggle={toggleTheme}/>
-                </div>
-            )}
 
             <div className="flex flex-col">
                 <NewsTicker newsList={newsList} animate={!loading}/>
