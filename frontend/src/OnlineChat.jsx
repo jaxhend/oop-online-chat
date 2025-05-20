@@ -10,6 +10,7 @@ import AIChatPopover from "./components/AIChatPanel/AIChatPopover";
 import useWebSocket from "./hooks/useWebSocket";
 import "./index.css";
 import "./main.css";
+import utLogo from "./assets/ut-logo.webp";
 
 export default function OnlineChat() {
     const [usernameAccepted, setUsernameAccepted] = useState(false);
@@ -138,8 +139,23 @@ export default function OnlineChat() {
 
 
             <div className="flex flex-col">
+                <div className="footer-info">
+                    <div className="footer-text">
+                        <p>
+                            <strong>Tere tulemast UTchat veebilehele!</strong><br />
+                            Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga.
+                            Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega või pidada privaatset vestlust oma sõbraga.
+                            Sõnumid säilivad avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse.
+                            Privaatvestluse sõnumeid ei salvestata.
+                            Palume jääda suhtlemisel viisakaks ning seetõttu asendatakse enim levinud vulgaarsused automaatselt tärniga (*).
+                            Head suhtlemist!
+                        </p>
+                    </div>
+                    <div className="footer-logo">
+                        <img src={utLogo} alt="TÜ logo"/>
+                    </div>
+                </div>
                 <NewsTicker newsList={newsList} animate={!loading}/>
-
                 <div className="main-layout">
                     <div className="chat-panel">
                         {usernameAccepted && (
@@ -181,6 +197,8 @@ export default function OnlineChat() {
                         isActive={true}
                     />
                 )}
+
+
             </div>
         </>
     );

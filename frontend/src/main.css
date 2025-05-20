@@ -45,7 +45,57 @@
         width: 100%;
     }
     body {
-        padding-top: 70px;
+        padding-top: 0;
+    }
+}
+
+.footer-info {
+    display: none;
+}
+
+@media (max-width: 800px) {
+    .footer-info {
+        display: block;
+        background-color: #004b9b;
+        color: white;
+        padding: 1rem;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        text-align: center;
+        white-space: pre-wrap;
+        border-top: 2px solid var(--border-color);
+
+    }
+    .footer-text {
+        flex: 3;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        overflow-wrap: break-word;
+    }
+
+    .footer-text ul {
+        padding-left: 1.5rem;
+        margin: 0.5rem 0;
+    }
+
+    .footer-text a {
+        color: #a3d5ff;
+        text-decoration: underline;
+    }
+
+    .footer-logo {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .footer-logo img {
+        max-width: 100%;
+        height: auto;
+        max-height: 80px;
+        filter: brightness(1000%) contrast(200%);
+        opacity: 0.9;
     }
 }
 
