@@ -1,5 +1,4 @@
 .section {
-    font-size: clamp(8px, 3vw, 12px);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -10,12 +9,13 @@
     background-color: var(--bg-color);
     width: 100%;
     max-width: 100%;
+    font-size: clamp(12px, 1.5vw, 16px);
 }
 
 .title {
     margin: 0;
     padding: 10px 0 0 16px;
-    font-size: clamp(16px, 3vw, 18px);
+    font-size: clamp(16px, 1.9vw, 21px);
     font-weight: 700;
 }
 
@@ -36,6 +36,7 @@
     cursor: pointer;
     color: var(--text-color);
     font-family: inherit;
+    font-size: clamp(7px, 0.9vw, 14px);
 }
 
 .list {
@@ -76,4 +77,16 @@
 }
 .panel {
     width: 100%;
+}
+@media (max-width: 800px) {
+    .section {
+        font-size: clamp(10px, 2.5vw, 16px);
+    }
+    .title {
+        font-size: clamp(15px, 4vw, 26px);
+    }
+    .button {
+        font-size: clamp(12px, 3vw, 20px);
+    }
+
 }
