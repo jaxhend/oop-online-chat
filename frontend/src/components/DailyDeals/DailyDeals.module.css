@@ -15,7 +15,7 @@
 .title {
     margin: 0;
     padding: 10px 0 0 16px;
-    font-size: clamp(14px, 3vw, 17px);
+    font-size: clamp(16px, 3vw, 18px);
     font-weight: 700;
 }
 
