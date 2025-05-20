@@ -15,12 +15,12 @@ export default function WeatherInfo({weather}) {
             transition={{ duration: 0.6 }}
         >
             <div className={styles.header}>
-                <h3 className={styles.city}>Tartu</h3>
+                <h4 className={styles.city}>Tartu</h4>
                 <span className={styles.time}>{new Date().toLocaleTimeString("et-EE", { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
 
             <div className={styles.tempBlock}>
-                <h1 className={styles.temperature}>{weather.temperature}</h1>
+                <h3 className={styles.temperature}>{weather.temperature}</h3>
                 <p className={styles.condition}>Hetkeilm</p>
             </div>
 
