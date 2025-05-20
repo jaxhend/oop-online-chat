@@ -138,33 +138,35 @@ export default function AIChatPanel({
             </div>
 
             <div className={styles.inputGroup}>
-                <Textarea
-                    value={botInput}
-                    onChange={(e) => {
-                        if (isActive) onBotInputChange(e);
-                    }}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey && isActive) {
-                            e.preventDefault();
-                            handleSend();
-                        }
-                    }}
-                    className={`${styles.textarea}`}
-                    placeholder={"Sisesta küsimus..."}
-                />
-                <div className={getCharCountColor()}>
-                    {charCount}/{MAX_MESSAGE_LENGTH}
+                <div className={styles.textareaWrapper}>
+                    <Textarea
+                        value={botInput}
+                        onChange={(e) => isActive && onBotInputChange(e)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey && isActive) {
+                                e.preventDefault();
+                                handleSend();
+                            }
+                        }}
+                        className={styles.textarea}
+                        placeholder="Sisesta küsimus..."
+                    />
+
+                    <div className={getCharCountColor()}>
+                        {charCount}/{MAX_MESSAGE_LENGTH}
+                    </div>
                 </div>
 
                 {!isMobile && (
-                    <button
-                        onClick={handleSend}
-                        className={`${styles.button} 
-                                ${(isThinking || charCount > MAX_MESSAGE_LENGTH) ? styles.notAllowed : ''}`}
-                        disabled={!isActive || isThinking || !botInput.trim() || charCount > MAX_MESSAGE_LENGTH}
-                    >
-                        Saada
-                    </button>
+                    <div className={styles.sendArea}>
+                        <button
+                            onClick={handleSend}
+                            className={`${styles.button} ${(isThinking || charCount > MAX_MESSAGE_LENGTH) ? styles.notAllowed : ''}`}
+                            disabled={!isActive || isThinking || !botInput.trim() || charCount > MAX_MESSAGE_LENGTH}
+                        >
+                            Saada
+                        </button>
+                    </div>
                 )}
             </div>
         </div>

@@ -6,7 +6,7 @@
     border: 1px solid var(--border-color);
     border-radius: 1rem;
     background-color: var(--bg-color);
-    min-height: 500px;
+    height: 500px;
     overflow-y: hidden;
     box-sizing: border-box;
     box-shadow: 0 3px 12px var(--border-color);
@@ -94,9 +94,12 @@
 
 .inputGroup {
     display: flex;
+    align-items: flex-start;
     gap: 0.75rem;
-    position: relative;
+    width: 100%;
 }
+
+
 
 .textarea {
     border: 1px solid var(--border-color);
@@ -108,6 +111,16 @@
     font-size: clamp(14px, 1.1vw, 16px);
     border-radius: 4px;
     font-family: inherit;
+}
+.textareaWrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.sendArea {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 
@@ -141,10 +154,11 @@
 .charCount,
 .charCountWarning,
 .charCountExceeded {
-    margin-top: 0.25rem;
+    margin-top: 0.4rem;
     font-size: 0.8rem;
-    color: #888;
     font-weight: bold;
+    color: #888;
+    text-align: right;
     align-self: flex-end;
     position: static;
 }
