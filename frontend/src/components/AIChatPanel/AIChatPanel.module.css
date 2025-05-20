@@ -7,7 +7,7 @@
     border-radius: 1rem;
     background-color: var(--bg-color);
     height: 500px;
-    overflow: visible;
+    overflow-y: hidden;
     box-sizing: border-box;
     box-shadow: 0 3px 12px var(--border-color);
 

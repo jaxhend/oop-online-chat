@@ -24,7 +24,7 @@
     right: 5rem;
     width: 40vw;
     height: 70vh;
-    overflow: visible;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 12px var(--border-color);
