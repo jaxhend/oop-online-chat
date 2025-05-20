@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Textarea} from "@/components/ChatPanelComponents/textarea";
 import styles from "./AIChatPanel.module.css";
-import { HelpCircle } from "lucide-react";
+import {HelpCircle} from "lucide-react";
 import {AnimatePresence, motion} from "framer-motion";
 import ReactMarkdown from "react-markdown";
 
@@ -30,7 +30,7 @@ export default function AIChatPanel({
     }, []);
 
     useEffect(() => {
-        if(isThinking)
+        if (isThinking)
             lastInputRef.current = botInput;
     }, [botInput]);
 
@@ -97,19 +97,19 @@ export default function AIChatPanel({
                         onMouseEnter={() => setShowTooltip(true)}
                         onMouseLeave={() => setShowTooltip(false)}
                     >
-            <HelpCircle className={styles["help-icon"]} />
+            <HelpCircle className={styles["help-icon"]}/>
             <AnimatePresence>
                 {showTooltip && (
                     <motion.div
                         className={styles["tool-tip"]}
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 10 }}
-                        transition={{ duration: 0.2 }}
+                        initial={{opacity: 0, x: 10}}
+                        animate={{opacity: 1, x: 0}}
+                        exit={{opacity: 0, x: 10}}
+                        transition={{duration: 0.2}}
                     >
-                        Mudel: Qwen3-3B <br />
-                        Server: Tartu Ülikooli HPC <br />
-                        Teie sõnumeid ei salvestata! <br />
+                        Mudel: Qwen3-3B <br/>
+                        Server: Tartu Ülikooli HPC <br/>
+                        Teie sõnumeid ei salvestata! <br/>
                         Hetke teadmised:
                         <ul className={styles.listItems}>
                             <li>TÜ õppekavad</li>
@@ -128,9 +128,17 @@ export default function AIChatPanel({
                 {chatHistory.map((entry, i) => (
                     <div key={i} className={styles.message}>
                         <strong>{entry.sender}:</strong>{" "}
-                        {entry.sender === "Robot" ?
-                            (<ReactMarkdown>{entry.text}</ReactMarkdown>) :
-                            (entry.text)}
+                        {entry.sender === "Robot" ? (
+                            <ReactMarkdown
+                                components={{
+                                    p: ({ node, ...props }) => <span {...props} />
+                                }}
+                            >
+                                {entry.text}
+                            </ReactMarkdown>
+                        ) : (
+                            entry.text
+                        )}
                     </div>
                 ))}
 
