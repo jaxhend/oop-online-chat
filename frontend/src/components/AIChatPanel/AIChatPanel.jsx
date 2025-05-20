@@ -3,6 +3,7 @@ import {Textarea} from "@/components/ChatPanelComponents/textarea";
 import styles from "./AIChatPanel.module.css";
 import { HelpCircle } from "lucide-react";
 import {AnimatePresence, motion} from "framer-motion";
+import ReactMarkdown from "react-markdown";
 
 
 export default function AIChatPanel({
@@ -126,7 +127,10 @@ export default function AIChatPanel({
             <div className={styles.chatLog} ref={chatLogRef}>
                 {chatHistory.map((entry, i) => (
                     <div key={i} className={styles.message}>
-                        <strong>{entry.sender}:</strong> {entry.text}
+                        <strong>{entry.sender}:</strong>{" "}
+                        {entry.sender === "Robot" ?
+                            (<ReactMarkdown>{entry.text}</ReactMarkdown>) :
+                            (entry.text)}
                     </div>
                 ))}
 
