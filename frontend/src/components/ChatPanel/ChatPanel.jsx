@@ -138,7 +138,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                         className={styles["command-button"]}
                         onClick={() => setInputText("/liitu ")}
                     >
-                        Liitu
+                        Liitu / Loo
                     </motion.button>
                     <motion.button
                         whileHover={{scale: 1.05}}
@@ -146,7 +146,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                         className={styles["command-button"]}
                         onClick={() => setInputText("/privaat ")}
                     >
-                        Privaatsõnum
+                        Privaatvestlus
                     </motion.button>
                     <motion.button
                         whileHover={{scale: 1.05}}
@@ -154,7 +154,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                         className={styles["command-button"]}
                         onClick={() => onSend("/lahku")}
                     >
-                        Lahku ruumist
+                        Lahku
                     </motion.button>
                     <motion.button
                         whileHover={{scale: 1.05}}
