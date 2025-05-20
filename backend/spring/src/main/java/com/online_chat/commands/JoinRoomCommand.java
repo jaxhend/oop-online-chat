@@ -32,6 +32,7 @@ public class JoinRoomCommand implements Command {
         chatRoomManager.getOrCreatePublicRoom(roomName);
         chatRoomManager.removeClientFromCurrentRoom(session);
         chatRoomManager.addClientToRoom(session, roomName); // Lisab ruumi ja saadab sõnumi.
+        session.updateLastSeenMessage(roomName);
 
         return new MessageFormatter("Liitusid ruumiga '" + roomName + "'", MessageFormatter.GREEN);
     }

@@ -104,10 +104,10 @@ const TerminalInput = forwardRef(function TerminalInput({
                                 Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga. <br />
                                 Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega <br />
                                 või pidada privaatselt vestlust oma sõbraga. Sõnumid säilivad <br />
-                                vestlusruumides 24 tundi, pärast mida need kustutatakse. <br />
-                                Palume jääda suhtlemisel viisakaks ning seetõttu asendatakse <br />
-                                enim levinud vulgaarsused vulgaarsused automaatselt tärniga (*). <br />
-                                Head suhtlemist!
+                                avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse. <br />
+                                Privaatvestluse sõnumeid ei salvestata. Palume jääda suhtlemisel <br />
+                                viisakaks ning seetõttu asendatakse enim levinud vulgaarsused
+                                automaatselt tärniga (*). Head suhtlemist!
                             </motion.div>
                         )}
                     </AnimatePresence>

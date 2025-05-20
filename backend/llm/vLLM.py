@@ -14,10 +14,10 @@ from vllm import LLM, SamplingParams
 
 # -------- Konf --------
 MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-LLM_MODEL = "tartuNLP/Llammas"
+LLM_MODEL = "Qwen/Qwen3-4B"
 EMBED_BATCH = 64
 TOP_K = 3
-CONTEXT_TOKEN_LIMIT = 4000  # Max token limit on 4096. Igale promptile anname ette paar lauset, mis on 82 tokenit.
+CONTEXT_TOKEN_LIMIT = 15000   # Max token limit on 4096. Igale promptile anname ette paar lauset, mis on 82 tokenit.
 
 # --------- FastAPI ---------
 app = FastAPI()
@@ -64,16 +64,13 @@ index = faiss.IndexFlatL2(dim)
 index.add(np.array(embeddings, dtype='float32'))
 
 # --------- vLLM ---------
-sampling_params = SamplingParams(  # Hugging Face näited.
-    temperature=0.6,
-    max_tokens=256,
-    top_k=50,
-    top_p=0.9
-)
+sampling_params = SamplingParams(temperature=0.6, top_p=0.95, top_k=20, max_tokens=4096)
+
 llm = LLM(
     model=LLM_MODEL,
     dtype=torch.float16,
-    gpu_memory_utilization=0.95,
+    max_model_len = 18000,
+    gpu_memory_utilization=0.90
 )
 
 tokenizer = AutoTokenizer.from_pretrained(LLM_MODEL)
@@ -131,16 +128,32 @@ def rag_chat(req: QueryRequest):
 
         context = "\n\n".join(prompt_chunks)
         prompt = (
-            f"""Allpool on valitud lõigud õppekava andmetest. Vasta ainult nende põhjal. Ära kasuta üldteadmisi ega lisa infot, mida siin ei ole. Kirjuta vastus lühidalt ja konkreetselt.
+            f"""You are a helpful AI assistant. Your primary task is to answer the user's question based *only* on the provided context. If the answer is not found in the context, you may then use your general knowledge.
                 
+                Provided Context:
                 {context}
                 
-                Küsimus: {q}
-                Vastus:"""
+                User's question: {q}
+                
+                Please provide your answer in Estonian.
+                Vastus (Answer in Estonian): """
+        )
+        messages = [
+            {"role": "user", "content": prompt}
+        ]
+        text = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            enable_thinking=False
         )
 
+
         # Genereeri vastus
-        outputs = llm.generate([prompt], sampling_params)
+        outputs = llm.generate([text], sampling_params)
         text = outputs[0].outputs[0].text.strip()
 
     return {"response": text}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=5000)

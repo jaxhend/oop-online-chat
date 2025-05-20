@@ -106,8 +106,9 @@ export default function AIChatPanel({
                         exit={{ opacity: 0, x: 10 }}
                         transition={{ duration: 0.2 }}
                     >
-                        Mudel: TartuNLP LLammas <br />
+                        Mudel: Qwen3-3B <br />
                         Server: Tartu Ülikooli HPC <br />
+                        Teie sõnumeid ei salvestata! <br />
                         Hetke teadmised:
                         <ul className={styles.listItems}>
                             <li>TÜ õppekavad</li>

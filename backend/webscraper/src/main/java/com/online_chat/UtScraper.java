@@ -23,7 +23,7 @@ import java.util.*;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.ReturnDocument.AFTER;
 
-public class UTEEScraper {
+public class UtScraper {
 
     private static final String SITEMAP_URL = "https://ut.ee/sitemap.xml";
     private static final LocalDate SINCE_DATE = LocalDate.of(2024, 1, 1);
