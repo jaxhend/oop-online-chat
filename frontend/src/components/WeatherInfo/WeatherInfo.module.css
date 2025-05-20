@@ -116,5 +116,18 @@
     .bottom-info {
         display: flex;
     }
+    .city {
+        font-size: clamp(12px, 3vw, 18px);
+    }
+    .card {
+        padding: clamp(12px, 3vw, 20px);
+    }
+    .time {
+        font-size: clamp(12px, 3vw, 18px);
+    }
+
+
+
+
 
 }
