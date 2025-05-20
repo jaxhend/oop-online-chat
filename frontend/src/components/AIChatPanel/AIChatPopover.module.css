@@ -25,10 +25,9 @@
     position: fixed;
     bottom: 4rem;
     right: 5rem;
-    width: 400px;
-    max-width: 90vw;
-    max-height: 70vh;
-    overflow: hidden;
+    width: 40vw;
+    height: 70vh;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 12px var(--border-color);
