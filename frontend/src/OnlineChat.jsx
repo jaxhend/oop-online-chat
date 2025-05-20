@@ -11,6 +11,7 @@ import useWebSocket from "./hooks/useWebSocket";
 import "./index.css";
 import "./main.css";
 import utLogo from "./assets/ut-logo.webp";
+import Footer from "@/components/Footer/Footer";
 
 export default function OnlineChat() {
     const [usernameAccepted, setUsernameAccepted] = useState(false);
@@ -139,8 +140,8 @@ export default function OnlineChat() {
 
 
             <div className="flex flex-col">
-                <div className="footer-info">
-                    <div className="footer-text">
+                <div className="header-info">
+                    <div className="header-text">
                         <strong>Tere tulemast UTchat veebilehele!</strong><br />
                         <div className="footer-content">
                             <p>
@@ -153,7 +154,7 @@ export default function OnlineChat() {
                             </p>
                         </div>
                     </div>
-                    <div className="footer-logo">
+                    <div className="header-logo">
                         <img src={utLogo} alt="TÜ logo"/>
                     </div>
                 </div>
@@ -199,7 +200,7 @@ export default function OnlineChat() {
                         isActive={true}
                     />
                 )}
-
+                <Footer/>
 
             </div>
         </>
