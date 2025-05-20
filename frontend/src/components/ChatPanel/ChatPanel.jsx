@@ -138,7 +138,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                         whileHover={{scale: 1.05}}
                         whileTap={{scale: 0.95}}
                         className={styles["command-button"]}
-                        onClick={() => onSend("/vestlusruumid")}
+                        onClick={() => onSend("/ruumid")}
                     > Vestlusruumid</motion.button>
                     <motion.button
                         whileHover={{scale: 1.05}}

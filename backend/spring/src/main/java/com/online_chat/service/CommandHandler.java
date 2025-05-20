@@ -18,7 +18,7 @@ public class CommandHandler {
     public CommandHandler(ChatRoomManager chatRoomManager, ClientSessionManager sessionManager) {
         commands.put("/liitu", new JoinRoomCommand(chatRoomManager));
         commands.put("/lahku", new LeaveCommand(chatRoomManager));
-        commands.put("/vestlusruumid", new SeeChatroomsCommand(chatRoomManager));
+        commands.put("/ruumid", new SeeChatroomsCommand(chatRoomManager));
         commands.put("/kasutajad", new ListMembersCommand(sessionManager));
         commands.put("/privaat", new PrivateJoinCommand(chatRoomManager, sessionManager));
         commands.put("/abi", new HelpCommand());

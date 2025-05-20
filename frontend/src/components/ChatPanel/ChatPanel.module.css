@@ -140,6 +140,7 @@
 @media (max-width: 800px) {
     .command-bar {
         display: none;
+        margin: 0;
     }
 
     .chatLog {

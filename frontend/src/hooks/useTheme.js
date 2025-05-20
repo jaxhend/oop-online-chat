@@ -1,2 +1,2 @@
-import { useTheme } from '@/components/context/ThemeContext';
+import { useTheme } from '@/context/ThemeContext';
 export default useTheme;

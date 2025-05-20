@@ -14,7 +14,7 @@ export default function useWebSocket(sessionId, onMessage, onOpen) {
             if (socket.readyState === WebSocket.OPEN) {
                 socket.send("__heartbeat_ping__");
             }
-        }, 30000);
+        }, 15000);
 
         onOpen?.(socket);
     }, [onOpen]);

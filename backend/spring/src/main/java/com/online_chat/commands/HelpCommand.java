@@ -10,12 +10,13 @@ public class HelpCommand implements Command {
     public MessageFormatter execute(ClientSession session, String[] args) {
         String text = """
                 Saadaval käsud:
-                /liitu <ruum> – liitu või loo uus vestlusruum
-                /privaat <kasutajanimi> – alusta või liitu privaatvestlusega
-                Saadaval nupud:
-                Vestlusruumid - kuvab kasutajale temale nähtavad vestlusruumid
-                Kasutajad – kuvab aktiivsed kasutajad veebilehel / aktiivses ruumis
-                Lahku – lahku aktiivsest vestlusest
+                • /liitu <ruum> – liitu olemasoleva või loo uus vestlusruum
+                • /privaat <kasutajanimi> – alusta või liitu privaatvestlusega
+                
+                Saadaval nupud (sulgudes olevat käsku on saab ka käsitsi sisestada):
+                • Vestlusruumid (/ruumid) - kuva nimekiri Sulle nähtavatest vestlusruumidest
+                • Kasutajad (/kasutajad) – kuva aktiivsed kasutajad veebilehel või aktiivses ruumis
+                • Lahku (/lahku) – lahku aktiivsest vestlusest
                 """;
         return new MessageFormatter(text, MessageFormatter.PURPLE);
     }
