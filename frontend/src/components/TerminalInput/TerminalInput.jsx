@@ -14,8 +14,8 @@ const TerminalInput = forwardRef(function TerminalInput({
                                       }, ref) {
     const inputRef = useRef(null);
     const [isEmpty, setIsEmpty] = useState(true);
-    const [showTooltip, setShowTooltip] = useState(false);
     useEffect(() => {
+        if (window.innerWidth <= 800) return;
         const handleClick = (e) => {
             const isInsideEmoji = e.target.closest(".emoji-trigger") || e.target.closest(".emoji-picker");
             const isInsideAIChat = e.target.closest("textarea");
