@@ -65,6 +65,7 @@
     margin-right: 0;
     font-weight: 400;
     line-height: 1.4;
+    font-size: clamp(8px, 1.5vw, 13px);
 }
 
 .price {

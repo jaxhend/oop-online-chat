@@ -37,7 +37,6 @@
     position: absolute;
     left: 0;
     top: 100%;
-    transform: translateX(-50%);
     background-color: var(--bg-color);
     color: var(--text-color);
     border: 1px solid var(--border-color);
@@ -48,6 +47,11 @@
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     font-weight: 500;
+}
+@media (max-width: 1010px) {
+    .tool-tip {
+    left: -5rem;
+    }
 }
 .title {
     display: flex;
