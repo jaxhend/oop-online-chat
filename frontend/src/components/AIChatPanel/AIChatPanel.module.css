@@ -79,7 +79,7 @@
     overflow-wrap: break-word;
     box-sizing: border-box;
     word-break: break-word;
-    font-size: clamp(12px, 1.1vw, 16px);
+    font-size: clamp(14px, 1.1vw, 16px);
 }
 
 
@@ -105,7 +105,7 @@
     flex: 1;
     background-color: var(--input-bg);
     color: var(--text-color);
-    font-size: clamp(12px, 1.1vw, 16px);
+    font-size: clamp(14px, 1.1vw, 16px);
     border-radius: 4px;
     font-family: inherit;
 }

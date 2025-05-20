@@ -12,9 +12,10 @@ public class HelpCommand implements Command {
                 Saadaval käsud:
                 /liitu <ruum> – liitu või loo uus vestlusruum
                 /privaat <kasutajanimi> – alusta või liitu privaatvestlusega
-                /lahku – lahku aktiivsest vestlusest
-                /vestlusruumid – kuva avalikud vestlusruumid
-                /kasutajad – kuva hetkel aktiivsed kasutajad
+                Saadaval nupud:
+                Vestlusruumid - kuvab kasutajale temale nähtavad vestlusruumid
+                Kasutajad – kuvab aktiivsed kasutajad veebilehel / aktiivses ruumis
+                Lahku – lahku aktiivsest vestlusest
                 """;
         return new MessageFormatter(text, MessageFormatter.PURPLE);
     }

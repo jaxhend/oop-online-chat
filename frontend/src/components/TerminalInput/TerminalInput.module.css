@@ -24,7 +24,7 @@
     word-break: break-word;
     overflow-y: auto;
     flex: 1;
-    height: 50px;
+    height: 55px;
     min-height: 40px;
     border: 2px solid #3b82f6;
     border-radius: 0.5rem;
@@ -34,7 +34,7 @@
     position: relative;
     overflow-x: hidden;
     box-sizing: border-box;
-    font-size: clamp(12px, 1.1vw, 16px);
+    font-size: clamp(14px, 1.1vw, 16px);
 }
 
 

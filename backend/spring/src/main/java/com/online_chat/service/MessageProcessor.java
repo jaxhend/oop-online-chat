@@ -73,7 +73,7 @@ public class MessageProcessor {
         } else {
             String error = """
                     Sa ei ole üheski vestlusruumis. Kasuta käske:
-                    /liitu <chatruumi_nimi>, et liituda või luua vestlusruumiga,
+                    /liitu <vestlusruumi_nimi>, et liituda või luua vestlusruumiga,
                     /private <kasutaja_nimi>, et alustada privaatsõnumit.""";
             sendMessage(session, new MessageFormatter(error, MessageFormatter.RED));
         }
@@ -99,7 +99,7 @@ public class MessageProcessor {
         else {
             session.setUsername(username);
             sessionManager.setCookieUsername(session.getId(), username);
-            String welcome = String.format("Tere tulemast, %s! Kasuta /help, et näha erinevaid käske.", session.getUsername());
+            String welcome = String.format("Tere tulemast, %s! Kasuta /abi, et näha erinevaid käske.", session.getUsername());
             sendMessage(session, new MessageFormatter(welcome, MessageFormatter.GREEN));
         }
     }
@@ -130,7 +130,7 @@ public class MessageProcessor {
                 .forEach(s -> {
                     if (s.equals(sender)) { // Enda saadetud sõnum on sinist värvi.
                         sendMessage(s, new MessageFormatter(formatted, BLUE));
-                        s.updateLastSeenMessage(roomName); // Värskendab viimase sõnu nägemise aega.
+                        s.updateLastSeenMessage(roomName); // Värskendab viimase sõnumi nägemise aega.
                     } else sendMessage(s, msg);
                 });
 
@@ -162,6 +162,7 @@ public class MessageProcessor {
             // Leiab regexi abil chatruumi nime.
             String chatRoomName = matcher.group(1);
             LocalDateTime lastSeen = session.getLastSeenTimestamp(chatRoomName);
+            session.updateLastSeenMessage(chatRoomName);
             List<ChatRoomMessage> lastChatRoomMessages;
             if (lastSeen == null) // Kasutaja liitub esimest korda vestlusruumiga
                 lastChatRoomMessages = chatRoomMessageService.findRoomMessages(chatRoomName);

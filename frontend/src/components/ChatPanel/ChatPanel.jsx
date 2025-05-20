@@ -122,6 +122,22 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                         whileHover={{scale: 1.05}}
                         whileTap={{scale: 0.95}}
                         className={styles["command-button"]}
+                        onClick={() => setInputText("/liitu ")}
+                    >
+                        Liitu ruumiga
+                    </motion.button>
+                    <motion.button
+                        whileHover={{scale: 1.05}}
+                        whileTap={{scale: 0.95}}
+                        className={styles["command-button"]}
+                        onClick={() => setInputText("/privaat ")}
+                    >
+                        Privaatvestlus
+                    </motion.button>
+                    <motion.button
+                        whileHover={{scale: 1.05}}
+                        whileTap={{scale: 0.95}}
+                        className={styles["command-button"]}
                         onClick={() => onSend("/vestlusruumid")}
                     > Vestlusruumid</motion.button>
                     <motion.button
@@ -131,22 +147,6 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                         onClick={() => onSend("/kasutajad")}
                     >
                         Kasutajad
-                    </motion.button>
-                    <motion.button
-                        whileHover={{scale: 1.05}}
-                        whileTap={{scale: 0.95}}
-                        className={styles["command-button"]}
-                        onClick={() => setInputText("/liitu ")}
-                    >
-                        Liitu / Loo
-                    </motion.button>
-                    <motion.button
-                        whileHover={{scale: 1.05}}
-                        whileTap={{scale: 0.95}}
-                        className={styles["command-button"]}
-                        onClick={() => setInputText("/privaat ")}
-                    >
-                        Privaatvestlus
                     </motion.button>
                     <motion.button
                         whileHover={{scale: 1.05}}

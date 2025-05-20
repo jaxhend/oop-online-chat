@@ -22,7 +22,7 @@ public class ListMembersCommand implements Command {
         List<String> usernames;
         if (room == null) {
             usernames = sessionManager.getAllUsernames();
-            return new MessageFormatter("Aktiivsed kasutajad vestlusplatsil: " + usernames.stream()
+            return new MessageFormatter("Aktiivsed kasutajad veebilehel: " + usernames.stream()
                     .sorted(String.CASE_INSENSITIVE_ORDER)
                     .collect(Collectors.joining(", ")), MessageFormatter.PURPLE);
         } else {
