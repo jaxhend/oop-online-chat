@@ -120,6 +120,10 @@ body {
 
 .flex-col {
     flex-direction: column;
+
+}
+
+@media (min-width: 801px) {
     align-items: center;
 }
 
