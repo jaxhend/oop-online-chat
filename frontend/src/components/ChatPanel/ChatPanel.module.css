@@ -104,7 +104,9 @@
 
 .tool-tip {
     position: absolute;
-    top: 120%;
+    top: 50%;
+    left: 120%;
+    transform: translateX(-50%);
     background-color: var(--bg-color);
     color: var(--text-color);
     border: 1px solid var(--border-color);
@@ -131,6 +133,7 @@
 @media (max-width: 1000px) {
     .tool-tip {
         white-space: pre-wrap;
+        min-width: 250px;
     }
 }
 
@@ -146,5 +149,6 @@
     .title {
         font-size: clamp(20px, 5vw, 30px);
     }
+
 }
 
