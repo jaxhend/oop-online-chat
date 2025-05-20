@@ -177,3 +177,7 @@ li a:hover {
     text-decoration: underline;
     color: white;
 }
+
+h3 {
+    margin: 15px;
+}

@@ -106,7 +106,7 @@ const TerminalInput = forwardRef(function TerminalInput({
                                 või pidada privaatselt vestlust oma sõbraga. Sõnumid säilivad <br />
                                 avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse. <br />
                                 Privaatvestluse sõnumeid ei salvestata. Palume jääda suhtlemisel <br />
-                                viisakaks ning seetõttu asendatakse enim levinud vulgaarsused
+                                viisakaks ning seetõttu asendatakse enim levinud vulgaarsused <br />
                                 automaatselt tärniga (*). Head suhtlemist!
                             </motion.div>
                         )}
