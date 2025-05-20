@@ -16,7 +16,7 @@ export default function DailyDeals({deals}) {
 
     return (
         <motion.div
-            className={styles[""]}
+            className={styles.panel}
             initial={{opacity: 0, y: 20}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.6}}
