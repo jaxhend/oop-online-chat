@@ -139,8 +139,8 @@
 
 .charCount {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
+    bottom: -19px;
+    right: -15px;
     font-size: 0.80rem;
     color: #888;
     font-weight: bold;
@@ -148,8 +148,8 @@
 
 .charCountWarning {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
+    bottom: -19px;
+    right: -15px;
     font-size: 0.80rem;
     color: #ccb800;
     font-weight: bold;
@@ -157,8 +157,8 @@
 
 .charCountExceeded {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
+    bottom: -19px;
+    right: -15px;
     font-size: 0.80rem;
     color: red;
     font-weight: bold;

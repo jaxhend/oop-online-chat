@@ -104,6 +104,35 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                 <div ref={chatLogRef} className={styles.chatLog}>
                     {chatMessages.map((msg, i) => {
                         const uniqueKey = msg.id || `msg-${i}-${msg.text.substring(0,10)}`;
+
+                        function formatLinks(text) {
+                            const urlRegex = /https:\/\/[^\s]+/g;
+                            const parts = [];
+                            let lastIndex = 0;
+                            let match;
+                            let keyIndex = 0;
+                            while ((match = urlRegex.exec(text)) !== null) {
+                                if (match.index > lastIndex)
+                                    parts.push(text.slice(lastIndex, match.index));
+
+                                parts.push(
+                                    <a
+                                        key={`link-${uniqueKey}-${keyIndex++}`}
+                                        href={match[0]}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ textDecoration: "underline" }}
+                                    >
+                                        {match[0]}
+                                    </a>
+                                );
+                                lastIndex = urlRegex.lastIndex;
+                            }
+                            if (lastIndex < text.length)
+                                parts.push(text.slice(lastIndex));
+                            return parts;
+                        }
+
                         return (
                             <div
                                 key={uniqueKey}
@@ -112,7 +141,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                                     color: resolveColor(msg.color)
                                 }}
                             >
-                                {msg.text}
+                                {formatLinks(msg.text)}
                             </div>
                         );
                     })}
