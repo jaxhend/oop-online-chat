@@ -126,7 +126,18 @@ export default function AIChatPanel({
             <div className={styles.chatLog} ref={chatLogRef}>
                 {chatHistory.map((entry, i) => (
                     <div key={i} className={styles.message}>
-                        <strong>{entry.sender}:</strong> {entry.text}
+                        <strong>{entry.sender}:</strong>{" "}
+                        {entry.sender === "Robot" ? (
+                            <ReactMarkdown
+                                components={{
+                                    p: ({ node, ...props }) => <span {...props} />
+                                }}
+                            >
+                                {entry.text}
+                            </ReactMarkdown>
+                        ) : (
+                            entry.text
+                        )}
                     </div>
                 ))}
 
