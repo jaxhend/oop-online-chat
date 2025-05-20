@@ -27,7 +27,7 @@
 }
 
 .city {
-    padding: clamp(0.2rem, 1.2vw, 1rem);
+    font-size: clamp(12px, 1.8vw, 18px);
     font-weight: 600;
     margin: 0;
     padding: 0;
