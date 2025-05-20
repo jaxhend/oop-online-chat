@@ -79,7 +79,7 @@
 }
 @media (max-width: 800px) {
     .section {
-        font-size: clamp(10px, 2.5vw, 16px);
+        font-size: clamp(12px, 2.5vw, 16px);
     }
     .title {
         font-size: clamp(15px, 4vw, 26px);
