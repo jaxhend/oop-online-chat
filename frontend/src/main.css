@@ -94,8 +94,9 @@
         max-width: 100%;
         height: auto;
         max-height: 80px;
-        filter: brightness(1000%) contrast(200%);
+        filter: brightness(0) contrast(200%) invert(1);
         opacity: 1.0;
+
     }
 }
 
