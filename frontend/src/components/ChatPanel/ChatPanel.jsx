@@ -1,12 +1,15 @@
 import React, {useRef, useEffect, useState} from "react";
 import styles from "./ChatPanel.module.css";
 import TerminalInput from "../TerminalInput/TerminalInput";
-import {motion} from "framer-motion";
+import {AnimatePresence, motion} from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
+import {HelpCircle} from "lucide-react";
+import EmojiPicker from "@/components/ChatPanelComponents/EmojiPicker";
 
 export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, theme}) {
     const [userScrolledUp, setUserScrolledUp] = useState(false);
     const terminalInputRef = useRef(null);
+    const [showTooltip, setShowTooltip] = useState(false);
 
     useEffect(() => { // Kontrollib, kas kasutaja on üles scrollinud
         const chatLog = chatLogRef.current;
@@ -56,6 +59,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
 
     return (
         <motion.div
+            className="wide-div"
             initial={{opacity: 0, y: 20}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 0.6}}
@@ -64,7 +68,36 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
             <div className={styles.container}>
                 <div className={styles["header-row"]}>
                     <div className={styles["title-bar"]}>
-                        <h2 className={styles.title}>Vestlusplats</h2>
+                        <div className={styles["title-left"]}>
+                            <h2 className={styles.title}>Vestlusplats</h2>
+                            <div
+                                className={styles["help-wrapper"]}
+                                onMouseEnter={() => setShowTooltip(true)}
+                                onMouseLeave={() => setShowTooltip(false)}
+                            >
+                                <HelpCircle className={styles["help-icon"]} />
+                                <AnimatePresence>
+                                    {showTooltip && (
+                                        <motion.div
+                                            className={styles["tool-tip"]}
+                                            initial={{ opacity: 0, x: 10 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: 10 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <b>Tere tulemast UTchat veebilehele!</b> <br />
+                                            Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga. <br />
+                                            Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega <br />
+                                            või pidada privaatselt vestlust oma sõbraga. Sõnumid säilivad <br />
+                                            avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse. <br />
+                                            Privaatvestluse sõnumeid ei salvestata. Palume jääda suhtlemisel <br />
+                                            viisakaks ning seetõttu asendatakse enim levinud vulgaarsused <br />
+                                            automaatselt tärniga (*). Head suhtlemist!
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        </div>
                         <ThemeToggle/>
                     </div>
                 </div>

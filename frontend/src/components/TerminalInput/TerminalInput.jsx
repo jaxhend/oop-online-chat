@@ -15,7 +15,6 @@ const TerminalInput = forwardRef(function TerminalInput({
     const inputRef = useRef(null);
     const [isEmpty, setIsEmpty] = useState(true);
     const [showTooltip, setShowTooltip] = useState(false);
-
     useEffect(() => {
         const handleClick = (e) => {
             const isInsideEmoji = e.target.closest(".emoji-trigger") || e.target.closest(".emoji-picker");
@@ -84,35 +83,6 @@ const TerminalInput = forwardRef(function TerminalInput({
                 className={`${styles.input} ${isEmpty ? styles.empty : ""}`}
                 data-placeholder={placeholder}
             />
-            {showHelpIcon && (
-                <div
-                    className={styles["help-wrapper"]}
-                    onMouseEnter={() => setShowTooltip(true)}
-                    onMouseLeave={() => setShowTooltip(false)}
-                >
-                    <HelpCircle className={styles["help-icon"]} />
-                    <AnimatePresence>
-                        {showTooltip && (
-                            <motion.div
-                                className={styles["tool-tip"]}
-                                initial={{ opacity: 0, x: 10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: 10 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                <b>Tere tulemast UTchat veebilehele!</b> <br />
-                                Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga. <br />
-                                Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega <br />
-                                või pidada privaatselt vestlust oma sõbraga. Sõnumid säilivad <br />
-                                avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse. <br />
-                                Privaatvestluse sõnumeid ei salvestata. Palume jääda suhtlemisel <br />
-                                viisakaks ning seetõttu asendatakse enim levinud vulgaarsused <br />
-                                automaatselt tärniga (*). Head suhtlemist!
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            )}
             {showEmojiButton && <EmojiPicker onSelect={(emoji) => insertEmojiAtCaret(emoji.native)} />}
         </div>
     );

@@ -25,6 +25,11 @@
     vertical-align: middle;
 }
 
+.title-left {
+    display: flex;
+    align-items: center;
+}
+
 .command-button {
     background-color: var(--bg-color);
     border: 1px solid var(--border-color);
@@ -76,6 +81,57 @@
 .message {
     margin-bottom: 0.5rem;
     align-self: flex-start;
+}
+
+.help-wrapper {
+    position: relative;
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+}
+
+.help-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--border-color);
+    opacity: 0.8;
+    cursor: help;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    text-align: justify;
+}
+
+.tool-tip {
+    position: absolute;
+    top: 120%;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 800px) {
+    .input {
+        font-size: 0.8rem;
+    }
+    .empty::before {
+        font-size: 0.8rem;
+    }
+    .tool-tip {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 1000px) {
+    .tool-tip {
+        white-space: pre-wrap;
+    }
 }
 
 @media (max-width: 800px) {
