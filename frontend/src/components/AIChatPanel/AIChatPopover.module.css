@@ -26,7 +26,7 @@
     bottom: 4rem;
     right: 5rem;
     width: 40vw;
-    height: 70vw;
+    height: 70vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
