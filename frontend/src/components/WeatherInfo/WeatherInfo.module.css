@@ -2,7 +2,7 @@
     background-color: var(--bg-color);
     border-radius: 1.5rem;
     border: 1.25px solid var(--border-color);
-    padding: clamp(12px, 1.3vw, 16px);
+    padding: clamp(14px, 1.7vw, 23px);
     box-shadow: 0 3px 10px #2C5696;
     width: 100%;
     max-width: 100%;
@@ -120,7 +120,7 @@
         font-size: clamp(12px, 3vw, 18px);
     }
     .card {
-        padding: clamp(12px, 3vw, 22px);
+        padding: clamp(16px, 4vw, 30px);
     }
     .time {
         font-size: clamp(12px, 3vw, 18px);
