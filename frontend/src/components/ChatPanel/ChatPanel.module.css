@@ -73,7 +73,7 @@
     scrollbar-color: rgba(128, 128, 128, 0.4) transparent;
     box-sizing: border-box;
     word-break: break-word;
-    font-size: clamp(12px, 1.5vw, 16px);
+    font-size: clamp(12px, 1vw, 16px);
     overflow-wrap: break-word;
 }
 
