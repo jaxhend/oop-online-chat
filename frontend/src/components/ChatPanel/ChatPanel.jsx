@@ -121,7 +121,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                                         href={match[0]}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        style={{ textDecoration: "underline" }}
+                                        className={styles.link}
                                     >
                                         {match[0]}
                                     </a>
