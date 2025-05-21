@@ -15,10 +15,10 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 
 ## Kasutatud tehnoloogiad
 
-### 1. **Deployment **
+## 1. **Deployment **
   - Frontend on hostitud Vercelis ja kättesaadal domeenil utchat.ee
 
-### 2. **Frontend **
+## 2. **Frontend **
 
 - Kuvab vestlused, AI-roboti liides, ilmateade, uudised ja päevapakkumised.
 - Kasutab WebSocket-ühendust reaalajas sõnumivahetuseks.
@@ -26,16 +26,16 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 - REST-päringud uudsite, ilmateate, päevapakkumiste pärimiseks ning AI juturobotiga suhtlemiseks
 - Light/Dark mode valik, mis salvestatakse küpsisesse.
 
-### 3. **Backend **
+## 3. **Backend **
 
-### **Spring Boot**:
+### **Spring Boot**
 - Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse salvestatud `SESSION_ID` seotakse serveris kasutajanimega.
 - Vestlusplatsi käsud ning sõnumite saatmine ja vastuvõtmine toimuvad reaalajas WebSocketi kaudu.
 - REST API-de kaudu edastatakse frontendile reaalajas uudised, päevapakkumised ja ilmainfo.
 
----
 
-### Klasside selgitused
+
+#### Klasside selgitused:
 
 - **MessageProcessor** töötleb kasutaja sisendeid (käske, sõnumeid ja nende filtreerimist) ning edastab vastava info WebSocketi kaudu.
   - Kasutab:
@@ -71,9 +71,9 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
   
 - **PrivateChatRoom ja RegularChatRoom** realiseerivad `ChatRoom` loogika erinevatele ruumitüüpidele.
 
----
 
-### Websocketi toimimine:
+
+#### Websocketi toimimine:
 
 1. Brauser avab WebSocketi ühenduse.
 2. `WebSocketHandshakeInterceptor` kontrollib, kas brauseri küpsis sisaldab kehtivat `sessionId`.
@@ -94,7 +94,7 @@ Scraperid, mis töötlevad `sitemap.xml` faile, tuvastavad seal loetletud lehed 
 Lehekülg laaditakse dünaamiliselt, otsitakse kõik vajalikud lingid ning külastatakse neid, salvestades vajaliku info.
 
 ### Andmete salvestamine  
-Kõik kraabitud andmed salvestatakse MongoDB andmebaasi `webscraping` alla.
+Kõik andmed salvestatakse NoSQL andmebaasi MongoDB
 
 
 #### Scraperid koguvad infot järgmistelt Tartu Ülikooli ja informaatikainstituudi lehtedelt:
