@@ -1,8 +1,8 @@
-# OOP Projekt: UT chat
+# OOP Projekt: UTchat
 #### Tiimiliikmed - Karl Markus Kiudma, Robin Juul, Hendrik Jaks
 
 ### Lühikokkuvõte:
-Ut chat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengitel omavahel reaalajas suhelda. Lisaks pakub rakendus AI-juturoboti tuge ning kuvab kasulikku teavet, sealhulgas päevast ilmateadet, aktuaalseid uudiseid ja päevapakkumisi.
+UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengitel omavahel reaalajas suhelda. Lisaks pakub rakendus AI-juturoboti tuge ning kuvab kasulikku teavet, sealhulgas päevast ilmateadet, aktuaalseid uudiseid ja päevapakkumisi.
 
 
 ## Funktsionaalsused:
@@ -88,10 +88,10 @@ Ut chat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengit
 Rakenduses kasutatakse mitut scraperit, mis koguvad struktureeritud infot Tartu Ülikooli avalikelt veebilehtedelt. 
 
 ####  XML-põhised scraperid
-Scraperid, mis töötlevad `sitemap.xml` faile, tuvastavad seal loetletud lehed ja külastavad neid, salvestades sealse vajaliku info.
+Scraperid, mis töötlevad `sitemap.xml` faile, tuvastavad seal loetletud lehed ja külastavad neid, salvestades vajaliku info.
 
 #### SPA-põhised scraperid
-Lehekülg laaditakse dünaamiliselt, otsitakse kõik vajalikud lingid ning külastatakse neid ning otsitakse vajalik info.
+Lehekülg laaditakse dünaamiliselt, otsitakse kõik vajalikud lingid ning külastatakse neid, salvestades vajaliku info.
 
 ### Andmete salvestamine  
 Kõik kraabitud andmed salvestatakse MongoDB andmebaasi `webscraping` alla.
@@ -103,7 +103,7 @@ Kõik kraabitud andmed salvestatakse MongoDB andmebaasi `webscraping` alla.
 - OisCoursesScraper – kogub õppeainete infot lehelt: https://ois2.ut.ee/#/courses
 - OisCurriculaScraper – kogub õppekavade ja moodulite infot lehelt: https://ois2.ut.ee/#/curricula
 - SisseastumineScraper – kogub sisseastumisega seotud infot lehelt: https://cs.ut.ee/et/sisseastumine
--TeadusScraper – kogub teadus- ja uurimistegevuse infot lehelt: https://cs.ut.ee/et/teadus
+- TeadusScraper – kogub teadus- ja uurimistegevuse infot lehelt: https://cs.ut.ee/et/teadus
 
 
 
