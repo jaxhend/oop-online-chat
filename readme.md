@@ -30,7 +30,7 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 - Kui kasutaja avab lehe, saadab brauser serverile päringu, et saada uus või kinnitada olemasolev `sessionId`.
 - Server salvestab või leiab `sessionId` alusel kasutaja varasema info ja saadab `sessionId` brauserisse küpsisena
 - Kui kasutajanimi on juba seotud selle `sessionId`ga, taastatakse see automaatselt.
-- Kasutajanimi hoitakse ainult serveris
+- Kasutajanime hoitakse ainult serveris
 
 ####  Reaalajas suhtlus WebSocketi kaudu
 
