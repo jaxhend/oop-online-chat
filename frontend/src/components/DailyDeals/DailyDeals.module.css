@@ -1,7 +1,7 @@
 .section {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow: hidden;
     max-height: 100%;
     box-shadow: 0 3px 10px #2C5696;
     border: 1.25px solid var(--border-color);
@@ -9,8 +9,7 @@
     background-color: var(--bg-color);
     width: 100%;
     max-width: 100%;
-    font-size: clamp(10px, 1.1vw, 14px);
-    height: 60vh;
+    font-size: clamp(12px, 1.5vh, 16px);
 }
 
 .title {
