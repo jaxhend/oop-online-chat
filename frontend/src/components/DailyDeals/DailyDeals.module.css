@@ -10,7 +10,7 @@
     width: 100%;
     max-width: 100%;
     font-size: clamp(10px, 1.1vw, 14px);
-    height: 50vh;
+    height: 60vh;
 }
 
 .title {
