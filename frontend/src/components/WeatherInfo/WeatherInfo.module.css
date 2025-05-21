@@ -2,7 +2,7 @@
     background-color: var(--bg-color);
     border-radius: 1.5rem;
     border: 1.25px solid var(--border-color);
-    padding: clamp(10px, 1.7vw, 14px);
+    padding: clamp(11px, 1.3vw, 14px);
     box-shadow: 0 3px 10px #2C5696;
     width: 100%;
     max-width: 100%;
@@ -28,14 +28,14 @@
 }
 
 .city {
-    font-size: clamp(10px, 1.8vw, 16px);
+    font-size: clamp(10px, 1.2vw, 14px);
     font-weight: 600;
     margin: 0;
     padding: 0;
 }
 
 .time {
-    font-size: clamp(10px, 1.8vw, 16px);
+    font-size: clamp(10px, 1.2vw, 14px);
     opacity: 0.7;
     margin: 0;
     padding: 0;
@@ -50,13 +50,13 @@
 .temperature {
     margin: 0;
     padding: 0;
-    font-size: clamp(14px, 1.9vw, 18px);
+    font-size: clamp(10px, 1.2vw, 14px);
     font-weight: bold;
     color: var(--text-color);
 }
 
 .condition {
-    font-size: clamp(10px, 1.7vw, 16px);
+    font-size: clamp(10px, 1.2vw, 14px);
     color: #888;
     padding: 0;
     margin: 0.15rem 0 0;
