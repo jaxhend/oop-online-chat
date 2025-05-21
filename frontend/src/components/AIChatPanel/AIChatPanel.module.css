@@ -168,11 +168,11 @@
     position: static;
 }
 
-charCountWarning {
+.charCountWarning {
     color: #ccb800;
 }
 
-charCountExceeded {
+.charCountExceeded {
     color: red;
 }
 
