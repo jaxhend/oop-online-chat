@@ -143,5 +143,7 @@ Rakenduses kasutatakse mitut scraperit, mis koguvad struktureeritud infot Tartu 
 
 
 ![Kuvatõmmis 2025-05-21 232243](https://github.com/user-attachments/assets/ec0de958-a780-4d5d-9b95-e7c697461aec)
+![image](https://github.com/user-attachments/assets/f6162805-c919-44cd-aff1-348ceffa32c6)
+
 
 
