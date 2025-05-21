@@ -15,20 +15,51 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 
 ## Kasutatud tehnoloogiad
 
-## 1. **Deployment **
+## 1. *Deployment* 
   - Frontend on hostitud Vercelis ja kättesaadal domeenil utchat.ee
 
-## 2. **Frontend **
-
+## 2. *Frontend* 
 - Kuvab vestlused, AI-roboti liides, ilmateade, uudised ja päevapakkumised.
 - Kasutab WebSocket-ühendust reaalajas sõnumivahetuseks.
 - Emotikonide kasutamine EmojiPicker abil.
 - REST-päringud uudiste, ilmateate, päevapakkumiste pärimiseks ning AI juturobotiga suhtlemiseks
 - Light/Dark mode valik, mis salvestatakse küpsisesse.
 
-## 3. **Backend **
 
-### **Spring Boot**
+#### Sessioonihaldus
+- Kui kasutaja avab lehe, saadab brauser serverile päringu, et saada uus või kinnitada olemasolev `sessionId`.
+- Server salvestab või leiab `sessionId` alusel kasutaja varasema info ja saadab `sessionId` brauserisse küpsisena
+- Kui kasutajanimi on juba seotud selle `sessionId`ga, taastatakse see automaatselt.
+- Kasutajanime hoitakse ainult serveris
+
+####  Reaalajas suhtlus WebSocketi kaudu
+
+- WebSocket-ühendus luuakse automaatselt kohe pärast `sessionId` saamist.
+- Kasutaja sisestatud sõnum või käsk edastatakse WebSocketi kaudu otse serverile.
+- Server töötleb sõnumi ja saadab vastuse tagasi, mis kuvatakse kasutajaliideses.
+- Kui uus sõnum saabub ajal, mil brauseri sakk ei ole aktiivne, siis kuvatakse visuaalne märguanne vahelehe pealkirjas.
+
+#### AI juturobot
+- Kasutaja küsimus saadetakse POST-päringuna serverile, kaasa saadetakse kuni 10 eelmist küsimust-vastust.
+- Vastuse ootel kuvatakse kasutajale “AI mõtleb…” animatsioon.
+- Kui vastus saabub, lisatakse nii kasutaja sisend kui ka roboti vastus vestluse ajalukku ning kuvatakse ekraanil
+
+#### Andmete kuvamine
+- Rakenduse käivitumisel laetakse automaatselt: ilmateade, uudised ja päevapakkumised
+- Need andmed saadakse REST API-de päringute kaudu
+
+#### Kasutajaliides
+- Kasutaja saab valida Light/Dark mode'i vahel, mis salvestatakse küpsisesse ja taastatakse järgmisel külastusel.
+- Leht on jagatud neljaks osaks: Vestlusala, Uudistepaneel, Infopaneel(ilm + päevapakkumised) ja AI juturobot
+- Sõnumiväljal on olemas emotikoni valiku võimalus, kust kasutaja saab valida sobiva emotikoni, mis lisatakse sõnumi teksti.
+- Stiilid on loodud skaleeruvaks ning toetavad mobiilivaade
+
+
+
+
+## 3. *Backend* 
+
+### *Spring Boot*
 - Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse salvestatud `SESSION_ID` seotakse serveris kasutajanimega.
 - Vestlusplatsi käsud ning sõnumite saatmine ja vastuvõtmine toimub reaalajas WebSocketi kaudu.
 - REST API-de kaudu edastatakse frontendile reaalajas uudised, päevapakkumised ja ilmainfo.
@@ -36,6 +67,9 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 
 
 #### Klasside selgitused:
+
+
+- **ApplicationInfoController** pakub REST API otspunkte ilmainfo, päevapakkumiste ja uudiste edastamiseks frontendile.
 
 - **MessageProcessor** töötleb kasutaja sisendeid (käske, sõnumeid ja nende filtreerimist) ning edastab vastava info WebSocketi kaudu.
   - Kasutab:
@@ -82,7 +116,14 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 5. `MessageProcessor` töötleb käske, filtreerib sisu, salvestab sõnumeid ja edastab need teistele kasutajatele WebSocketi kaudu.
 6. `ChatRoomManager` kontrollib ruumide olemasolu ja suunab kasutajad sobivatesse `ChatRoom`idesse.
 7. `ChatRoom` haldab liikmeid ja liitumisõigusi.
-  
+
+#### REST API
+
+1.	Brauser teeb GET päringu ühele API otspunktidest (/ilm, /uudised, /paevapakkumised).
+2.	Spring Boot controller `ApplicationInfoController` võtab päringu vastu.
+3.	Controller kutsub vastavat teenust:
+4.	Saadud andmed vormistatakse JSON-vastuseks ja saadetakse frontendile.
+5.	Frontendis kuvatakse kasutajale andmed reaalajas.
 
 
 ### Andmete salvestamine  
@@ -100,6 +141,9 @@ Rakenduses kasutatakse mitut scraperit, mis koguvad struktureeritud infot Tartu 
 - SisseastumineScraper – kogub sisseastumisega seotud infot lehelt: https://cs.ut.ee/et/sisseastumine
 - TeadusScraper – kogub teadus- ja uurimistegevuse infot lehelt: https://cs.ut.ee/et/teadus
 
+
+![Kuvatõmmis 2025-05-21 232243](https://github.com/user-attachments/assets/ec0de958-a780-4d5d-9b95-e7c697461aec)
+![image](https://github.com/user-attachments/assets/f6162805-c919-44cd-aff1-348ceffa32c6)
 
 
 
