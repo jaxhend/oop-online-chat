@@ -23,14 +23,14 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 - Kuvab vestlused, AI-roboti liides, ilmateade, uudised ja päevapakkumised.
 - Kasutab WebSocket-ühendust reaalajas sõnumivahetuseks.
 - Emotikonide kasutamine EmojiPicker abil.
-- REST-päringud uudsite, ilmateate, päevapakkumiste pärimiseks ning AI juturobotiga suhtlemiseks
+- REST-päringud uudiste, ilmateate, päevapakkumiste pärimiseks ning AI juturobotiga suhtlemiseks
 - Light/Dark mode valik, mis salvestatakse küpsisesse.
 
 ## 3. **Backend **
 
 ### **Spring Boot**
 - Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse salvestatud `SESSION_ID` seotakse serveris kasutajanimega.
-- Vestlusplatsi käsud ning sõnumite saatmine ja vastuvõtmine toimuvad reaalajas WebSocketi kaudu.
+- Vestlusplatsi käsud ning sõnumite saatmine ja vastuvõtmine toimub reaalajas WebSocketi kaudu.
 - REST API-de kaudu edastatakse frontendile reaalajas uudised, päevapakkumised ja ilmainfo.
 
 
@@ -45,7 +45,7 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
     - `ChatRoomManager` – ruumide haldus
     - `ProfanityFilter` – sobimatute sõnade filtreerimine
 
-- **WebSocketHandler** seob WebSocketi sessiooni kasutajaga ning edastab kasutaja sisendid `MessageProcessor`ile töötlemiseks.
+- **WebSocketHandler** seob WebSocketi sessiooni kasutajaga ning edastab kasutaja sisendid `MessageProcessor`'ile töötlemiseks.
   - Kasutab:
     - `ClientSessionManager` – seansi tuvastamiseks
     - `MessageProcessor` – sisendi töötlemiseks
@@ -63,11 +63,11 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 - **ClientSession** salvestab kasutaja seansi info (WebSocket-ühendus, sessiooni ID, kasutajanimi, aktiivne vestlusruum, viimati nähtud sõnumid).
   - Seostatakse WebSocketi sessiooniga
 
-- **ClientSessionManager** haldab aktiivseid seansse ja nende infot (sh kasutajanime seos sessiooni ID-ga.
+- **ClientSessionManager** haldab aktiivseid seansse ja nende infot (sh kasutajanime seos sessiooni ID-ga).
 
 - **CommandHandler** töötleb käske ning suunab need käsuklassidele edasi, tagastades süsteemipoolsed vastused.
   
-- **ChatRoomMessageService** salvestab ja tagastab vestlusruumide sõnumid).
+- **ChatRoomMessageService** salvestab ja tagastab vestlusruumide sõnumid.
   
 - **PrivateChatRoom ja RegularChatRoom** realiseerivad `ChatRoom` loogika erinevatele ruumitüüpidele.
 
@@ -83,21 +83,16 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 6. `ChatRoomManager` kontrollib ruumide olemasolu ja suunab kasutajad sobivatesse `ChatRoom`idesse.
 7. `ChatRoom` haldab liikmeid ja liitumisõigusi.
   
-### Scraperid
 
-Rakenduses kasutatakse mitut scraperit, mis koguvad struktureeritud infot Tartu Ülikooli avalikelt veebilehtedelt. 
-
-####  XML-põhised scraperid
-Scraperid, mis töötlevad `sitemap.xml` faile, tuvastavad seal loetletud lehed ja külastavad neid, salvestades vajaliku info.
-
-#### SPA-põhised scraperid
-Lehekülg laaditakse dünaamiliselt, otsitakse kõik vajalikud lingid ning külastatakse neid, salvestades vajaliku info.
 
 ### Andmete salvestamine  
 Kõik andmed salvestatakse NoSQL andmebaasi MongoDB
 
+### Scraperid
 
-#### Scraperid koguvad infot järgmistelt Tartu Ülikooli ja informaatikainstituudi lehtedelt:
+Rakenduses kasutatakse mitut scraperit, mis koguvad struktureeritud infot Tartu Ülikooli avalikelt veebilehtedelt. 
+
+#### Scraperid koguvad infot järgmistelt Tartu Ülikooli ja Tartu Ülikooli Arvutiteaduste Instituudi lehtedelt:
 - CsScraper – kogub infot: https://cs.ut.ee/sitemap.xml
 - UtScraper – kogub infot: https://ut.ee/sitemap.xml
 - OisCoursesScraper – kogub õppeainete infot lehelt: https://ois2.ut.ee/#/courses
