@@ -2,11 +2,12 @@
     background-color: var(--bg-color);
     border-radius: 1.5rem;
     border: 1.25px solid var(--border-color);
-    padding: clamp(14px, 1.7vw, 19px);
+    padding: clamp(14px, 1.7vw, 17px);
     box-shadow: 0 3px 10px #2C5696;
     width: 100%;
     max-width: 100%;
     height: auto;
+
 
     display: flex;
     flex-direction: column;
