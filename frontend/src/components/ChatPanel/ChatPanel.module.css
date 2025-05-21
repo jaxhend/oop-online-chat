@@ -120,6 +120,10 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+.mail-text {
+    color: var(--border-color);
+}
+
 .link {
     color: #2C5696;
     text-decoration: underline;

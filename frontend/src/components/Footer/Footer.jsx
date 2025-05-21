@@ -28,7 +28,7 @@ export default function Footer() {
                 </div>
                 <p className={styles.line}>
                     NB! Mudel võib TÜ-välise info ja küsimuste korral hallutsineerida. <br/>
-                    Vigade või ettepanekute korral kontakteeruda <a href="mailto:info@utchat.ee">info@utchat.ee</a>
+                    Vigade või ettepanekute korral kirjutage palun aadressile <a className={styles["mail-text"]} href="mailto:info@utchat.ee">info@utchat.ee</a>
                 </p>
             </div>
         </div>

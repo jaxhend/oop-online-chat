@@ -93,7 +93,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                                             Privaatvestluse sõnumeid ei salvestata. Palume jääda suhtlemisel <br />
                                             viisakaks ning seetõttu asendatakse enim levinud vulgaarsused <br />
                                             automaatselt tärniga (*). Head suhtlemist! <br/>
-                                            Vigade või ettepanekute korral kontakteeruda <a href="mailto:info@utchat.ee">info@utchat.ee</a>
+                                            Vigade või ettepanekute korral kirjutage palun aadressile <a className={styles["mail-text"]} href="mailto:info@utchat.ee">info@utchat.ee</a>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
