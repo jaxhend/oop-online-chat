@@ -49,6 +49,10 @@
         text-align: left;
     }
 
+    .mail-text {
+        color: #bbe0ff;
+    }
+
     .list-content {
         display: flex;
         justify-content: center;

@@ -24,7 +24,7 @@ public class DeltaJsoupScraper {
     private static final List<String> diners = List.of("delta", "drinkgeld");
     private static final Map<String, String> cafeAliases = Map.of("delta", "Delta kohvik", "drinkgeld", "Drinkgeld / Ülikooli kohvik");
     @PostConstruct
-    @Scheduled(cron = "0 0 11 * * MON-FRI")
+    @Scheduled(cron = "0 30 10 * * MON-FRI")
     public void updateLunchOffers() {
         try {
             logger.info("Päevapakkumiste scrapemine algas.");

@@ -1,4 +1,5 @@
 import styles from "./Footer.module.css";
+import React from "react";
 
 export default function Footer() {
     return (
@@ -26,7 +27,8 @@ export default function Footer() {
                     </p>
                 </div>
                 <p className={styles.line}>
-                    NB! Mudel võib TÜ-välise info ja küsimuste korral hallutsineerida.
+                    NB! Mudel võib TÜ-välise info ja küsimuste korral hallutsineerida. <br/>
+                    Vigade või ettepanekute korral kirjutage palun aadressile <a className={styles["mail-text"]} href="mailto:info@utchat.ee">info@utchat.ee</a>
                 </p>
             </div>
         </div>

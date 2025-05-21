@@ -149,7 +149,7 @@ export default function OnlineChat() {
                                 Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega või pidada privaatset vestlust oma sõbraga.
                                 Sõnumid säilivad avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse.
                                 Privaatvestluse sõnumeid ei salvestata.
-                                Palume jääda suhtlemisel viisakaks ning seetõttu asendatakse enim levinud vulgaarsused automaatselt tärniga (*).
+                                Palume jääda suhtlemisel viisakaks ning seetõttu asendatakse vulgaarsused automaatselt tärniga (*).
                                 Head suhtlemist!
                             </p>
                         </div>
