@@ -1,15 +1,16 @@
 .section {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-y: auto;
     max-height: 100%;
     box-shadow: 0 3px 10px #2C5696;
     border: 1.25px solid var(--border-color);
     border-radius: 1.5rem;
     background-color: var(--bg-color);
     width: 100%;
-    max-width: 100%;
-    font-size: clamp(12px, 1.5vw, 16px);
+    font-size: clamp(10px, 1.1vw, 14px);
+    height: 50vh;
+    max-width: 600px;
 }
 
 .title {
