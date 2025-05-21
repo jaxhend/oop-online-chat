@@ -25,6 +25,38 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 - REST-päringud uudiste, ilmateate, päevapakkumiste pärimiseks ning AI juturobotiga suhtlemiseks
 - Light/Dark mode valik, mis salvestatakse küpsisesse.
 
+
+#### Sessioonihaldus
+- Kui kasutaja avab lehe, saadab brauser serverile päringu, et saada uus või kinnitada olemasolev `sessionId`.
+- Server salvestab või leiab `sessionId` alusel kasutaja varasema info ja saadab `sessionId` brauserisse küpsisena
+- Kui kasutajanimi on juba seotud selle `sessionId`ga, taastatakse see automaatselt.
+- Kasutajanimi hoitakse ainult serveris
+
+####  Reaalajas suhtlus WebSocketi kaudu
+
+- WebSocket-ühendus luuakse automaatselt kohe pärast `sessionId` saamist.
+- Kasutaja sisestatud sõnum või käsk edastatakse WebSocketi kaudu otse serverile.
+- Server töötleb sõnumi ja saadab vastuse tagasi, mis kuvatakse kasutajaliideses.
+- Kui uus sõnum saabub ajal, mil brauseri sakk ei ole aktiivne, siis kuvatakse visuaalne märguanne vahelehe pealkirjas.
+
+#### AI juturobot
+- Kasutaja küsimus saadetakse POST-päringuna serverile, kaasa saadetakse kuni 10 eelmist küsimust-vastust.
+- Vastuse ootel kuvatakse kasutajale “AI mõtleb…” animatsioon.
+- Kui vastus saabub, lisatakse nii kasutaja sisend kui ka roboti vastus vestluse ajalukku ning kuvatakse ekraanil
+
+#### Andmete kuvamine
+- Rakenduse käivitumisel laetakse automaatselt: ilmateade, uudised ja päevapakkumised
+- Need andmed saadakse REST API-de päringu kaudu
+
+#### Kasutajaliides
+- Kasutaja saab valida Light/Dark teema – valik salvestatakse küpsisesse ja taastatakse järgmisel külastusel.
+- Leht on jagatud kolmeks osaks: Vestlusala, Infopaneel(ilm + päevapakkumised) ja AI juturobot
+- Sõnumiväljal on olemas emotikoni valiku võimalus, kust kasutaja saab valida sobiva emotikoni, mis lisatakse sõnumi teksti.
+- Stiilid on loodud skaleeruvaks ning toetavad mobiilivaade
+
+
+
+
 ## 3. *Backend* 
 
 ### *Spring Boot*
@@ -35,6 +67,9 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 
 
 #### Klasside selgitused:
+
+
+- **ApplicationInfoController** pakub REST API otspunkte ilmainfo, päevapakkumiste ja uudiste edastamiseks frontendile.
 
 - **MessageProcessor** töötleb kasutaja sisendeid (käske, sõnumeid ja nende filtreerimist) ning edastab vastava info WebSocketi kaudu.
   - Kasutab:
@@ -81,7 +116,14 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 5. `MessageProcessor` töötleb käske, filtreerib sisu, salvestab sõnumeid ja edastab need teistele kasutajatele WebSocketi kaudu.
 6. `ChatRoomManager` kontrollib ruumide olemasolu ja suunab kasutajad sobivatesse `ChatRoom`idesse.
 7. `ChatRoom` haldab liikmeid ja liitumisõigusi.
-  
+
+#### REST API
+
+1.	Brauser teeb GET päringu ühele API otspunktidest (/ilm, /uudised, /paevapakkumised).
+2.	Spring Boot controller `ApplicationInfoController` võtab päringu vastu.
+3.	Controller kutsub vastavat teenust:
+4.	Saadud andmed vormistatakse JSON-vastuseks ja saadetakse frontendile.
+5.	Frontendis kuvatakse kasutajale andmed reaalajas.
 
 
 ### Andmete salvestamine  
