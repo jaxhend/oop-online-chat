@@ -46,7 +46,7 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 
 #### Andmete kuvamine
 - Rakenduse käivitumisel laetakse automaatselt: ilmateade, uudised ja päevapakkumised
-- Need andmed saadakse REST API-de päringu kaudu
+- Need andmed saadakse REST API-de päringute kaudu
 
 #### Kasutajaliides
 - Kasutaja saab valida Light/Dark mode'i vahel, mis salvestatakse küpsisesse ja taastatakse järgmisel külastusel.
