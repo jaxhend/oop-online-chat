@@ -5,7 +5,6 @@
     padding: clamp(11px, 1.3vw, 14px);
     box-shadow: 0 3px 10px #2C5696;
     width: 100%;
-    max-width: 100%;
     height: auto;
 
 
@@ -130,7 +129,7 @@
         font-size: clamp(12px, 1.4vw, 16px);
     }
     .temperature {
-        font-size: clamp(12px, 3vw, 18px); ;
+        font-size: clamp(14px, 3vw, 20px); ;
     }
 
 
