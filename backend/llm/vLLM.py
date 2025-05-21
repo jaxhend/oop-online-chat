@@ -24,7 +24,7 @@ EMBED_BATCH = 64
 TOP_K = 15  # Võtab vektorandmebaasist top 15 kirjet.
 CONTEXT_TOKEN_LIMIT = 10000  # Maksimum token limit on 10000.
 PRIOR_MESSAGES_TOKEN_LIMIT = 200  # 200 tokeni väärtuses on kasutaja varasem vestlus AI-ga
-FILE_NAME = "data2.json"
+FILE_NAME = "data.json"
 FAISS_INDEX_PATH = "faiss_index.bin"
 EMBEDDINGS_PATH = "embeddings.npy"
 
