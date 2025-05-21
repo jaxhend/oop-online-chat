@@ -138,32 +138,31 @@ export default function OnlineChat() {
                 <UsernameDialog onSubmit={handleUsernameSubmit} error={usernameError}/>
             )}
 
-
-            <div className="flex flex-col">
-                <div className="header-info">
-                    <div className="header-text">
-                        <strong>Tere tulemast UTchat veebilehele!</strong><br />
-                        {usernameAccepted && (
-                        <div className="footer-content">
-                            <p>
-                                Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga.
-                                Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega või pidada privaatset vestlust oma sõbraga.
-                                Sõnumid säilivad avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse.
-                                Privaatvestluse sõnumeid ei salvestata.
-                                Palume jääda suhtlemisel viisakaks ning seetõttu asendatakse vulgaarsused automaatselt tärniga (*).
-                                Head suhtlemist!
-                            </p>
+            {usernameAccepted && (
+                <div className="flex flex-col">
+                    <div className="header-info">
+                        <div className="header-text">
+                            <strong>Tere tulemast UTchat veebilehele!</strong><br/>
+                            <div className="footer-content">
+                                <p>
+                                    Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga.
+                                    Vestlusplatsil võid luua uusi vestlusruume, liituda olemasolevatega või pidada
+                                    privaatset vestlust oma sõbraga.
+                                    Sõnumid säilivad avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse.
+                                    Privaatvestluse sõnumeid ei salvestata.
+                                    Palume jääda suhtlemisel viisakaks ning seetõttu asendatakse vulgaarsused
+                                    automaatselt tärniga (*).
+                                    Head suhtlemist!
+                                </p>
+                            </div>
                         </div>
-                        )}
+                        <div className="header-logo">
+                            <img src={utLogo} alt="TÜ logo"/>
+                        </div>
                     </div>
-                    <div className="header-logo">
-                        <img src={utLogo} alt="TÜ logo"/>
-                    </div>
-                </div>
-                <NewsTicker newsList={newsList} animate={!loading}/>
-                <div className="main-layout">
-                    <div className="chat-panel">
-                        {usernameAccepted && (
+                    <NewsTicker newsList={newsList} animate={!loading}/>
+                    <div className="main-layout">
+                        <div className="chat-panel">
                             <ChatPanel
                                 chatMessages={chatMessages}
                                 onSend={(msg) => {
@@ -175,24 +174,17 @@ export default function OnlineChat() {
                                 isActive={true}
                                 theme={theme}
                             />
-                        )}
-                    </div>
+                        </div>
 
-                    <div className="info-panel">
-                        <div className="container">
-                            {usernameAccepted && (
+                        <div className="info-panel">
+                            <div className="container">
                                 <DailyDeals deals={dailyDeals}/>
-                            )}
-                        </div>
-                        <div className="container">
-                            {usernameAccepted && (
+                            </div>
+                            <div className="container">
                                 <WeatherInfo weather={weatherInfo}/>
-                            )}
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                {usernameAccepted && (
                     <AIChatPopover
                         isThinking={isThinking}
                         chatHistory={chatHistory}
@@ -201,11 +193,9 @@ export default function OnlineChat() {
                         onBotSend={sendToBot}
                         isActive={true}
                     />
-                )}
-                {usernameAccepted && (
-                <Footer/>
-                    )}
-            </div>
+                    <Footer/>
+                </div>
+            )}
         </>
     );
 }
