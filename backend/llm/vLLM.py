@@ -1,23 +1,32 @@
 import faiss
 import json
+import logging
 import numpy as np
+import os
 import threading
+import time
 import torch
 import uvicorn
+from cachetools import TTLCache
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer
+from typing import List, Dict
 from vllm import LLM, SamplingParams
 
 # -------- Konf --------
-MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"  # Lausete sisendusmudel
 LLM_MODEL = "Qwen/Qwen3-4B"
 EMBED_BATCH = 64
-TOP_K = 3
-CONTEXT_TOKEN_LIMIT = 15000   # Max token limit on 4096. Igale promptile anname ette paar lauset, mis on 82 tokenit.
+TOP_K = 15  # Võtab vektorandmebaasist top 15 kirjet.
+CONTEXT_TOKEN_LIMIT = 10000  # Maksimum token limit on 10000.
+PRIOR_MESSAGES_TOKEN_LIMIT = 200  # 200 tokeni väärtuses on kasutaja varasem vestlus AI-ga
+FILE_NAME = "data2.json"
+FAISS_INDEX_PATH = "faiss_index.bin"
+EMBEDDINGS_PATH = "embeddings.npy"
 
 # --------- FastAPI ---------
 app = FastAPI()
@@ -29,64 +38,88 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --------- ÕIS andmed ---------
-with open("data.json", "r", encoding="utf-8") as f:
+# --------- Päringute piirang ---------
+RATE_LIMIT = 8
+RATE_PERIOD = 60 # sekundit
+
+ip_cache = TTLCache(maxsize=1000, ttl=RATE_PERIOD)
+
+
+def is_rate_limited(ip: str):
+    now = time.time()
+    if ip not in ip_cache:
+        ip_cache[ip] = [now]
+        return False
+
+    ip_cache[ip] = [ts for ts in ip_cache[ip] if now - ts < RATE_PERIOD]
+    if len(ip_cache[ip]) >= RATE_LIMIT:
+        return True
+
+    ip_cache[ip].append(now)
+    return False
+
+
+# --------- Veebikraabitsa andmed ---------
+with open(FILE_NAME, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 chunks = []
-split_keys = ["sisu", "õpivaljundid", "lõpetamise_tingimused"]
 for item in data:
-    title = item.get("õppekava")
-    level = item.get("õppeaste")
-    base = f"ÕPPEAINE: {title}\n ÕPPEASTE: {level}\n"
-    for key, val in item.items():
-        if key in split_keys or key == "õppeaine" or key == "õppeaste" or key == "moodulid":  # Jätame moodulite info vahele hetkel.
-            continue
-        base += f"{key}: {val}\n"
-    for sk in split_keys:
-        val = item.get(sk)
-        if val:
-            chunks.append(base + f"{sk.upper()}: {val}")
+    for key, value in item.items():
+        chunks.append(f"{key}: {value}")
 
-# --------- Embedding mudel ---------
+
+# --------- Vektorandmebaas ---------
 torch.cuda.empty_cache()
-embedder = SentenceTransformer(MODEL_NAME)
-embeddings = embedder.encode(
-    chunks,
-    device="cpu",
-    batch_size=EMBED_BATCH,
-    show_progress_bar=True
-)
+embedder = SentenceTransformer(EMBEDDING_MODEL)
 
-# --------- FAISS indeks ---------
-dim = embeddings.shape[1]
-index = faiss.IndexFlatL2(dim)
-index.add(np.array(embeddings, dtype='float32'))
+# Kui vektorandmebaas on juba olemas, siis laeb selle mällu.
+if os.path.exists(FAISS_INDEX_PATH) and os.path.exists(EMBEDDINGS_PATH):
+    index = faiss.read_index(FAISS_INDEX_PATH)
+    embeddings = np.load(EMBEDDINGS_PATH)
+else:
+    embeddings = embedder.encode(
+        chunks,
+        device="cpu",
+        batch_size=EMBED_BATCH,
+        show_progress_bar=True
+    )
+    np.save(EMBEDDINGS_PATH, embeddings)
+    dim = embeddings.shape[1]
+    index = faiss.IndexFlatL2(dim)  # Ehitab indeksid.
+    index.add(np.array(embeddings, dtype='float32'))  # Lisab vektorid indeksile.
+    faiss.write_index(index, FAISS_INDEX_PATH)
 
 # --------- vLLM ---------
-sampling_params = SamplingParams(temperature=0.6, top_p=0.95, top_k=20, max_tokens=4096)
-
+sampling_params = SamplingParams(
+    temperature=0.7,
+    top_p=0.8,
+    top_k=20,
+    max_tokens=32768
+)
 llm = LLM(
     model=LLM_MODEL,
     dtype=torch.float16,
-    max_model_len = 18000,
-    gpu_memory_utilization=0.90
+    max_model_len=12000,
+    gpu_memory_utilization=0.97
 )
-
 tokenizer = AutoTokenizer.from_pretrained(LLM_MODEL)
-
 lock = threading.Lock()  # Tekitame queue.
 
 
-# --------- Tokenite lugemine ---------
-def count_tokens(text: str) -> int:
+# --------- Konteksti pikkuse piiramine ---------
+def truncate_to_token_limit(text, limit):
     tokens = tokenizer.encode(text)
-    return len(tokens)
+    if len(tokens) > limit:
+        tokens = tokens[:limit]
+        return tokenizer.decode(tokens)
+    return text
 
 
 # --------- REST API skeem ---------
-class QueryRequest(BaseModel):
-    query: str  # JSON body sisaldab 'query' välja
+class QueryRequest(BaseModel):  # JSON body sisaldab 'query' ja 'history' välja
+    query: str
+    history: List[Dict[str, str]]
 
 
 # --------- Kõik muud leheküljed ---------
@@ -100,8 +133,22 @@ async def not_found_html(request: Request, exc):
 
 # --------- RAG ---------
 @app.post("/chatbot")
-def rag_chat(req: QueryRequest):
+def rag_chat(req: QueryRequest, request: Request):
+    client_ip = request.client.host
+    if is_rate_limited(client_ip):
+        return {"response": "Liiga palju päringuid. Proovi ühe minuti pärast uuesti!"}
+
     q = req.query.strip()
+    prior_messages = ""
+    for elem in req.history:
+        sender = elem.get("sender", "")
+        text = elem.get("text", "")
+        if sender == "Robot":
+            prior_messages += "Sinu vastus oli: "
+        elif sender == "Sina":
+            prior_messages += "Kasutaja küsimus: "
+        prior_messages += text + "\n"
+
     if not q:
         raise HTTPException(status_code=400, detail="Päring ei tohi tühi olla.")
 
@@ -110,33 +157,22 @@ def rag_chat(req: QueryRequest):
         D, I = index.search(np.array(q_emb, dtype='float32'), TOP_K)
         ctxs = [chunks[i] for i in I[0]]
 
-        prompt_chunks = []
-        total_tokens = count_tokens(q)  # Prompti tokenite pikkus
-        for c in ctxs:
-            t = count_tokens(c + "\n--------\n")
-            if total_tokens + t > CONTEXT_TOKEN_LIMIT:
-                break  # Rohkem chunke juurde ei lisa.
-            prompt_chunks.append(c)
-            total_tokens += t
-
-        if not prompt_chunks:
-            # Juhul kui kui esimene chunk on liiga suur.
-            if total_tokens > CONTEXT_TOKEN_LIMIT:
-                q = q[: int(CONTEXT_TOKEN_LIMIT * 3.5)]
-            else:  # Juhul kui kontekst on liiga suur-
-                prompt_chunks = [ctxs[0][: int(CONTEXT_TOKEN_LIMIT - total_tokens * 3.5)] + "..."]
-
-        context = "\n\n".join(prompt_chunks)
+        combined_context = "\n\n".join(ctxs)
+        context = truncate_to_token_limit(combined_context, CONTEXT_TOKEN_LIMIT)
+        truncated_prior_messages = truncate_to_token_limit(prior_messages, PRIOR_MESSAGES_TOKEN_LIMIT)
         prompt = (
-            f"""You are a helpful AI assistant. Your primary task is to answer the user's question based *only* on the provided context. If the answer is not found in the context, you may then use your general knowledge.
-                
-                Provided Context:
+            f"""Oled abivalmis tehisintellekti assistent veebilehel UTchat. See veebileht on mõeldud Tartu Ülikooli üliõpilastele. 
+            Sinu peamine ülesanne on vastata kasutaja sisendile ainult antud konteksti põhjal. Ole sõbralik ja abivalmis.
+
+                Antud kontekst:
                 {context}
                 
-                User's question: {q}
+                Kasutaja varasem sisend ja sinu vastused:
+                {truncated_prior_messages}
                 
-                Please provide your answer in Estonian.
-                Vastus (Answer in Estonian): """
+                Kasutaja sisend: {q}
+            
+                Vastus: """
         )
         messages = [
             {"role": "user", "content": prompt}
@@ -148,12 +184,8 @@ def rag_chat(req: QueryRequest):
             enable_thinking=False
         )
 
-
-        # Genereeri vastus
+        # LLM Genereerib vastus
         outputs = llm.generate([text], sampling_params)
         text = outputs[0].outputs[0].text.strip()
 
     return {"response": text}
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=5000)
