@@ -117,7 +117,7 @@ export default function OnlineChat() {
             const res = await fetch(LLM_URL, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({query: trimmed}),
+                body: JSON.stringify({query: trimmed, history: chatHistory}),
             });
             const data = await res.json();
             setChatHistory((prev) => [...prev, {sender: "Robot", text: data.response || "..."}]);
