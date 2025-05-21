@@ -112,7 +112,7 @@
     border: 1px solid var(--border-color);
     border-radius: 0.5rem;
     padding: 0.5rem 0.75rem;
-    min-width: 430px;
+    min-width: 500px;
     font-size: 0.8rem;
     white-space: normal;
     overflow-wrap: break-word;
@@ -152,12 +152,38 @@
     }
 }
 
-@media (max-width: 1100px) {
+
+
+@media (max-width: 1200px) {
     .tool-tip {
-        white-space: pre-wrap;
-        min-width: 250px;
+        min-width: 440px ;
     }
 }
+
+@media (max-width: 1100px) {
+    .tool-tip {
+        min-width: 350px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .tool-tip {
+        min-width: 300px;
+    }
+}
+
+@media (max-width: 885px) {
+    .tool-tip {
+        min-width: 270px;
+    }
+}
+
+@media (max-width: 840px) {
+    .tool-tip {
+        min-width: 240px;
+    }
+}
+
 
 
 

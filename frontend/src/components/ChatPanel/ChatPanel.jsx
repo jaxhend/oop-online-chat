@@ -92,7 +92,8 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                                             avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse. <br />
                                             Privaatvestluse sõnumeid ei salvestata. Palume jääda suhtlemisel <br />
                                             viisakaks ning seetõttu asendatakse enim levinud vulgaarsused <br />
-                                            automaatselt tärniga (*). Head suhtlemist!
+                                            automaatselt tärniga (*). Head suhtlemist! <br/>
+                                            Vigade või ettepanekute korral kontakteeruda <a href="mailto:info@utchat.ee">info@utchat.ee</a>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
