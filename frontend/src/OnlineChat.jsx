@@ -143,6 +143,7 @@ export default function OnlineChat() {
                 <div className="header-info">
                     <div className="header-text">
                         <strong>Tere tulemast UTchat veebilehele!</strong><br />
+                        {usernameAccepted && (
                         <div className="footer-content">
                             <p>
                                 Siin saad suhelda nii teiste üliõpilastega kui ka AI juturobotiga.
@@ -153,6 +154,7 @@ export default function OnlineChat() {
                                 Head suhtlemist!
                             </p>
                         </div>
+                        )}
                     </div>
                     <div className="header-logo">
                         <img src={utLogo} alt="TÜ logo"/>
@@ -200,8 +202,9 @@ export default function OnlineChat() {
                         isActive={true}
                     />
                 )}
+                {usernameAccepted && (
                 <Footer/>
-
+                    )}
             </div>
         </>
     );

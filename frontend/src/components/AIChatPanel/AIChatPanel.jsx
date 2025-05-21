@@ -116,8 +116,8 @@ export default function AIChatPanel({
                             <li>Lehekülje <a href="https://ut.ee" target="_blank">ut.ee</a> sisu</li>
                             <li>Lehekülje <a href="https://cs.ut.ee" target="_blank">cs.ut.ee</a> sisu</li>
                         </ul>
-                        NB! Mudel võib TÜ-välise info ja <br/>
-                        küsimuste korral hallutsineerida
+                        NB! Palun arvestage, et tehisaru <br/>
+                        võib anda ebatäpseid vastuseid.
                     </motion.div>
                 )}
             </AnimatePresence>

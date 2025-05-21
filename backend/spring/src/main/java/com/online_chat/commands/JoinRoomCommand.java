@@ -33,7 +33,7 @@ public class JoinRoomCommand implements Command {
         chatRoomManager.removeClientFromCurrentRoom(session);
         chatRoomManager.addClientToRoom(session, roomName); // Lisab ruumi ja saadab sõnumi.
 
-        return new MessageFormatter("Liitusid ruumiga '" + roomName + "'", MessageFormatter.GREEN);
+        return new MessageFormatter("Liitusid ruumiga '" + roomName + "'.", MessageFormatter.GREEN);
     }
 
     @Override

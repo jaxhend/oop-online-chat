@@ -74,7 +74,7 @@ public class MessageProcessor {
             String error = """
                     Sa ei ole üheski vestlusruumis. Kasuta käske:
                     /liitu <vestlusruumi_nimi>, et liituda või luua vestlusruumiga,
-                    /private <kasutaja_nimi>, et alustada privaatsõnumit.""";
+                    /privaat <kasutaja_nimi>, et alustada privaatsõnumit.""";
             sendMessage(session, new MessageFormatter(error, MessageFormatter.RED));
         }
     }
@@ -182,8 +182,7 @@ public class MessageProcessor {
         if (oldMessages.isEmpty())
             sendMessage(session, response);
         else {
-            response.addText(".\n " +
-                    "✉\uFE0F Viimase 24 tunni lugemata sõnumid (" + oldMessages.size() + ")");
+            response.addText("\n✉\uFE0F Viimase 24 tunni lugemata sõnumid (" + oldMessages.size() + ")");
             sendMessage(session, response);
             oldMessages.forEach(msg -> sendMessage(session, msg));
             MessageFormatter lastMessage = new MessageFormatter("✅ Varasemad sõnumid on kuvatud", GREEN);

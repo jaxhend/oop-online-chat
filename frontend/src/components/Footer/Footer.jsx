@@ -5,7 +5,7 @@ export default function Footer() {
     return (
         <div className={styles["footer"]}>
             <div className={styles["footer-title"]}>
-                <strong> AI-mudeli info</strong>
+                <strong> Tehisaru info</strong>
             </div>
             <div className={styles["text-block"]}>
                 <div className={styles["main-footer"]}>
@@ -27,7 +27,7 @@ export default function Footer() {
                     </p>
                 </div>
                 <p className={styles.line}>
-                    NB! Mudel võib TÜ-välise info ja küsimuste korral hallutsineerida. <br/>
+                    NB! Palun arvestage, et tehisaru võib anda ebatäpseid vastuseid. <br/>
                     Vigade või ettepanekute korral kirjutage palun aadressile <a className={styles["mail-text"]} href="mailto:info@utchat.ee">info@utchat.ee</a>
                 </p>
             </div>
