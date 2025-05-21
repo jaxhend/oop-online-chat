@@ -91,7 +91,7 @@ export default function ChatPanel({chatMessages, onSend, chatLogRef, isActive, t
                                             või pidada privaatselt vestlust oma sõbraga. Sõnumid säilivad <br />
                                             avalikes vestlusruumides 24 tundi, pärast mida need kustutatakse. <br />
                                             Privaatvestluse sõnumeid ei salvestata. Palume jääda suhtlemisel <br />
-                                            viisakaks ning seetõttu asendatakse enim levinud vulgaarsused <br />
+                                            viisakaks ning seetõttu asendatakse vulgaarsused <br />
                                             automaatselt tärniga (*). Head suhtlemist! <br/>
                                             Vigade või ettepanekute korral kirjutage palun aadressile <a className={styles["mail-text"]} href="mailto:info@utchat.ee">info@utchat.ee</a>
                                         </motion.div>
