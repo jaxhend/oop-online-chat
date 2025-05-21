@@ -168,6 +168,14 @@
     position: static;
 }
 
+charCountWarning {
+    color: #ccb800;
+}
+
+charCountExceeded {
+    color: red;
+}
+
 .listItems {
     padding-left: 25px;
 }
