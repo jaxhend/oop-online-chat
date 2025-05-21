@@ -50,7 +50,7 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 
 #### Kasutajaliides
 - Kasutaja saab valida Light/Dark mode'i vahel, mis salvestatakse küpsisesse ja taastatakse järgmisel külastusel.
-- Leht on jagatud kolmeks osaks: Vestlusala, Infopaneel(ilm + päevapakkumised) ja AI juturobot
+- Leht on jagatud neljaks osaks: Vestlusala, Uudistepaneel, Infopaneel(ilm + päevapakkumised) ja AI juturobot
 - Sõnumiväljal on olemas emotikoni valiku võimalus, kust kasutaja saab valida sobiva emotikoni, mis lisatakse sõnumi teksti.
 - Stiilid on loodud skaleeruvaks ning toetavad mobiilivaade
 
