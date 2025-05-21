@@ -100,5 +100,6 @@ Rakenduses kasutatakse mitut scraperit, mis koguvad struktureeritud infot Tartu 
 - TeadusScraper – kogub teadus- ja uurimistegevuse infot lehelt: https://cs.ut.ee/et/teadus
 
 
+![Kuvatõmmis 2025-05-21 232243](https://github.com/user-attachments/assets/ec0de958-a780-4d5d-9b95-e7c697461aec)
 
 
