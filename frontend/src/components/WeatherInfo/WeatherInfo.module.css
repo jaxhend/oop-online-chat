@@ -5,6 +5,7 @@
     padding: clamp(14px, 1.7vw, 19px);
     box-shadow: 0 3px 10px #2C5696;
     width: 100%;
+    max-width: 100%;
     height: auto;
 
     display: flex;
@@ -14,7 +15,6 @@
     overflow: hidden;
     color: var(--text-color);
     flex: 1;
-    max-width: 600px;
 }
 
 .header {
