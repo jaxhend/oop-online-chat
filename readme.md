@@ -18,7 +18,7 @@ OnlineChat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tuden
 
 ### 1. **Frontend (React + Tailwind CSS)**
 
-- Kuvab kasutajaliidest: vestlused, AI-roboti liides, ilmateade, uudised ja päevapakkumised.
+- Kuvab vestlused, AI-roboti liides, ilmateade, uudised ja päevapakkumised.
 - Kasutab WebSocket-ühendust reaalajas sõnumivahetuseks.
 - Emotikonide sisestamine spetsiaalse EmojiPicker komponendi abil.
 - REST-päringuid uudsite, ilmateate, päevapakkumiste pärimiseks ning AI juturobotiga suhtlemiseks
