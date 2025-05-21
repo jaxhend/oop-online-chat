@@ -8,7 +8,7 @@
     background-color: var(--bg-color);
     width: 100%;
     max-width: 100%;
-    font-size: clamp(8px, 1.1vh, 16px);
+    font-size: clamp(11px, 1.4vh, 16px);
 }
 
 .title {
