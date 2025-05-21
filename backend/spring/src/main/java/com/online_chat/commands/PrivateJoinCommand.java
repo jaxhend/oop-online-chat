@@ -2,6 +2,7 @@ package com.online_chat.commands;
 
 
 import com.online_chat.chatrooms.ChatRoomManager;
+import com.online_chat.chatrooms.PrivateChatRoom;
 import com.online_chat.client.ClientSession;
 import com.online_chat.client.ClientSessionManager;
 import com.online_chat.model.MessageFormatter;
@@ -41,7 +42,8 @@ public class PrivateJoinCommand implements Command {
         if (target == null)
             return new MessageFormatter("Ei leitud kasutajat '" + args[1] + "'", MessageFormatter.RED);
 
-        if (session.getCurrentRoom() != null && session.getCurrentRoom().equals(target.getCurrentRoom()))
+        if (session.getCurrentRoom() != null && session.getCurrentRoom().equals(target.getCurrentRoom()) &&
+                session.getCurrentRoom() instanceof PrivateChatRoom)
             return new MessageFormatter("Oled juba privaatvestluses " + args[1], MessageFormatter.RED);
 
         // loome privaatse ruumi
