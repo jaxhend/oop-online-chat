@@ -15,20 +15,19 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 
 ## Kasutatud tehnoloogiad
 
-## 1. **Deployment **
+## 1. *Deployment* 
   - Frontend on hostitud Vercelis ja kättesaadal domeenil utchat.ee
 
-## 2. **Frontend **
-
+## 2. *Frontend* 
 - Kuvab vestlused, AI-roboti liides, ilmateade, uudised ja päevapakkumised.
 - Kasutab WebSocket-ühendust reaalajas sõnumivahetuseks.
 - Emotikonide kasutamine EmojiPicker abil.
 - REST-päringud uudiste, ilmateate, päevapakkumiste pärimiseks ning AI juturobotiga suhtlemiseks
 - Light/Dark mode valik, mis salvestatakse küpsisesse.
 
-## 3. **Backend **
+## 3. *Backend* 
 
-### **Spring Boot**
+### *Spring Boot*
 - Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse salvestatud `SESSION_ID` seotakse serveris kasutajanimega.
 - Vestlusplatsi käsud ning sõnumite saatmine ja vastuvõtmine toimub reaalajas WebSocketi kaudu.
 - REST API-de kaudu edastatakse frontendile reaalajas uudised, päevapakkumised ja ilmainfo.
