@@ -82,7 +82,7 @@ public class MessageProcessor {
 
     // kasutajanime töötlemine ja sobivuse kontroll
     public void handleUsernameAssignment(ClientSession session, String message) {
-        String username = message.trim();
+        String username = message.toLowerCase().trim();
 
         if (username.isBlank())
             sendUsernameMessage(session, "Kasutajanimi ei saa tühi olla.");
