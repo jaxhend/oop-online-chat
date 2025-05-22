@@ -1,21 +1,57 @@
-# OOP Projekt: UTchat
+<h1><a href="https://www.utchat.ee" target="_blank" rel="noopener noreferrer">UTchat</a></h1>
+
 #### Tiimiliikmed - Karl Markus Kiudma, Robin Juul, Hendrik Jaks
 
 ### Lühikokkuvõte:
 UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengitel omavahel reaalajas suhelda. Lisaks pakub rakendus AI-juturoboti tuge ning kuvab olulist ja kasulikku teavet. Kasutajad saavad hetkega näha, mis päevapakkumisi Delta  ja Ülikooli kohvikutes pakutakse ning jälgida reaalajas Tartu ilma. Veebilehel kuvatakse ka jooksvaid uudiseid, mis aitavad kasutajatel aktuaalsete teemadega kursis olla.
 
-
-
-
-## Funktsionaalsused:
-* Võimalus luua uusi ja liituda olemasolevate vestlusruumidega.
+![Kuvatõmmis 2025-05-21 232243](https://github.com/user-attachments/assets/ec0de958-a780-4d5d-9b95-e7c697461aec)
+*Joonis 1. Kuvatõmmis utchat.ee veebilehest*
+<br>
+<br>
+<br>
+## 1. Veebirakenduse funktsioonid:
+* Võimalus liituda olemasolevate ja luua uusi avalikke vestlusruume
+  * Vestlusruumide varasemate sõnumite kuvamine
 * Privaatne sõnumivahetus teiste kasutajatega
-* Emotikonide kasutamine sõnumites
-* Kuvab reaalajas ilma, uudiseid ning Delta kohviku ja Ülikooli Kohviku päevapakkumisi.
-* Võimalus vestelda AI juturobotiga, kes annab infot Tartu Ülikooli õppekavade, õppeainete ja muu kohta.
-* Light/Dark mode
+* Sobimatute või vulgaarsete sõnumite automaatne tuvastamine ja katmine
+* Emotikonide kasutamise võimalus
+* Lugemata sõnumi teavitused
+* Kuvab reaalajas:
+  * Ilma
+  * Uudiseid
+  * Delta ja Ülikooli kohviku päevapakkumisi
+* Võimalus vestelda AI juturobotiga, kes annab infot:
+  * Tartu Ülikooli õppekavade kohta
+  * Õppeainete kohta
+  * lehekülje ut.ee kohta
+  * lehekülje cs.ut.ee kohta
+* _Light_/_Dark_ mode tugi
+* Mobiilivaate tugi
+<br>
+
+## 2. *Deployment* 
+Domeen on _hostitud_ Zone's.
+  ### Vercel – [utchat.ee](https://www.utchat.ee)
+  - Veebirakenduse _frontend_'i majutus
+  - Automaatne CI/CD Githubi repositooriumiga
+  ### Azure - [api.utchat.ee](https://api.utchat.ee)
+  - Backend’i äriloogika jookseb Azure'i virtuaalmasinas (B2ls_v2).
+  - Dockeri konteinerid:
+    - **Nginx proxy** – turvaliseks ühenduseks internetiga
+    - **Spring Boot** – rakenduse äriloogika ja API teenused
+    - **Certbot** – HTTPS-sertifikaadi automaatne uuendamine
+  ### Tartu Ülikooli High Performance Computing Center (HPC) - [llm.utchat.ee](https://llm.utchat.ee)
+  - Tehisaru jooksutamiseks kasutame **Nvidia Tesla V100 16GB GPU**
+  - Lõime systemd teenuse tehisaru automaatseks käivitamiseks
+<br>
+
+
+
 
 ## Kasutatud tehnoloogiad
+
+
 
 ## AI-juturobot
 Kasutame **Qwen3-4B** keelemudelit, mis osutus testides kõige efektiivsemaks
@@ -23,16 +59,6 @@ AI-mudelit jooksutame HPC Serveris. AI-mudeli efektiivsuse tõstmiseks kasutasim
 - Rakendasime RAG'i (Retrieval-Augmented Generation), et anda mudelile reaalajas ette vajalik kontekst. Mudel otsib päringu hetkel etteantud andmebaasist infot juurde-
 - Info kättesaamiseks kasutame vektorandmebaasi ning FAISS (Facebook AI Similarity Search) tehnoloogiat, mis leiab lähima vaste vektori kujul ja genereerib selle abil vastuse.
 
-## 2. *Deployment* 
-  ### Vercel
-  - Veebirakenduse majutus
-  - _front-end_ uueneb muudatuste tegemisel automaatselt
-  ### Azure
-  - Rakenduse _back-end_ loogika asub Azure virtuaalmasinas
-  - Kasutame _back-end_'i jooksutamiseks Dockeri konteinereid
-  ### ATI UTHPC
-  - Lõime systemd teenuse tehisaru käivitamiseks
-  - Tehisaru jooksutamiseks kasutame 1 GPU-ga virtuaalmasinat
     
 
 ## 3. *Frontend* 
@@ -159,10 +185,6 @@ Rakenduses kasutatakse mitut scraperit, mis koguvad struktureeritud infot Tartu 
 - TeadusScraper – kogub teadus- ja uurimistegevuse infot lehelt: https://cs.ut.ee/et/teadus
 
 ## Kuvatõmmised UTchat veebilehelt
-
-![Kuvatõmmis 2025-05-21 232243](https://github.com/user-attachments/assets/ec0de958-a780-4d5d-9b95-e7c697461aec)
-*Joonis 1. Kuvatõmmis utchat.ee veebilehest*
-
 
 <br/>
 
