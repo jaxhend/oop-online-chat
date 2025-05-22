@@ -46,12 +46,18 @@ Domeen on _hostitud_ Zone's.
   - Lõime systemd teenuse tehisaru automaatseks käivitamiseks
 <br>
 
+## 3. *Frontend* 
+Frontend on arendatud Reacti ja CSS-iga ning kasutab Motion UI raamistiku animatsioonide jaoks.
 
+- Kuvab vestlused, AI-roboti liides, ilmateade, uudised ja päevapakkumised.
+- Reaalajas sõnumivahetuseks kasutab WebSocket-ühendust.
+- Emotikonide valik on lahendatud EmojiPicker komponendiga.
+- Andmete pärimiseks (uudised, ilmateade, päevapakkumised) ja AI-juturobotiga suhtlemiseks kasutatakse REST API päringuid.
+- Kasutajal on võimalik valida _Light_ või _Dark_ režiim, mille eelistus salvestatakse brauseri lokaalsesse mällu (localStorage).
 
-
-## Kasutatud tehnoloogiad
-
-
+Lisainfo leiad [_frontend_'i README failist](./frontend/README.md).
+<br>
+<br>
 
 ## AI-juturobot
 Kasutame **Qwen3-4B** keelemudelit, mis osutus testides kõige efektiivsemaks
@@ -59,44 +65,7 @@ AI-mudelit jooksutame HPC Serveris. AI-mudeli efektiivsuse tõstmiseks kasutasim
 - Rakendasime RAG'i (Retrieval-Augmented Generation), et anda mudelile reaalajas ette vajalik kontekst. Mudel otsib päringu hetkel etteantud andmebaasist infot juurde-
 - Info kättesaamiseks kasutame vektorandmebaasi ning FAISS (Facebook AI Similarity Search) tehnoloogiat, mis leiab lähima vaste vektori kujul ja genereerib selle abil vastuse.
 
-    
-
-## 3. *Frontend* 
-- Kuvab vestlused, AI-roboti liides, ilmateade, uudised ja päevapakkumised.
-- Kasutab WebSocket-ühendust reaalajas sõnumivahetuseks.
-- Emotikonide kasutamine EmojiPicker abil.
-- REST-päringud uudiste, ilmateate, päevapakkumiste pärimiseks ning AI juturobotiga suhtlemiseks
-- Light/Dark mode valik, mis salvestatakse küpsisesse.
-
-
-#### Sessioonihaldus
-- Kui kasutaja avab lehe, saadab brauser serverile päringu, et saada uus või kinnitada olemasolev `sessionId`.
-- Server salvestab või leiab `sessionId` alusel kasutaja varasema info ja saadab `sessionId` brauserisse küpsisena
-- Kui kasutajanimi on juba seotud selle `sessionId`ga, taastatakse see automaatselt.
-- Kasutajanime hoitakse ainult serveris
-
-####  Reaalajas suhtlus WebSocketi kaudu
-
-- WebSocket-ühendus luuakse automaatselt kohe pärast `sessionId` saamist.
-- Kasutaja sisestatud sõnum või käsk edastatakse WebSocketi kaudu otse serverile.
-- Server töötleb sõnumi ja saadab vastuse tagasi, mis kuvatakse kasutajaliideses.
-- Kui uus sõnum saabub ajal, mil brauseri sakk ei ole aktiivne, siis kuvatakse visuaalne märguanne vahelehe pealkirjas.
-
-#### AI juturobot
-- Kasutaja küsimus saadetakse POST-päringuna serverile, kaasa saadetakse kuni 10 eelmist küsimust-vastust.
-- Vastuse ootel kuvatakse kasutajale “AI mõtleb…” animatsioon.
-- Kui vastus saabub, lisatakse nii kasutaja sisend kui ka roboti vastus vestluse ajalukku ning kuvatakse ekraanil
-
-#### Andmete kuvamine
-- Rakenduse käivitumisel laetakse automaatselt: ilmateade, uudised ja päevapakkumised
-- Need andmed saadakse REST API-de päringute kaudu
-
-#### Kasutajaliides
-- Kasutaja saab valida Light/Dark mode'i vahel, mis salvestatakse küpsisesse ja taastatakse järgmisel külastusel.
-- Leht on jagatud neljaks osaks: Vestlusala, Uudistepaneel, Infopaneel(ilm + päevapakkumised) ja AI juturobot
-- Sõnumiväljal on olemas emotikoni valiku võimalus, kust kasutaja saab valida sobiva emotikoni, mis lisatakse sõnumi teksti.
-- Stiilid on loodud skaleeruvaks ning toetavad mobiilivaade
-
+  
 
 
 
@@ -106,6 +75,7 @@ AI-mudelit jooksutame HPC Serveris. AI-mudeli efektiivsuse tõstmiseks kasutasim
 - Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse salvestatud `SESSION_ID` seotakse serveris kasutajanimega.
 - Vestlusplatsi käsud ning sõnumite saatmine ja vastuvõtmine toimub reaalajas WebSocketi kaudu.
 - REST API-de kaudu edastatakse frontendile reaalajas uudised, päevapakkumised ja ilmainfo.
+- 
 
 
 
