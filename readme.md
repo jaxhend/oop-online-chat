@@ -6,11 +6,11 @@
 UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengitel omavahel reaalajas suhelda. Lisaks pakub rakendus AI-juturoboti tuge ning kuvab olulist ja kasulikku teavet. Kasutajad saavad hetkega näha, mis päevapakkumisi Delta  ja Ülikooli kohvikutes pakutakse ning jälgida reaalajas Tartu ilma. Veebilehel kuvatakse ka jooksvaid uudiseid, mis aitavad kasutajatel aktuaalsete teemadega kursis olla.
 
 ![Kuvatõmmis 2025-05-21 232243](https://github.com/user-attachments/assets/ec0de958-a780-4d5d-9b95-e7c697461aec)
-*Joonis 1. Kuvatõmmis utchat.ee veebilehest*
+*Joonis 1. Kuvatõmmis utchat.ee veebilehest.*
 <br>
 <br>
 <br>
-## 1. Veebirakenduse funktsioonid:
+## 1. Veebirakenduse funktsionaalsused
 * Võimalus liituda olemasolevate ja luua uusi avalikke vestlusruume
   * Vestlusruumide varasemate sõnumite kuvamine
 * Privaatne sõnumivahetus teiste kasutajatega
@@ -59,11 +59,13 @@ Lisainfo leiad [_frontend_'i README failist](./frontend/readme.md).
 <br>
 <br>
 
+
 ## 4. *Backend* 
 Spring ja LLM
 Lisainfo leiad [backend'i README failist](./backend/readme.md).
 <br>
 <br>
+
 
 ## 5. AI-juturobot
 Kasutame **Qwen3-4B** keelemudelit, mis osutus testides kõige efektiivsemaks
@@ -73,14 +75,14 @@ AI-mudelit jooksutame HPC Serveris. AI-mudeli efektiivsuse tõstmiseks kasutasim
 
 ![image](https://github.com/user-attachments/assets/94597f65-492e-45f4-a76c-d005afe867b4)
 <br>
-*Joonis 2. Kuvatõmmis AI-juturoboti aknast*
+*Joonis 2. Kuvatõmmis AI-juturoboti aknast.*
 <br>
 <br>
 
 
 ## 2025. aasta tudengiprojekt poster
 ![UTchat poster](https://github.com/user-attachments/assets/da4ca42b-8ccf-4466-a061-ef117844da3b)
-*Joonis 3. UTchat poster*
+*Joonis 3. UTchat poster.*
 
 
 
