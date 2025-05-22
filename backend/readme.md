@@ -68,9 +68,6 @@
 5.	Frontendis kuvatakse kasutajale andmed reaalajas.
 
 
-### Andmete salvestamine  
-Kõik andmed salvestatakse NoSQL andmebaasi MongoDB
-
 ### Scraperid
 
 Rakenduses kasutatakse mitut scraperit, mis koguvad struktureeritud infot Tartu Ülikooli avalikelt veebilehtedelt. 
