@@ -55,7 +55,7 @@ Frontend on arendatud Reacti ja CSS-iga ning kasutab Motion UI raamistiku animat
 - Andmete pärimiseks (uudised, ilmateade, päevapakkumised) ja AI-juturobotiga suhtlemiseks kasutatakse REST API päringuid.
 - Kasutajal on võimalik valida _Light_ või _Dark_ režiim, mille eelistus salvestatakse brauseri lokaalsesse mällu (localStorage).
 
-Lisainfo leiad [_frontend_'i README failist](./frontend/README.md).
+Lisainfo leiad [_frontend_'i README failist](./frontend/readme.md).
 <br>
 <br>
 
