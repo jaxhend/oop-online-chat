@@ -2,7 +2,9 @@
 #### Tiimiliikmed - Karl Markus Kiudma, Robin Juul, Hendrik Jaks
 
 ### Lühikokkuvõte:
-UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengitel omavahel reaalajas suhelda. Lisaks pakub rakendus AI-juturoboti tuge ning kuvab kasulikku teavet, sealhulgas päevast ilmateadet, aktuaalseid uudiseid ja päevapakkumisi.
+UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengitel omavahel reaalajas suhelda. Lisaks pakub rakendus AI-juturoboti tuge ning kuvab olulist ja kasulikku teavet. Kasutajad saavad hetkega näha, mis päevapakkumisi Delta  ja Ülikooli kohvikutes pakutakse ning jälgida reaalajas Tartu ilma. Veebilehel kuvatakse ka jooksvaid uudiseid, mis aitavad kasutajatel aktuaalsete teemadega kursis olla.
+
+
 
 
 ## Funktsionaalsused:
@@ -15,10 +17,25 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 
 ## Kasutatud tehnoloogiad
 
-## 1. *Deployment* 
-  - Frontend on hostitud Vercelis ja kättesaadal domeenil utchat.ee
+## AI-juturobot
+Kasutame **Qwen3-4B** keelemudelit, mis osutus testides kõige efektiivsemaks
+AI-mudelit jooksutame HPC Serveris. AI-mudeli efektiivsuse tõstmiseks kasutasime järgmiseid meetodeid:
+- Rakendasime RAG'i (Retrieval-Augmented Generation), et anda mudelile reaalajas ette vajalik kontekst. Mudel otsib päringu hetkel etteantud andmebaasist infot juurde-
+- Info kättesaamiseks kasutame vektorandmebaasi ning FAISS (Facebook AI Similarity Search) tehnoloogiat, mis leiab lähima vaste vektori kujul ja genereerib selle abil vastuse.
 
-## 2. *Frontend* 
+## 2. *Deployment* 
+  ### Vercel
+  - Veebirakenduse majutus
+  - _front-end_ uueneb muudatuste tegemisel automaatselt
+  ### Azure
+  - Rakenduse _back-end_ loogika asub Azure virtuaalmasinas
+  - Kasutame _back-end_'i jooksutamiseks Dockeri konteinereid
+  ### ATI UTHPC
+  - Lõime systemd teenuse tehisaru käivitamiseks
+  - Tehisaru jooksutamiseks kasutame 1 GPU-ga virtuaalmasinat
+    
+
+## 3. *Frontend* 
 - Kuvab vestlused, AI-roboti liides, ilmateade, uudised ja päevapakkumised.
 - Kasutab WebSocket-ühendust reaalajas sõnumivahetuseks.
 - Emotikonide kasutamine EmojiPicker abil.
@@ -57,7 +74,7 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 
 
 
-## 3. *Backend* 
+## 4. *Backend* 
 
 ### *Spring Boot*
 - Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse salvestatud `SESSION_ID` seotakse serveris kasutajanimega.
@@ -141,10 +158,22 @@ Rakenduses kasutatakse mitut scraperit, mis koguvad struktureeritud infot Tartu 
 - SisseastumineScraper – kogub sisseastumisega seotud infot lehelt: https://cs.ut.ee/et/sisseastumine
 - TeadusScraper – kogub teadus- ja uurimistegevuse infot lehelt: https://cs.ut.ee/et/teadus
 
+## Kuvatõmmised UTchat veebilehelt
 
 ![Kuvatõmmis 2025-05-21 232243](https://github.com/user-attachments/assets/ec0de958-a780-4d5d-9b95-e7c697461aec)
+*Joonis 1. Kuvatõmmis utchat.ee veebilehest*
+
+
+<br/>
+
 ![image](https://github.com/user-attachments/assets/f6162805-c919-44cd-aff1-348ceffa32c6)
+
+*Joonis 2. Kuvatõmmis AI-juturoboti aknast*
+
+
+
 ![UTchat poster](https://github.com/user-attachments/assets/da4ca42b-8ccf-4466-a061-ef117844da3b)
+*Joonis 3. UTchat projekti poster*
 
 
 
