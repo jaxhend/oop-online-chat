@@ -16,7 +16,7 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 * Privaatne sõnumivahetus teiste kasutajatega
 * Sobimatute või vulgaarsete sõnumite automaatne tuvastamine ja katmine
 * Emotikonide kasutamise võimalus
-* Lugemata sõnumi teavitused
+* Lugemata sõnumite teavitused
 * Kuvab reaalajas:
   * Ilma
   * Uudiseid
@@ -31,7 +31,7 @@ UTchat on veebipõhine vestlusrakendus, mis võimaldab Tartu Ülikooli tudengite
 <br>
 
 ## 2. *Deployment* 
-Domeen on _hostitud_ Zone's.
+Domeen on _hostitud_ Zone'is.
   ### Vercel – [utchat.ee](https://www.utchat.ee)
   - Veebirakenduse _frontend_'i majutus
   - Automaatne CI/CD Githubi repositooriumiga
