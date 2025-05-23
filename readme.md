@@ -91,8 +91,8 @@ Rakenduses kasutasime Pythoni FastAPI teeki, mis pakub REST API teenust veebirak
   - Salvestasime need vektorid FAISS-i (Facebook AI Similarity Search) vektorandmebaasi.
 - Kasutaja päringu saabumisel teisendasime sisendi samal transformeri mudelil vektoriteks ja otsisime FAISS-ist linguistiliselt lähimaid vastuseid.
 - Keelemudelile andsime ette kontekstiks 15 lähimat vastust vektorandmebaasist.
-- Lisaks saadab _frontend_ serverisse kasutaja viimased 5 sõnumit ja juturoboti vastust.
-- Keelemudel genereerib vastuse, mis põhineb juhistel, leitud kontekstil ning varasematel sõnumitel. Server saadab selle vastuse tagasi kasutajale.
+- Lisaks saadab _frontend_ serverisse viimased viis kasutaja sisendit ja juturoboti vastust.
+- Keelemudel genereerib vastuse, mis põhineb juhistel, leitud kontekstil, varasematel sõnumitel ning kasutaja sisendil. Server saadab vastuse tagasi kasutajale.
 
 ```
 prompt = (
