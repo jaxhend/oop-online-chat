@@ -39,48 +39,88 @@ Domeen on _hostitud_ Zone's.
   - Backend’i äriloogika jookseb Azure'i virtuaalmasinas (B2ls_v2).
   - Dockeri konteinerid:
     - **Nginx proxy** – turvaliseks ühenduseks internetiga
-    - **Spring Boot** – rakenduse äriloogika ja API teenused
+    - **Spring Boot** – rakenduse äriloogika ja REST API teenused
     - **Certbot** – HTTPS-sertifikaadi automaatne uuendamine
   ### Tartu Ülikooli High Performance Computing Center (HPC) - [llm.utchat.ee](https://llm.utchat.ee)
-  - Tehisaru jooksutamiseks kasutame **Nvidia Tesla V100 16GB GPU**
+  - Tehisaru jooksutamiseks kasutame **Nvidia Tesla V100 16GB** graafikakaarti
   - Lõime systemd teenuse tehisaru automaatseks käivitamiseks
 <br>
 
 ## 3. *Frontend* 
 Frontend on arendatud Reacti ja CSS-iga ning kasutab Motion UI raamistiku animatsioonide jaoks.
 
-- Kuvab vestlused, AI-juturoboti liidese, ilmateate, uudised ja päevapakkumised.
-- Reaalajas sõnumivahetuseks kasutab WebSocket-ühendust.
-- Emotikonide valik on lahendatud EmojiPicker komponendiga.
-- Andmete pärimiseks (uudised, ilmateade, päevapakkumised, sessionID) ja AI-juturobotiga suhtlemiseks kasutatakse REST API päringuid.
-- Kasutajal on võimalik valida _Light_ või _Dark_ režiim, mille eelistus salvestatakse brauseri lokaalsesse mällu (localStorage).
+- Reaalajas sõnumivahetus toimub WebSocket ühenduse kaudu.
+- Andmete (uudised, ilmateade, päevapakkumised, sessionID) pärimiseks ja AI-juturobotiga suhtlemiseks kasutatakse REST API päringuid.
+- Kasutaja unikaalne ID salvestatakse küpsisesse ning _Light_ või _Dark mode_ eelistus talletatakse lokaalsesse mällu.
 
 Lisainfo leiad [_frontend_'i README failist](./frontend/readme.md).
 <br>
 <br>
+<br>
 
+## 4. Java Spring Boot
+Rakenduse _backend_'is kasutasime Java raamistikku Spring Boot.
+Selles kihis paikneb kogu veebirakenduse äriloogika:
+- vestlusruumide ja privaatsõnumite haldus,
+- varasemate sõnumite salvestamine H2 andmebaasi ja nende ajastatud kustutamine,
+- WebSocket ühenduse konfigureerimine,
+- ajastatud uudiste, ilmateate ja päevapakkumiste veebikoorimine,  
+- ning vastavate teenuste REST API-de pakkumine.
 
-## 4. *Backend* 
-Spring ja LLM
 Lisainfo leiad [backend'i README failist](./backend/readme.md).
 <br>
 <br>
-
+<br>
 
 ## 5. AI-juturobot
-Kasutame **Qwen3-4B** keelemudelit, mis osutus testides kõige efektiivsemaks
-AI-mudelit jooksutame HPC Serveris. AI-mudeli efektiivsuse tõstmiseks kasutasime järgmiseid meetodeid:
-- Rakendasime RAG'i (Retrieval-Augmented Generation), et anda mudelile reaalajas ette vajalik kontekst. Mudel otsib päringu hetkel etteantud andmebaasist infot juurde-
-- Info kättesaamiseks kasutame vektorandmebaasi ning FAISS (Facebook AI Similarity Search) tehnoloogiat, mis leiab lähima vaste vektori kujul ja genereerib selle abil vastuse.
+### Andmete kogumine
+ - Veebikoorisime ÕIS-i [õppeained](https://ois2.ut.ee/#/courses) ja [õppekavad](https://ois2.ut.ee/#/curricula) ning veebilehti [ut.ee](https://ut.ee/et) ja [cs.ut.ee](https://cs.ut.ee/et). 
+ - Salvestasime kogutud info NoSQL andmebaasi MongoDB ja eksportisime sealt andmebaasist JSON-faili, mis sisaldas kokku 6150 JSON-dokumenti.  
+ - Valisime MongoDB, sest me polnud varem NoSQL-andmebaasidega töötanud ning tahtsime katsetada, kuidas struktureerimata andmeid andmebaasi salvestada.
+
+### Keelemudeli valimine
+ - Meie eesmärk AI-juturoboti loomisel oli luua vestlusassistent, kes suudaks eesti keeles vastata ülikoolialastele küsimustele. Seetõttu oli keelemudeli valikul oluline mudeli eesti keele oskus. **Samuti soovisime ise püsti panna juturoboti, mitte kasutada kellegi teise teenust.**
+ - Algselt kasutasime juturoboti keelemudelina **tartuNLP Llammast**, kuid hiljem läksime üle **Qwen3-4B** mudelile, kuna see suutis paremini töödelda etteantud andmeid ning omab kontekstiakent, mis on mitu korda suurem kui Llambal.
+ - Õnneks saime Tartu Ülikooli HPC keskusest kasutada virtuaalmasinat, millel oli **Nvidia Tesla V100 16GB** graafikakaart. See sobis ideaalselt meie valitud 4-miljardilise parameetriga keelemudelile.
+   
+### Mudeli tööpõhimõte
+Rakenduses kasutasime Pythoni FastAPI teeki, mis pakub REST API teenust veebirakendusele. Eesmärk oli rakendada RAG-i (Retrieval-Augmented Generation) lähenemist:
+- Koostasime vektorandmebaasi
+  - kasutasime transformerit **paraphrase-multilingual-MiniLM-L12-v2**, mis teisendas meie veebikooritud andmed vektoriteks.
+  - Salvestasime need vektorid FAISS-i (Facebook AI Similarity Search) vektorandmebaasi.
+- Kasutaja päringu saabumisel teisendasime sisendi samal transformeri mudelil vektoriteks ja otsisime FAISS-ist linguistiliselt lähimaid vastuseid.
+- Keelemudelile andsime ette kontekstiks 15 lähimat vastust vektorandmebaasist.
+- Lisaks saadab _frontend_ serverisse kasutaja viimased 5 sõnumit ja juturoboti vastust.
+- Keelemudel genereerib vastuse, mis põhineb juhistel, leitud kontekstil ning varasematel sõnumitel. Server saadab selle vastuse tagasi kasutajale.
+
+```
+prompt = (
+            f"""Oled abivalmis tehisintellekti assistent veebilehel UTchat. See veebileht on mõeldud Tartu Ülikooli üliõpilastele. 
+            Sinu peamine ülesanne on vastata kasutaja sisendile ainult antud konteksti põhjal. Ole sõbralik ja abivalmis.
+
+                Antud kontekst:
+                {context}
+                
+                Kasutaja varasem sisend ja sinu vastused:
+                {truncated_prior_messages}
+                
+                Kasutaja sisend: {q}
+            
+                Vastus: """
+        )
+```
+
+### Kokkuvõte
+Oleme tulemusega rahul. Kuigi vastused ei ole kõige täpsemad ega võrdu näiteks OpenAI ChatGPT kvaliteediga, on asjaolu, et saime keelemudelit jooksutada lokaalselt ilma kolmanda osapoole teenuseta ja piiranguteta, meie arvates väga väärtuslik.
 
 ![image](https://github.com/user-attachments/assets/94597f65-492e-45f4-a76c-d005afe867b4)
 <br>
 *Joonis 2. Kuvatõmmis AI-juturoboti aknast.*
 <br>
 <br>
+<br>
 
-
-## 2025. aasta tudengiprojekt poster
+## 2025. aasta tudengiprojekti poster
 ![UTchat poster](https://github.com/user-attachments/assets/da4ca42b-8ccf-4466-a061-ef117844da3b)
 *Joonis 3. UTchat poster.*
 
