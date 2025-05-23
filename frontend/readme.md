@@ -1,4 +1,4 @@
-# Frontend
+# _Frontend_
 _Frontend_ on loodud kasutades **Reacti** ja **CSS-i**, animatsioonide jaoks on kasutusel **Motion UI** raamistik.
 
 #### Funktsionaalsused
