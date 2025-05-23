@@ -1,17 +1,18 @@
-## 4. *Backend* 
+# Java
+Veebirakenduse backend'is kasutasime Java raamistikku Spring Boot. Selles kihis paikneb kogu veebirakenduse äriloogika:
 
-### *Spring Boot*
-- Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse salvestatud `SESSION_ID` seotakse serveris kasutajanimega.
-- Vestlusplatsi käsud ning sõnumite saatmine ja vastuvõtmine toimub reaalajas WebSocketi kaudu.
-- REST API-de kaudu edastatakse frontendile reaalajas uudised, päevapakkumised ja ilmainfo.
-- 
+- vestlusruumide ja privaatsõnumite haldus,
+- vulgaarsete sõnumite automaatne tuvastamine ja katmine,
+- varasemate sõnumite salvestamine H2 andmebaasi ja nende ajastatud kustutamine,
+- WebSocket ühenduse konfigureerimine,
+- ajastatud uudiste, ilmateate ja päevapakkumiste veebikoorimine,
+- ning vastavate teenuste REST API-de pakkumine.
 
+Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse salvestatud `SESSION_ID` seotakse serveris kasutajanimega.
+</br></br>
 
-
-#### Klasside selgitused:
-
-
-- **ApplicationInfoController** pakub REST API otspunkte ilmainfo, päevapakkumiste ja uudiste edastamiseks frontendile.
+### Tähtsamate klasside selgitused:
+- **ApplicationInfoController** pakub REST API otspunkte ilma, päevapakkumiste ja uudiste edastamiseks _frontend_'ile.
 
 - **MessageProcessor** töötleb kasutaja sisendeid (käske, sõnumeid ja nende filtreerimist) ning edastab vastava info WebSocketi kaudu.
   - Kasutab:
@@ -47,9 +48,9 @@
   
 - **PrivateChatRoom ja RegularChatRoom** realiseerivad `ChatRoom` loogika erinevatele ruumitüüpidele.
 
+</br>
 
-
-#### Websocketi toimimine:
+### Websocket:
 
 1. Brauser avab WebSocketi ühenduse.
 2. `WebSocketHandshakeInterceptor` kontrollib, kas brauseri küpsis sisaldab kehtivat `sessionId`.
@@ -68,9 +69,9 @@
 5.	Frontendis kuvatakse kasutajale andmed reaalajas.
 
 
-### Scraperid
+### Veebikoorijad
+Lisaks uudiste, ilmateate ja päevapakkumiste veebikoorimisele lõime _scraper_'id, et koguda informatsiooni AI-juturoboti vektorandmebaasi jaoks.
 
-Rakenduses kasutatakse mitut scraperit, mis koguvad struktureeritud infot Tartu Ülikooli avalikelt veebilehtedelt. 
 
 #### Scraperid koguvad infot järgmistelt Tartu Ülikooli ja Tartu Ülikooli Arvutiteaduste Instituudi lehtedelt:
 - CsScraper – kogub infot: https://cs.ut.ee/sitemap.xml
