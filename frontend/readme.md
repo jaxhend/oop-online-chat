@@ -1,36 +1,41 @@
 # Frontend
-Frontend on arendatud Reacti ja CSS-iga ning kasutab Motion UI raamistiku animatsioonide jaoks.
+_Frontend_ on loodud kasutades **Reacti** ja **CSS-i**, animatsioonide jaoks on kasutusel **Motion UI** raamistik.
 
+#### Funktsionaalsused
 - Kuvab vestlused, AI-roboti liides, ilmateade, uudised ja päevapakkumised.
-- Reaalajas sõnumivahetuseks kasutab WebSocket-ühendust.
-- Emotikonide valik on lahendatud EmojiPicker komponendiga.
-- Andmete pärimiseks (uudised, ilmateade, päevapakkumised) ja AI-juturobotiga suhtlemiseks kasutatakse REST API päringuid.
-- Kasutajal on võimalik valida Light või Dark režiim, mille eelistus salvestatakse brauseri lokaalsesse mällu (localStorage).
+- Emotikonide lisamine on lahendatud `EmojiPicker` komponendi abil.
+- Reaalajas sõnumivahetus toimub WebSocket ühenduse kaudu.
+- Andmete (uudised, ilmateade, päevapakkumised, sessionID) pärimiseks ja AI-juturobotiga suhtlemiseks kasutatakse REST API päringuid.
+- Kasutaja unikaalne ID salvestatakse küpsisesse ning _Light_ või _Dark mode_ eelistus talletatakse lokaalsesse mällu.
 
 #### Sessioonihaldus
-- Kui kasutaja avab lehe, saadab brauser serverile päringu, et saada uus või kinnitada olemasolev `sessionId`.
-- Server salvestab või leiab `sessionId` alusel kasutaja varasema info ja saadab `sessionId` brauserisse küpsisena
-- Kui kasutajanimi on juba seotud selle `sessionId`ga, taastatakse see automaatselt.
-- Kasutajanime hoitakse ainult serveris
+- Lehe avamisel saadab brauser serverile päringu uue `sessionId` saamiseks või olemasoleva kinnitamiseks.
+- Server salvestab või leiab olemasoleva sessiooni ja saadab `sessionId` brauserile küpsisena.
+- Kui sessioon on juba seotud kasutajanimega, taastatakse kasutajanimi automaatselt.
+- Kasutajanime hoitakse ainult serveri poolel.
 
 ####  Reaalajas suhtlus WebSocketi kaudu
-
-- WebSocket-ühendus luuakse automaatselt kohe pärast `sessionId` saamist.
-- Kasutaja sisestatud sõnum või käsk edastatakse WebSocketi kaudu otse serverile.
-- Server töötleb sõnumi ja saadab vastuse tagasi, mis kuvatakse kasutajaliideses.
-- Kui uus sõnum saabub ajal, mil brauseri sakk ei ole aktiivne, siis kuvatakse visuaalne märguanne vahelehe pealkirjas.
+- WebSocket-ühendus luuakse automaatselt pärast `sessionId` saamist.
+- Kasutaja sisestatud sõnum või käsk edastatakse otse serverile läbi WebSocketi.
+- Server töötleb sõnumi ja saadab kasutajale vastuse, mis kuvatakse kasutajaliideses.
+- Kui uus sõnum saabub ajal, mil brauseri sakk ei ole aktiivne, kuvatakse vahelehe pealkirjas visuaalne märguanne.
 
 #### AI juturobot
-- Kasutaja küsimus saadetakse POST-päringuna serverile, kaasa saadetakse kuni 10 eelmist küsimust-vastust.
-- Vastuse ootel kuvatakse kasutajale “AI mõtleb…” animatsioon.
-- Kui vastus saabub, lisatakse nii kasutaja sisend kui ka roboti vastus vestluse ajalukku ning kuvatakse ekraanil
+- Kasutaja küsimus saadetakse POST-päringuna koos kuni viie varasema küsimus-vastus paariga.
+- Vastuse ootel kuvatakse kasutajale „AI mõtleb…” animatsioon.
+- Kui vastus saabub, lisatakse nii kasutaja sisend kui ka roboti vastus vestlusajalukku ning kuvatakse ekraanil.
 
 #### Andmete kuvamine
-- Rakenduse käivitumisel laetakse automaatselt: ilmateade, uudised ja päevapakkumised
-- Need andmed saadakse REST API-de päringute kaudu
+- Rakenduse käivitamisel laaditakse automaatselt ilmateade, uudised ja päevapakkumised.
+- Vajalikud andmed saadakse REST API päringute kaudu.
 
 #### Kasutajaliides
 - Kasutaja saab valida Light/Dark mode'i vahel, mis salvestatakse küpsisesse ja taastatakse järgmisel külastusel.
-- Leht on jagatud neljaks osaks: Vestlusala, Uudistepaneel, Infopaneel(ilm + päevapakkumised) ja AI juturobot
-- Sõnumiväljal on olemas emotikoni valiku võimalus, kust kasutaja saab valida sobiva emotikoni, mis lisatakse sõnumi teksti.
-- Stiilid on loodud skaleeruvaks ning toetavad mobiilivaade
+- Kasutaja saab valida Light või Dark režiimi, mis salvestatakse lokaalsesse mällu ja taastatakse järgmisel külastusel.
+- Leht on jaotatud neljaks osaks:
+  - Vestlusala
+  - Uudistepaneel
+  - Infopaneel (ilm + päevapakkumised)
+  - AI-juturobot
+- Sõnumiväli sisaldab emotikonide valikut.
+- **Kujundus on skaleeruv ja toetab ka mobiilivaadet.**
