@@ -62,7 +62,7 @@ Lisainfo leiad [_frontend_'i README failist](./frontend/readme.md).
 Rakenduse _backend_'is kasutasime Java raamistikku Spring Boot.
 Selles kihis paikneb kogu veebirakenduse äriloogika:
 - vestlusruumide ja privaatsõnumite haldus,
-- vulgaarsete sõnumite automaatne tuvastamine ja katmine,
+- vulgaarsete sõnumite automaatne tuvastamine ja katmine (Aho-Corasick algoritm),
 - varasemate sõnumite salvestamine H2 andmebaasi ja nende ajastatud kustutamine,
 - WebSocket ühenduse konfigureerimine,
 - ajastatud uudiste, ilmateate ja päevapakkumiste veebikoorimine,  
