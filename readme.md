@@ -80,9 +80,9 @@ Lisainfo leiad [backend'i README failist](./backend/readme.md).
  - Valisime MongoDB, sest me polnud varem NoSQL-andmebaasidega töötanud ning tahtsime katsetada, kuidas struktureerimata andmeid andmebaasi salvestada.
 
 ### Keelemudeli valimine
- - Meie eesmärk AI-juturoboti loomisel oli luua vestlusassistent, kes suudaks eesti keeles vastata ülikoolialastele küsimustele. Seetõttu oli keelemudeli valikul oluline mudeli eesti keele oskus. **Samuti soovisime ise püsti panna juturoboti, mitte kasutada kellegi teise teenust.**
- - Algselt kasutasime juturoboti keelemudelina **tartuNLP Llammast**, kuid hiljem läksime üle **Qwen3-4B** mudelile, kuna see suutis paremini töödelda etteantud andmeid ning omab kontekstiakent, mis on mitu korda suurem kui Llambal.
- - Õnneks saime Tartu Ülikooli HPC keskusest kasutada virtuaalmasinat, millel oli **Nvidia Tesla V100 16GB** graafikakaart. See sobis ideaalselt meie valitud 4-miljardilise parameetriga keelemudelile.
+ - Meie eesmärk oli luua vestlusassistent, kes suudaks eesti keeles vastata ülikoolialastele küsimustele. Seetõttu oli keelemudeli valikul oluline mudeli eesti keele oskus. **Samuti soovisime ise püsti panna oma juturoboti, tagades nii sõltumatuse välistest teenustest kui ka täieliku kontrolli lahenduse üle.**
+ - Algselt valisime juturoboti keelemudeliks **tartuNLP Llammas**, kuid hiljem läksime üle **Qwen3-4B** mudelile, kuna see suutis paremini töödelda etteantud andmeid ning omab kontekstiakent, mis on mitu korda suurem kui Llammas mudelil.
+ - Lisaks saime Tartu Ülikooli HPC keskusest kasutada virtuaalmasina, millel oli **Nvidia Tesla V100 16GB** graafikakaart. See sobis ideaalselt meie valitud 4-miljardilise parameetriga keelemudelile, mis kasutas ära kogu GPU VRAM-i.
    
 ### Mudeli tööpõhimõte
 Rakenduses kasutasime Pythoni FastAPI teeki, mis pakub REST API teenust veebirakendusele. Eesmärk oli rakendada RAG-i (Retrieval-Augmented Generation) lähenemist:
