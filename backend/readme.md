@@ -1,20 +1,17 @@
 # Java
-Veebirakenduse backend'is kasutasime Java raamistikku Spring Boot. Selles kihis paikneb kogu veebirakenduse äriloogika:
-
+Veebirakenduse _backend_'is kasutasime Java raamistikku Spring Boot. See kiht sisaldab kogu rakenduse äriloogikat:
 - vestlusruumide ja privaatsõnumite haldus,
 - vulgaarsete sõnumite automaatne tuvastamine ja katmine,
 - varasemate sõnumite salvestamine H2 andmebaasi ja nende ajastatud kustutamine,
 - WebSocket ühenduse konfigureerimine,
 - ajastatud uudiste, ilmateate ja päevapakkumiste veebikoorimine,
 - ning vastavate teenuste REST API-de pakkumine.
-
-Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse salvestatud `SESSION_ID` seotakse serveris kasutajanimega.
 </br></br>
 
 ### Tähtsamate klasside selgitused:
-- **ApplicationInfoController** pakub REST API otspunkte ilma, päevapakkumiste ja uudiste edastamiseks _frontend_'ile.
+- **ApplicationInfoController** ja **SessionController** pakub REST API otspunkte ilma, päevapakkumiste, uudiste ja sessionID edastamiseks _frontend_'ile.
 
-- **MessageProcessor** töötleb kasutaja sisendeid (käske, sõnumeid ja nende filtreerimist) ning edastab vastava info WebSocketi kaudu.
+- **MessageProcessor** töötleb kasutaja sisendeid (käske, sõnumeid ja nende filtreerimist) ning edastab vastava info WebSocketi kaudu kasutajale.
   - Kasutab:
     - `ClientSessionManager` – seansside leidmine ja haldus
     - `CommandHandler` – käsuloogika delegeerimine
@@ -42,16 +39,15 @@ Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse
 
 - **ClientSessionManager** haldab aktiivseid seansse ja nende infot (sh kasutajanime seos sessiooni ID-ga).
 
-- **CommandHandler** töötleb käske ning suunab need käsuklassidele edasi, tagastades süsteemipoolsed vastused.
+- **CommandHandler** töötleb käske ning suunab need käsuklassidele edasi, tagastades käsuklassides defineeritud vastused.
   
-- **ChatRoomMessageService** salvestab ja tagastab vestlusruumide sõnumid.
+- **ChatRoomMessageService** salvestab, kustutab ja tagastab vestlusruumide varasemaid sõnumeid H2 andmebaasist.
   
-- **PrivateChatRoom ja RegularChatRoom** realiseerivad `ChatRoom` loogika erinevatele ruumitüüpidele.
-
+- **ProfanityFilter** tuvastab ja katab vulgaarseid sõnu. Klass kasutab Aho-Corasick algoritmi efektiivseks sõnetöötluseks.
+  
 </br>
 
 ### Websocket:
-
 1. Brauser avab WebSocketi ühenduse.
 2. `WebSocketHandshakeInterceptor` kontrollib, kas brauseri küpsis sisaldab kehtivat `sessionId`.
 3. Kui küpsis on olemas, ühendatakse sessioon `WebSocketHandler`i kaudu olemasoleva või uue `ClientSession`iga.
@@ -60,23 +56,19 @@ Kasutaja tuvastamine toimub serveripoolse sessioonihalduse abil, kus küpsisesse
 6. `ChatRoomManager` kontrollib ruumide olemasolu ja suunab kasutajad sobivatesse `ChatRoom`idesse.
 7. `ChatRoom` haldab liikmeid ja liitumisõigusi.
 
+</br>
+
 #### REST API
 
-1.	Brauser teeb GET päringu ühele API otspunktidest (/ilm, /uudised, /paevapakkumised).
-2.	Spring Boot controller `ApplicationInfoController` võtab päringu vastu.
-3.	Controller kutsub vastavat teenust:
-4.	Saadud andmed vormistatakse JSON-vastuseks ja saadetakse frontendile.
-5.	Frontendis kuvatakse kasutajale andmed reaalajas.
+1.	Brauser teeb GET päringu ühele API otspunktidest (/ilm, /uudised, /paevapakkumised, /session/init).
+2.	Spring Boot controller `ApplicationInfoController` või `SessionController` võtab päringu vastu.
+3.	Controller kutsub vastavat teenust.
+4.	Saadud andmed vormistatakse JSON-vastuseks ja saadetakse _frontend_'ile.
+5.	Frontend'is kuvatakse kasutajale andmeid reaalajas.
 
+</br>
 
 ### Veebikoorijad
-Lisaks uudiste, ilmateate ja päevapakkumiste veebikoorimisele lõime _scraper_'id, et koguda informatsiooni AI-juturoboti vektorandmebaasi jaoks.
-
-
-#### Scraperid koguvad infot järgmistelt Tartu Ülikooli ja Tartu Ülikooli Arvutiteaduste Instituudi lehtedelt:
-- CsScraper – kogub infot: https://cs.ut.ee/sitemap.xml
-- UtScraper – kogub infot: https://ut.ee/sitemap.xml
-- OisCoursesScraper – kogub õppeainete infot lehelt: https://ois2.ut.ee/#/courses
-- OisCurriculaScraper – kogub õppekavade ja moodulite infot lehelt: https://ois2.ut.ee/#/curricula
-- SisseastumineScraper – kogub sisseastumisega seotud infot lehelt: https://cs.ut.ee/et/sisseastumine
-- TeadusScraper – kogub teadus- ja uurimistegevuse infot lehelt: https://cs.ut.ee/et/teadus
+Lisaks uudiste, ilmateate ja päevapakkumiste veebikoorimisele arendasime scraper-id, mille eesmärk oli koguda teavet AI-juturoboti vektorandmebaasi jaoks.
+Koorisime andmeid ÕIS-ist (õppeained ja õppekavad) ning Tartu Ülikooli ja Arvutiteaduse Instituudi veebilehtedelt (ut.ee ja cs.ut.ee).
+Viimastel juhtudel kasutasime sitemap’e, et tuvastada vajalikud lingid, mille põhjal filtreerisime välja asjakohase info.
