@@ -1,4 +1,6 @@
 # Java
+Esitluse link: https://docs.google.com/presentation/d/1xlZ6shxtppz0w7f7ZXmhpdC1JnLFl2AhLyw5ghZBGZs/edit?usp=sharing
+
 Veebirakenduse _backend_'is kasutasime Java raamistikku Spring Boot. See kiht sisaldab kogu rakenduse äriloogikat:
 - vestlusruumide ja privaatsõnumite haldus,
 - vulgaarsete sõnumite automaatne tuvastamine ja katmine,
