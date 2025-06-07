@@ -94,7 +94,7 @@ export default function OnlineChat() {
 
     const handleUsernameSubmit = (value) => {
         if (!ws?.current) {
-            setUsernameError("Puudub sessiooni ID. Proovi lehte värskendada.");
+            setUsernameError("Server läks puhkusele. Proovi varsti uuesti!");
             return;
         }
         const socket = ws.current;
